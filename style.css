@@ -1,0 +1,211 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html,body { height: 100%; }
+body {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: #f3f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  color: #222;
+}
+
+/* ===== Página / posicionamento do logo ===== */
+.page { width: 100%; max-width: 520px; position: relative; }
+
+/* Logo circular sobrepondo o card (centralizado) */
+.logo{
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 50%;
+  object-fit: contain;
+  transform: translateY(22px);
+}
+
+/* ===== Card (o painel branco) ===== */
+.card{
+  background: #fff;
+  margin-top: 36px;              /* cria espaço entre logo e topo do card */
+  padding: 34px 36px 18px 36px;
+  border-radius: 8px;
+  border: 1px solid #d6d8dc;     /* linha fina do contorno */
+  box-shadow: 0 6px 30px rgba(9,20,40,0.06);
+  text-align: left;
+}
+
+/* Título centralizado visualmente (toda a área do card é alinhada ao centro na imagem) */
+.title{
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* marca 'nop' no título — estilização leve */
+.title .brand{
+  color: #0b2340;
+  font-weight: 700;
+  font-size: 20px;
+  margin-left: 6px;
+}
+
+/* subtítulo */
+.subtitle{
+  color: #6b7280;
+  text-align: center;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+/* label */
+.label{
+  display: block;
+  color: #374151;
+  font-size: 13px;
+  margin: 10px 0 8px 0;
+  text-align: left;
+}
+
+/* ===== Toggle tipo de conta (Aluno / Professor) ===== */
+.account-toggle{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+/* botões estilo "segmented control" */
+.acct-btn{
+  flex: 1 1 0;
+  max-width: 200px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(15,23,42,0.06);
+  background: #f3f6fb;
+  color: #1f2937;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  text-align: center;
+  box-shadow: none;
+}
+
+/* estado ativo (Aluno por padrão) */
+.acct-btn--active{
+  background: #5b8def;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(91,141,239,0.18);
+  border: 1px solid rgba(60,110,220,0.9);
+}
+
+/* hover */
+.acct-btn:hover{ transform: translateY(-2px); }
+
+/* ===== Inputs ===== */
+input[type="email"],
+input[type="password"]{
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  background: #ffffff;
+  transition: border-color .14s ease, box-shadow .14s ease;
+}
+
+/* foco */
+input:focus{
+  outline: none;
+  border-color: #5b8def;
+  box-shadow: 0 6px 18px rgba(91,141,239,0.12);
+}
+
+/* linha com link "Esqueceu a senha?" */
+.pwd-row{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+
+/* link pequeno */
+.link-small{
+  font-size: 13px;
+  color: #5b8def;
+  text-decoration: none;
+}
+.link-small:hover{ text-decoration: underline; }
+
+/* área do input de senha com botão olho */
+.pwd-wrap{
+  position: relative;
+}
+.eye-btn{
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px;
+}
+
+/* ===== Botão Entrar ===== */
+.enter-btn{
+  margin-top: 16px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(180deg,#6fa8ff,#4f7cd9);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(79,124,217,0.18);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.enter-btn:hover{ transform: translateY(-3px); }
+
+/* ===== Divisor e rodapé do card ===== */
+.divider{
+  height: 1px;
+  background: #e6e7ea;
+  margin: 18px 0 14px 0;
+}
+
+/* texto auxiliar */
+.muted{
+  text-align: center;
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+.muted a{ color: #5b8def; text-decoration: none; }
+.muted a:hover{ text-decoration: underline; }
+
+/* botão "voltar" estilo ghost */
+.ghost-btn{
+  display: block;
+  margin: 6px auto 0 auto;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 420px){
+  .page{ padding: 16px; }
+  .card{ padding: 24px; }
+  .logo{ width: 72px; height: 72px; transform: translateY(18px); }
+}

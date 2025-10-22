@@ -10,10 +10,8 @@ body {
   color: #222;
 }
 
-/* ===== Página / posicionamento do logo ===== */
 .page { width: 100%; max-width: 520px; position: relative; }
 
-/* Logo circular sobrepondo o card (centralizado) */
 .logo{
   width: 100px;
   height: 100px;
@@ -24,18 +22,16 @@ body {
   transform: translateY(22px);
 }
 
-/* ===== Card (o painel branco) ===== */
 .card{
   background: #fff;
-  margin-top: 36px;              /* cria espaço entre logo e topo do card */
+  margin-top: 36px;
   padding: 34px 36px 18px 36px;
   border-radius: 8px;
-  border: 1px solid #d6d8dc;     /* linha fina do contorno */
+  border: 1px solid #d6d8dc;
   box-shadow: 0 6px 30px rgba(9,20,40,0.06);
   text-align: left;
 }
 
-/* Título centralizado visualmente (toda a área do card é alinhada ao centro na imagem) */
 .title{
   text-align: center;
   font-size: 20px;
@@ -43,7 +39,6 @@ body {
   margin-bottom: 6px;
 }
 
-/* marca 'nop' no título — estilização leve */
 .title .brand{
   color: #0b2340;
   font-weight: 700;
@@ -51,7 +46,6 @@ body {
   margin-left: 6px;
 }
 
-/* subtítulo */
 .subtitle{
   color: #6b7280;
   text-align: center;
@@ -59,7 +53,6 @@ body {
   margin-bottom: 18px;
 }
 
-/* label */
 .label{
   display: block;
   color: #374151;
@@ -68,7 +61,6 @@ body {
   text-align: left;
 }
 
-/* ===== Toggle tipo de conta (Aluno / Professor) ===== */
 .account-toggle{
   display: flex;
   gap: 10px;
@@ -76,7 +68,6 @@ body {
   margin-bottom: 14px;
 }
 
-/* botões estilo "segmented control" */
 .acct-btn{
   flex: 1 1 0;
   max-width: 200px;
@@ -92,7 +83,6 @@ body {
   box-shadow: none;
 }
 
-/* estado ativo (Aluno por padrão) */
 .acct-btn--active{
   background: #5b8def;
   color: #fff;
@@ -100,10 +90,8 @@ body {
   border: 1px solid rgba(60,110,220,0.9);
 }
 
-/* hover */
 .acct-btn:hover{ transform: translateY(-2px); }
 
-/* ===== Inputs ===== */
 input[type="email"],
 input[type="password"]{
   width: 100%;
@@ -116,14 +104,12 @@ input[type="password"]{
   transition: border-color .14s ease, box-shadow .14s ease;
 }
 
-/* foco */
 input:focus{
   outline: none;
   border-color: #5b8def;
   box-shadow: 0 6px 18px rgba(91,141,239,0.12);
 }
 
-/* linha com link "Esqueceu a senha?" */
 .pwd-row{
   display:flex;
   justify-content: space-between;
@@ -132,7 +118,6 @@ input:focus{
   margin-bottom: 6px;
 }
 
-/* link pequeno */
 .link-small{
   font-size: 13px;
   color: #5b8def;
@@ -140,7 +125,6 @@ input:focus{
 }
 .link-small:hover{ text-decoration: underline; }
 
-/* área do input de senha com botão olho */
 .pwd-wrap{
   position: relative;
 }
@@ -156,7 +140,6 @@ input:focus{
   padding: 6px;
 }
 
-/* ===== Botão Entrar ===== */
 .enter-btn{
   margin-top: 16px;
   width: 100%;
@@ -173,14 +156,12 @@ input:focus{
 }
 .enter-btn:hover{ transform: translateY(-3px); }
 
-/* ===== Divisor e rodapé do card ===== */
 .divider{
   height: 1px;
   background: #e6e7ea;
   margin: 18px 0 14px 0;
 }
 
-/* texto auxiliar */
 .muted{
   text-align: center;
   color: #6b7280;
@@ -190,7 +171,6 @@ input:focus{
 .muted a{ color: #5b8def; text-decoration: none; }
 .muted a:hover{ text-decoration: underline; }
 
-/* botão "voltar" estilo ghost */
 .ghost-btn{
   display: block;
   margin: 6px auto 0 auto;
@@ -203,7 +183,6 @@ input:focus{
   font-size: 14px;
 }
 
-/* ===== Responsividade ===== */
 @media (max-width: 420px){
   .page{ padding: 16px; }
   .card{ padding: 24px; }

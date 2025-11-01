@@ -16,7 +16,7 @@
 
     <header class="profile-header">
         <div class="header-content-profile">
-            <a href="home.html" class="back-arrow" aria-label="Voltar"><i class="fa-solid fa-arrow-left"></i></a>
+            <a href="javascript:void(0)" onclick="history.back()" class="back-arrow" aria-label="Voltar"><i class="fa-solid fa-arrow-left"></i></a>
             
             <div class="header-text">
                 <h1>Editar Perfil</h1>
@@ -37,7 +37,7 @@
 
         <div class="profile-form-box">
             
-            <button class="next-step-arrow" aria-label="Avançar para a próxima seção do perfil">
+            <button class="next-step-arrow" aria-label="Avançar para a próxima seção do perfil" onclick="window.location.href='perfil_aluno_parte2.html'">
                  <i class="fa-solid fa-arrow-right"></i>
             </button>
             
@@ -122,22 +122,27 @@
         }
 
 
-        // Função para alternar visibilidade da senha (LÓGICA AGORA CORRETA)
+        // Função para alternar visibilidade da senha (LÓGICA CORRETA)
         function setupPasswordToggle(toggleId, inputId) {
             const toggleButton = document.getElementById(toggleId);
             const passwordInput = document.getElementById(inputId);
 
+            // Garante o estado inicial (tipo password e ícone slash)
+            passwordInput.setAttribute('type', 'password');
+            toggleButton.querySelector('i').classList.add('fa-eye-slash');
+
             toggleButton.addEventListener('click', function() {
-                // Alterna entre 'password' (oculto) e 'text' (visível)
                 const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordInput.setAttribute('type', type);
                 
                 // Troca o ícone
                 const icon = this.querySelector('i');
                 if (type === 'text') {
+                    // Senha VISÍVEL -> Mostra o olho ABERTO
                     icon.classList.remove('fa-eye-slash');
                     icon.classList.add('fa-eye');
                 } else {
+                    // Senha OCULTA -> Mostra o olho FECHADO/barrado
                     icon.classList.remove('fa-eye');
                     icon.classList.add('fa-eye-slash');
                 }

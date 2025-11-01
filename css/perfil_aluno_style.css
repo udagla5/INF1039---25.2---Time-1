@@ -1,4 +1,4 @@
-/* VARIÁVEIS DE CORES */
+/* VARIÁVEIS DE CORES REUTILIZADAS */
 :root {
     --color-puc-blue: #3A83D9;
     --color-dark-blue: #0C1A2C;
@@ -113,8 +113,7 @@ body {
     font-size: 14px;
 }
 
-/* -------------------- BOX DO FORMULÁRIO -------------------- */
-
+/* BOX DO FORMULÁRIO */
 .profile-form-box {
     background-color: var(--color-text-light);
     padding: 30px;
@@ -172,7 +171,7 @@ body {
     font-style: italic;
 }
 
-/* Campo Mudar Senha */
+/* Campo Mudar Senha / Título Separador */
 .separator-text {
     font-size: 16px;
     font-weight: 700;
@@ -226,4 +225,49 @@ body {
     font-size: 12px;
     color: var(--color-icon-gray);
     margin-top: 15px;
+}
+
+/* --- ESTILOS ESPECÍFICOS PARA A PARTE 2 DO PERFIL (Tags de Interesse) --- */
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    margin-bottom: 5px;
+    /* Estilos para o Título da Seção (Interesses) */
+}
+
+.section-description {
+    font-size: 14px;
+    color: #666666;
+    margin-bottom: 20px;
+}
+
+.interests-grid {
+    display: flex;
+    flex-wrap: wrap; /* CRÍTICO: PERMITE O EFEITO ENCAIXADO */
+    gap: 10px; 
+    justify-content: flex-start; 
+}
+
+.interest-tag {
+    background-color: var(--color-text-light); 
+    color: var(--color-text-dark); 
+    border: 1px solid var(--color-input-border); 
+    padding: 8px 15px;
+    border-radius: 20px; 
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    white-space: nowrap; 
+}
+
+.interest-tag:hover {
+    border-color: var(--color-puc-blue); 
+}
+
+.interest-tag.selected {
+    background-color: var(--color-puc-blue); 
+    color: var(--color-text-light); 
+    border-color: var(--color-puc-blue); 
 }

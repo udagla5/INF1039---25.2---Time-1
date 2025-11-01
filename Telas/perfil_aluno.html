@@ -135,11 +135,9 @@
                 // Troca o ícone
                 const icon = this.querySelector('i');
                 if (type === 'text') {
-                    // Se o texto está VISÍVEL (type="text"), mostra o olho ABERTO
                     icon.classList.remove('fa-eye-slash');
                     icon.classList.add('fa-eye');
                 } else {
-                    // Se o texto está OCULTO (type="password"), mostra o olho FECHADO/barrado
                     icon.classList.remove('fa-eye');
                     icon.classList.add('fa-eye-slash');
                 }

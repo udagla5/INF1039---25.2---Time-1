@@ -1,5 +1,3 @@
-/* home_style.css */
-
 /* VARIÁVEIS DE CORES */
 :root {
     --color-puc-blue: #3A83D9;
@@ -21,7 +19,6 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--color-gray-bg);
     min-height: 100vh;
-    /* Remover qualquer overflow horizontal que impeça a largura total */
     overflow-x: hidden; 
 }
 
@@ -205,7 +202,7 @@ body {
     filter: brightness(0.6);
 }
 
-/* Texto de Legenda (Caption) */
+/* Texto de Legenda */
 .carousel-caption {
     position: absolute;
     bottom: 30px; 
@@ -234,7 +231,7 @@ body {
 }
 
 
-/* Controles de Navegação (Setas) */
+/* Controles de Navegação */
 .carousel-control-prev,
 .carousel-control-next {
     width: 40px; 
@@ -323,12 +320,10 @@ body {
     padding: 50px 20px;
     text-align: center;
     margin-top: 50px; 
-    /* Esta seção agora ocupa 100% da largura horizontal */
     width: 100%;
 }
 
 .filter-box {
-    /* Mantém o conteúdo centralizado e com largura limitada DENTRO da seção de 100% */
     max-width: 600px;
     margin: 0 auto;
     padding: 20px; 
@@ -348,7 +343,6 @@ body {
 }
 
 .filter-form {
-    /* Garante que o select e o botão estejam alinhados e espaçados */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -358,7 +352,6 @@ body {
 
 .select-wrapper {
     position: relative;
-    /* Garante largura suficiente para o texto */
     width: 300px; 
     border: 1px solid var(--color-text-light);
     border-radius: 6px;
@@ -391,7 +384,6 @@ body {
     font-weight: 500;
     pointer-events: none;
     text-transform: uppercase;
-    /* CORREÇÃO: Remove a exibição desse span para não sobrepor o texto do select */
     display: none; 
 }
 

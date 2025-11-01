@@ -1,6 +1,4 @@
-/* perfil_aluno_style.css */
-
-/* VARIÁVEIS DE CORES REUTILIZADAS */
+/* VARIÁVEIS DE CORES */
 :root {
     --color-puc-blue: #3A83D9;
     --color-dark-blue: #0C1A2C;
@@ -127,7 +125,7 @@ body {
     position: relative; 
 }
 
-/* Seta Avançar (POSIÇÃO CORRIGIDA - Canto Superior Direito) */
+/* Seta Avançar (Canto Superior Direito) */
 .next-step-arrow {
     position: absolute;
     top: 15px; 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar sua conta</title>
+    <link rel="stylesheet" href="cadastro2.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="logo-container">
+        <img src="img/logo-grande.png" alt="Logo principal" class="main-logo">
+    </div>
+
+    <main>
+        <form class="signup-card">
+
+            <h2 class="form-title">
+                Criar sua conta
+                <img src="img/logo-pequena.png" alt="Logo" class="inline-logo">
+            </h2>
+
+            <div class="form-group">
+                <label for="curso">Curso *</label>
+                <select id="curso" name="curso" required>
+                    <option value="" disabled selected>Selecione seu curso</option>
+                    <option value="design">Design</option>
+                    <option value="sistemas">Sistemas de Informação</option>
+                    <option value="engenharia">Engenharia</option>
+                    <option value="direito">Direito</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="inicio">Início *</label>
+                <select id="inicio" name="inicio" required>
+                    <option value="" disabled selected>Selecione o seu período de início</option>
+                    <option value="2025.1">2025.1</option>
+                    <option value="2025.2">2025.2</option>
+                    <option value="2026.1">2026.1</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="interesses">Interesses (opcional)</label>
+                <div class="interests-container" id="interesses">
+                    <button type="button" class="interest-tag">Design</button>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Criar conta</button>
+
+        </form>
+    </main>
+
+</body>
+
+</html>

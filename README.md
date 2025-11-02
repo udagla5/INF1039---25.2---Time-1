@@ -5,6 +5,9 @@ Para usar o Django, primeiro é necessário instalá-lo.
 Para isso,  é preciso ativar o ambiente virtual do projeto.
 
 1. Dê pull no projeto para a sua IDE
-2. Mude o diretório para a paste que colocou ele (cd "caminho")
-3. Dê o seguinte comando para ativar o ambiente virtual (. site_env/Scripts/activate)
-4. Como ambiente ativado, instale o Django (pip install Django)
+2. Mude o diretório para a paste que colocou ele 
+```cd "caminho"```
+3. Dê o seguinte comando para ativar o ambiente virtual 
+```. site_env/Scripts/activate```
+4. Com o ambiente ativado, instale as extensões necessárias 
+```pip install -r requirements.txt```

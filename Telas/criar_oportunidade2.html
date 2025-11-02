@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Oportunidade</title>
+    <link rel="stylesheet" href="criar_oportunidade2.css">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="#" class="back-arrow" aria-label="Voltar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </a>
+            <div class="header-text">
+                <h1>Criar Oportunidade</h1>
+                <p>Conecte alunos com oportunidades acadêmicas criadas por você</p>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <form>
+                <div class="form-group">
+                    <label for="processo">Processo seletivo <span class="required">*</span></label>
+                    <textarea id="processo" rows="4" placeholder="Descreva como é feita a seleção dos participantes: edital, entrevista, análise de currículo(...)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="data-encerramento">Data de encerramento do processo seletivo <span class="required">*</span></label>
+                    <input type="text" id="data-encerramento" class="date-input" placeholder="Dia / Mês / Ano">
+                </div>
+
+                <button type="submit" class="submit-btn">Confirmar mudanças</button>
+            </form>
+            
+            <div class="form-footer">
+                <span class="page-counter">3/3</span>
+            </div>
+        </div>
+    </main>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Oportunidade</title>
+    <link rel="stylesheet" href="criar_oportunidade1.css">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="#" class="back-arrow" aria-label="Voltar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </a>
+            <div class="header-text">
+                <h1>Criar Oportunidade</h1>
+                <p>Conecte alunos com oportunidades acadêmicas criadas por você</p>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <form>
+                <div class="form-group">
+                    <label for="titulo">Título <span class="required">*</span></label>
+                    <input type="text" id="titulo" placeholder="Título da oportunidade">
+                    <span class="char-counter">0/100</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao">Descrição <span class="required">*</span></label>
+                    <textarea id="descricao" rows="5" placeholder="Forneça uma descrição concisa do propósito e funcionamento da atividade"></textarea>
+                    <span class="char-counter">0/5000</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de atividade <span class="required">*</span></label>
+                    <div class="activity-types">
+                        <button type="button">Monitoria Acadêmica</button>
+                        <button type="button">Iniciação Científica</button>
+                        <button type="button">Estágio</button>
+                        <button type="button">Laboratório de Pesquisa</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="local">Local de realização da atividade <span class="required">*</span></label>
+                    <textarea id="local" rows="3" placeholder="Especifique a carga horária total e/ou semanal, bem como a quantidade de horas que podem ser aproveitadas como extensão"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Confirmar mudanças</button>
+            </form>
+            
+            <div class="form-footer">
+                <span class="page-counter">1/3</span>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

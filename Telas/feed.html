@@ -4,232 +4,179 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Feed | nop</title>
-  <link rel="stylesheet" href="css/feed.css" /> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/feed.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <header class="topo" role="banner">
-    <h1>Ache oportunidades do meu curso</h1>
-    <p>Conectamos você às oportunidades mais relevantes do seu curso para que sua trajetória universitária seja ainda mais completa e significativa</p>
-    <div class="curso-selecao">
-      <select aria-label="Selecionar curso">
-        <option>Selecione o seu Curso</option>
-        <option value="design" selected>design</option>
-        <option value="engenharia">Engenharia</option>
-        <option value="direito">Direito</option>
-      </select>
-      <button class="btn-ir" type="button">IR</button>
+    <div class="logo-busca-perfil">
+      <div class="logo">
+        <img src="img/logo-grande.png" height="70px">
+      </div>
+      <div class="busca-container">
+        <input type="text" id="busca" placeholder="Buscar oportunidades...">
+        <svg class="lupa" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+      <div class="icones-perfil">
+        <svg class="sino" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <div class="perfil-placeholder">
+          <img src="img/user_placeholder.png" alt="Foto de Perfil">
+        </div>
+      </div>
     </div>
   </header>
 
-  <nav class="barra" role="navigation" aria-label="Barra principal">
-    <div class="logo">nop</div>
-    <div class="busca">
-      <input type="text" id="busca" placeholder="Buscar oportunidades..." aria-label="Buscar oportunidades">
+  <nav class="barra-principal" role="navigation" aria-label="Menu principal">
+    <div class="filtros-toggle">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+      <span>FILTROS</span>
     </div>
-    <label for="toggle-filtros" class="btn-filtros" role="button" aria-haspopup="dialog" aria-controls="popup-filtros">
-      <span class="icone">⚙️</span> Filtros
-    </label>
+    <div class="Categorias">
+      <div class="coluna-header">TIPO</div>
+      <div class="coluna-header">CARGA HORÁRIA</div>
+      <div class="coluna-header">REMUNERAÇÃO</div>
+      <div class="coluna-header">HORAS COMP.</div>
+    </div>
   </nav>
 
-  <input type="checkbox" id="toggle-filtros" hidden>
-
-  <div class="popup" id="popup-filtros" role="dialog" aria-modal="true" aria-labelledby="titulo-filtros">
-    <div class="popup-conteudo">
-      <div class="popup-topo">
-        <h2 id="titulo-filtros">Filtros</h2>
-        <label for="toggle-filtros" class="fechar" aria-label="Fechar filtro">✕</label>
-      </div>
-
-      <div class="popup-linhas">
-        <div class="coluna">
-          <h3>TIPO</h3>
-          <label><input type="checkbox"> Monitoria</label>
-          <label><input type="checkbox"> Estágio</label>
-          <label><input type="checkbox"> Iniciação Científica</label>
-          <label><input type="checkbox"> Trabalho de Meio Período</label>
-          <label><input type="checkbox"> Voluntariado</label>
-          <label><input type="checkbox"> Palestra</label>
-          <label><input type="checkbox"> Equipe de Competição</label>
-          <label><input type="checkbox"> Bolsa</label>
-        </div>
-
-        <div class="coluna">
-          <h3>CARGA HORÁRIA</h3>
-          <label><input type="checkbox"> Compatível</label>
-          <label><input type="checkbox"> Menos de 2 horas /dia</label>
-          <label><input type="checkbox"> Mais de 2 horas /dia</label>
-          <label><input type="checkbox"> Mais de 4 horas /dia</label>
-          <label><input type="checkbox"> Mais de 6 horas /dia</label>
-          <label><input type="checkbox"> Mais de 8 horas /dia</label>
-        </div>
-
-        <div class="coluna">
-          <h3>REMUNERAÇÃO</h3>
-          <div class="slider-container" id="slider-remuneracao" data-min="100" data-max="2250" data-prefix="R$" data-suffix="/h">
-            <div class="slider-track"></div>
-            <div class="slider-track-filled"></div>
-            <div class="slider-handle" data-handle-type="min"></div> 
-            <div class="slider-handle" data-handle-type="max"></div>
-            <div class="slider-labels">
-              <span data-label-type="min">R$100/h</span>
-              <span data-label-type="max">R$2250/h</span>
-            </div>
-            <input type="hidden" name="remun_min" value="100">
-            <input type="hidden" name="remun_max" value="2250">
-          </div>
-        </div>
-
-        <div class="coluna">
-          <h3>HORAS COMP.</h3>
-          <div class="slider-container" id="slider-horas" data-min="2" data-max="30" data-prefix="" data-suffix="h +">
-            <div class="slider-track"></div>
-            <div class="slider-track-filled"></div>
-            <div class="slider-handle" data-handle-type="min"></div>
-            <div class="slider-handle" data-handle-type="max"></div>
-            <div class="slider-labels">
-              <span data-label-type="min">2h +</span>
-              <span data-label-type="max">30h +</span>
-            </div>
-            <input type="hidden" name="horas_min" value="2">
-            <input type="hidden" name="horas_max" value="30">
-          </div>
-        </div>
-
-        <div class="coluna">
-          <h3>INTERESSES</h3>
-          <label><input type="checkbox"> Apenas meus interesses</label>
-          <label><input type="checkbox"> Tudo</label>
-        </div>
-      </div>
-    </div>
-  </div>
   <main class="feed" id="conteudo" role="main">
-    <section class="card">
-      <h2>Monitoria de Lógica</h2>
-      <p class="compatibilidade">Compatível com seus interesses ✓</p>
-      <div class="info">
-        <div><strong>TIPO</strong><br>Monitoria</div>
-        <div><strong>CARGA HORÁRIA</strong><br>2h/dia</div>
-        <div><strong>REMUNERAÇÃO</strong><br>Sim</div>
-        <div><strong>HORAS COMP.</strong><br>Sim</div>
+    <section class="oportunidade-item">
+      <div class="oportunidade-col bookmark-col">
+        <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <div class="oportunidade-col info-col">
+        <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/80A9FF/FFFFFF?text=🧠');"></div>
+        <div class="info-texto">
+          <h3>Monitoria de Lógica</h3>
+          <p>Descrição</p>
+        </div>
+      </div>
+      <div class="oportunidade-col">Monitoria</div>
+      <div class="oportunidade-col">2h/dia</div>
+      <div class="oportunidade-col">Não</div>
+      <div class="oportunidade-col">Sim</div>
+      <div class="oportunidade-col compatibilidade-col">
+        <span class="status-texto">Compatível com seus interesses</span>
+        <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
       </div>
     </section>
 
-    <section class="card">
-      <h2>Estágio labgrad</h2>
-      <p class="compatibilidade">Compatível com seus interesses ✓</p>
-      <div class="info">
-        <div><strong>TIPO</strong><br>Estágio</div>
-        <div><strong>CARGA HORÁRIA</strong><br>6h/dia</div>
-        <div><strong>REMUNERAÇÃO</strong><br>Sim</div>
-        <div><strong>HORAS COMP.</strong><br>Não</div>
+    <section class="oportunidade-item">
+      <div class="oportunidade-col bookmark-col">
+        <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <div class="oportunidade-col info-col">
+        <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/343a40/FFFFFF?text=💻');"></div>
+        <div class="info-texto">
+          <h3>Monitoria de ModProg</h3>
+          <p>Descrição</p>
+        </div>
+      </div>
+      <div class="oportunidade-col">Monitoria</div>
+      <div class="oportunidade-col">2h/dia</div>
+      <div class="oportunidade-col">Não</div>
+      <div class="oportunidade-col">Sim</div>
+      <div class="oportunidade-col compatibilidade-col">
+        <span class="status-texto">Compatível com seus interesses</span>
+        <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
       </div>
     </section>
 
-    <section class="card">
-      <h2>Bolsa</h2>
-      <p class="compatibilidade">Compatível com seus interesses ✓</p>
-      <div class="info">
-        <div><strong>TIPO</strong><br>Bolsa</div>
-        <div><strong>CARGA HORÁRIA</strong><br>4h/dia</div>
-        <div><strong>REMUNERAÇÃO</strong><br>Sim</div>
-        <div><strong>HORAS COMP.</strong><br>Sim</div>
+    <section class="oportunidade-item">
+      <div class="oportunidade-col bookmark-col">
+        <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <div class="oportunidade-col info-col">
+        <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/6c757d/FFFFFF?text=🧑‍💻');"></div>
+        <div class="info-texto">
+          <h3>Estágio</h3>
+          <p>Descrição</p>
+        </div>
+      </div>
+      <div class="oportunidade-col">Estágio</div>
+      <div class="oportunidade-col">4h/dia</div>
+      <div class="oportunidade-col">Sim</div>
+      <div class="oportunidade-col">Não</div>
+      <div class="oportunidade-col compatibilidade-col incompativel">
+        <span class="status-texto">Incompatível com seus interesses</span>
+        <svg class="x-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
       </div>
     </section>
+
+    <section class="oportunidade-item">
+      <div class="oportunidade-col bookmark-col">
+        <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <div class="oportunidade-col info-col">
+        <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/007bff/FFFFFF?text=🎨');"></div>
+        <div class="info-texto">
+          <h3>Monitoria de Design</h3>
+          <p>Descrição</p>
+        </div>
+      </div>
+      <div class="oportunidade-col">Monitoria</div>
+      <div class="oportunidade-col">2h/dia</div>
+      <div class="oportunidade-col">Sim</div>
+      <div class="oportunidade-col">Sim</div>
+      <div class="oportunidade-col compatibilidade-col">
+        <span class="status-texto">Compatível com seus interesses</span>
+        <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+    </section>
+
+    <section class="oportunidade-item">
+      <div class="oportunidade-col bookmark-col">
+        <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <div class="oportunidade-col info-col">
+        <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/FFD700/FFFFFF?text=🧪');"></div>
+        <div class="info-texto">
+          <h3>Iniciação Científica</h3>
+          <p>Descrição</p>
+        </div>
+      </div>
+      <div class="oportunidade-col">I. Científica</div>
+      <div class="oportunidade-col">4h/dia</div>
+      <div class="oportunidade-col">Sim</div>
+      <div class="oportunidade-col">Sim</div>
+      <div class="oportunidade-col compatibilidade-col">
+        <span class="status-texto">Compatível com seus interesses</span>
+        <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+    </section>
+
   </main>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Função para iniciar um slider
-      function setupSlider(sliderId) {
-        const container = document.getElementById(sliderId);
-        if (!container) return;
-
-        const track = container.querySelector('.slider-track');
-        const filledTrack = container.querySelector('.slider-track-filled');
-        const minHandle = container.querySelector('[data-handle-type="min"]');
-        const maxHandle = container.querySelector('[data-handle-type="max"]');
-        const minLabel = container.querySelector('[data-label-type="min"]');
-        const maxLabel = container.querySelector('[data-label-type="max"]');
-        const minInput = container.querySelector('[name$="_min"]');
-        const maxInput = container.querySelector('[name$="_max"]');
-
-        const minVal = parseFloat(container.dataset.min);
-        const maxVal = parseFloat(container.dataset.max);
-        const prefix = container.dataset.prefix || '';
-        const suffix = container.dataset.suffix || '';
-
-        let minPercent = 0;
-        let maxPercent = 100;
-
-        // Função para atualizar a posição das alças e labels
-        function updateSlider() {
-          const minValue = minVal + (maxVal - minVal) * (minPercent / 100);
-          const maxValue = minVal + (maxVal - minVal) * (maxPercent / 100);
-
-          minHandle.style.left = `${minPercent}%`;
-          maxHandle.style.left = `${maxPercent}%`;
-
-          filledTrack.style.left = `${minPercent}%`;
-          filledTrack.style.width = `${maxPercent - minPercent}%`;
-
-          minLabel.textContent = `${prefix}${Math.round(minValue)}${suffix}`;
-          maxLabel.textContent = `${prefix}${Math.round(maxValue)}${suffix}`;
-          
-          minInput.value = Math.round(minValue);
-          maxInput.value = Math.round(maxValue);
-        }
-
-        // Função de arrastar
-        function startDrag(event, handle) {
-          event.preventDefault();
-          handle.classList.add('grabbing');
-          handle.style.cursor = 'grabbing';
-
-          const trackRect = track.getBoundingClientRect();
-
-          function onDrag(moveEvent) {
-            let clientX = moveEvent.type === 'touchmove' ? moveEvent.touches[0].clientX : moveEvent.clientX;
-            let percent = ((clientX - trackRect.left) / trackRect.width) * 100;
-            percent = Math.max(0, Math.min(100, percent));
-
-            if (handle === minHandle) {
-              minPercent = Math.min(percent, maxPercent - 1); // Evita sobreposição
-            } else {
-              maxPercent = Math.max(percent, minPercent + 1); // Evita sobreposição
-            }
-            updateSlider();
-          }
-
-          function stopDrag() {
-            handle.classList.remove('grabbing');
-            handle.style.cursor = 'grab';
-            document.removeEventListener('mousemove', onDrag);
-            document.removeEventListener('touchmove', onDrag);
-            document.removeEventListener('mouseup', stopDrag);
-            document.removeEventListener('touchend', stopDrag);
-          }
-
-          document.addEventListener('mousemove', onDrag);
-          document.addEventListener('touchmove', onDrag);
-          document.addEventListener('mouseup', stopDrag);
-          document.addEventListener('touchend', stopDrag);
-        }
-
-        minHandle.addEventListener('mousedown', (e) => startDrag(e, minHandle));
-        minHandle.addEventListener('touchstart', (e) => startDrag(e, minHandle));
-        maxHandle.addEventListener('mousedown', (e) => startDrag(e, maxHandle));
-        maxHandle.addEventListener('touchstart', (e) => startDrag(e, maxHandle));
-
-        // Inicia o slider
-        updateSlider();
-      }
-
-      // Inicia os dois sliders da página
-      setupSlider('slider-remuneracao');
-      setupSlider('slider-horas');
-    });
-  </script>
-
-</body>
+  </body>
 </html>

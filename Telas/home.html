@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOP - Home Page</title>
     
-    <link rel="stylesheet" href="css/home_style.css"> 
+    <link rel="stylesheet" href="{% static 'css/home_style.css' %}"> 
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
@@ -17,8 +18,8 @@
     <header class="main-header">
         <div class="header-content">
             <div class="logo-area">
-                <img src="img/logo-grande.png" alt="NOP Logo Grande" class="header-logo-grande">
-                <img src="img/logo-pequena.png" alt="NOP Logo Pequena" class="header-logo-pequena">
+                <img src="{% static 'img/logo-grande.png' %}" alt="NOP Logo Grande" class="header-logo-grande">
+                <img src="{% static 'img/logo-pequena.png' %}" alt="NOP Logo Pequena" class="header-logo-pequena">
             </div>
 
             <div class="search-bar-header">

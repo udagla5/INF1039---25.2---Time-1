@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -5,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar sua conta</title>
-    <link rel="stylesheet" href="css/cadastro2.css">
+    <link rel="stylesheet" href="{% static 'css/cadastro2.css' %}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +16,7 @@
 <body>
 
     <div class="logo-container">
-        <img src="img/logo-grande.png" alt="Logo principal" class="main-logo">
+        <img src="{% static 'img/logo-grande.png' %}" alt="Logo principal" class="main-logo">
     </div>
 
     <main>
@@ -23,7 +24,7 @@
 
             <h2 class="form-title">
                 Criar sua conta
-                <img src="img/logo-pequena.png" alt="Logo" class="inline-logo">
+                <img src="{% static 'img/logo-pequena.png' %}" alt="Logo" class="inline-logo">
             </h2>
 
             <div class="form-group">

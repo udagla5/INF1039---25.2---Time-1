@@ -4,48 +4,78 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Feed | nop</title>
+<<<<<<< HEAD
   <link rel="stylesheet" href="static/css/feed.css" /> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+=======
+  <link rel="stylesheet" href="css/feed.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+>>>>>>> 163472f6dfa336952db57184939e98dad2ecd2c5
 </head>
 <body>
   <header class="topo" role="banner">
     <div class="logo-busca-perfil">
       <div class="logo">
-        <img src="img/logo-grande.png" height="70px">
+        <img src="img/logo-grande.png" alt="NOP Logo" height="50px" style="display: block"> 
       </div>
+      
       <div class="busca-container">
-        <input type="text" id="busca" placeholder="Buscar oportunidades...">
-        <svg class="lupa" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="lupa" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
+        <input type="text" id="busca" placeholder="Buscar oportunidades...">
       </div>
+
       <div class="icones-perfil">
         <svg class="sino" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
           <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
         </svg>
-        <div class="perfil-placeholder">
-          <img src="img/user_placeholder.png" alt="Foto de Perfil">
+        
+        <div class="perfil-wrapper">
+            <input type="checkbox" id="user-menu-toggle" class="toggle-checkbox">
+            
+            <label for="user-menu-toggle" class="perfil-avatar-trigger">
+                <img src="img/user_placeholder.png" alt="Foto de Perfil">
+            </label>
+
+            <div class="modal-usuario">
+                <div class="modal-header">
+                    <span class="user-email">lucas.alves@aluno.puc-rio.br</span>
+                    <label for="user-menu-toggle" class="fechar-modal">&times;</label>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-avatar-large">
+                         <img src="img/user_placeholder.png" alt="Lucas">
+                         <div class="camera-icon">
+                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                         </div>
+                    </div>
+                    <h3>Olá, Lucas!</h3>
+                    <button onclick="window.location.href='perfil_aluno.html'" class="btn-editar-conta">Editar sua Conta NOP</button>
+                </div>
+            </div>
         </div>
-      </div>
+        </div>
     </div>
   </header>
 
   <nav class="barra-principal" role="navigation" aria-label="Menu principal">
-    <div class="filtros-toggle">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="4" y1="12" x2="20" y2="12"></line>
-        <line x1="4" y1="6" x2="20" y2="6"></line>
-        <line x1="4" y1="18" x2="20" y2="18"></line>
-      </svg>
-      <span>FILTROS</span>
+    <div class="filtros-area">
+        <div class="filtros-toggle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="12" x2="20" y2="12"></line>
+                <line x1="4" y1="6" x2="20" y2="6"></line>
+                <line x1="4" y1="18" x2="20" y2="18"></line>
+            </svg>
+            <span>FILTROS</span>
+        </div>
     </div>
-    <div class="Categorias">
-      <div class="coluna-header">TIPO</div>
-      <div class="coluna-header">CARGA HORÁRIA</div>
-      <div class="coluna-header">REMUNERAÇÃO</div>
-      <div class="coluna-header">HORAS COMP.</div>
-    </div>
+    <div class="coluna-header">TIPO</div>
+    <div class="coluna-header">CARGA HORÁRIA</div>
+    <div class="coluna-header">REMUNERAÇÃO</div>
+    <div class="coluna-header">HORAS COMP.</div>
+    <div></div>
   </nav>
 
   <main class="feed" id="conteudo" role="main">
@@ -59,15 +89,15 @@
         <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/80A9FF/FFFFFF?text=🧠');"></div>
         <div class="info-texto">
           <h3>Monitoria de Lógica</h3>
-          <p>Descrição</p>
+          <p>Departamento de Filosofia</p>
         </div>
       </div>
       <div class="oportunidade-col">Monitoria</div>
-      <div class="oportunidade-col">2h/dia</div>
-      <div class="oportunidade-col">Não</div>
+      <div class="oportunidade-col">12h/semana</div>
+      <div class="oportunidade-col">R$ 400,00</div>
       <div class="oportunidade-col">Sim</div>
       <div class="oportunidade-col compatibilidade-col">
-        <span class="status-texto">Compatível com seus interesses</span>
+        <span class="status-texto">Compatível</span>
         <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
@@ -83,67 +113,16 @@
       <div class="oportunidade-col info-col">
         <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/343a40/FFFFFF?text=💻');"></div>
         <div class="info-texto">
-          <h3>Monitoria de ModProg</h3>
-          <p>Descrição</p>
-        </div>
-      </div>
-      <div class="oportunidade-col">Monitoria</div>
-      <div class="oportunidade-col">2h/dia</div>
-      <div class="oportunidade-col">Não</div>
-      <div class="oportunidade-col">Sim</div>
-      <div class="oportunidade-col compatibilidade-col">
-        <span class="status-texto">Compatível com seus interesses</span>
-        <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      </div>
-    </section>
-
-    <section class="oportunidade-item">
-      <div class="oportunidade-col bookmark-col">
-        <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-        </svg>
-      </div>
-      <div class="oportunidade-col info-col">
-        <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/6c757d/FFFFFF?text=🧑‍💻');"></div>
-        <div class="info-texto">
-          <h3>Estágio</h3>
-          <p>Descrição</p>
+          <h3>Estágio Desenvolvimento Web</h3>
+          <p>Empresa Parceira NOP</p>
         </div>
       </div>
       <div class="oportunidade-col">Estágio</div>
-      <div class="oportunidade-col">4h/dia</div>
-      <div class="oportunidade-col">Sim</div>
+      <div class="oportunidade-col">30h/semana</div>
+      <div class="oportunidade-col">R$ 2.500,00</div>
       <div class="oportunidade-col">Não</div>
-      <div class="oportunidade-col compatibilidade-col incompativel">
-        <span class="status-texto">Incompatível com seus interesses</span>
-        <svg class="x-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </div>
-    </section>
-
-    <section class="oportunidade-item">
-      <div class="oportunidade-col bookmark-col">
-        <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-        </svg>
-      </div>
-      <div class="oportunidade-col info-col">
-        <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/007bff/FFFFFF?text=🎨');"></div>
-        <div class="info-texto">
-          <h3>Monitoria de Design</h3>
-          <p>Descrição</p>
-        </div>
-      </div>
-      <div class="oportunidade-col">Monitoria</div>
-      <div class="oportunidade-col">2h/dia</div>
-      <div class="oportunidade-col">Sim</div>
-      <div class="oportunidade-col">Sim</div>
       <div class="oportunidade-col compatibilidade-col">
-        <span class="status-texto">Compatível com seus interesses</span>
+        <span class="status-texto">Compatível</span>
         <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
@@ -151,31 +130,30 @@
     </section>
 
     <section class="oportunidade-item">
-      <div class="oportunidade-col bookmark-col">
-        <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-        </svg>
-      </div>
-      <div class="oportunidade-col info-col">
-        <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/FFD700/FFFFFF?text=🧪');"></div>
-        <div class="info-texto">
-          <h3>Iniciação Científica</h3>
-          <p>Descrição</p>
+        <div class="oportunidade-col bookmark-col">
+          <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
         </div>
-      </div>
-      <div class="oportunidade-col">I. Científica</div>
-      <div class="oportunidade-col">4h/dia</div>
-      <div class="oportunidade-col">Sim</div>
-      <div class="oportunidade-col">Sim</div>
-      <div class="oportunidade-col compatibilidade-col">
-        <span class="status-texto">Compatível com seus interesses</span>
-        <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      </div>
-    </section>
-
+        <div class="oportunidade-col info-col">
+          <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/DC3545/FFFFFF?text=🎨');"></div>
+          <div class="info-texto">
+            <h3>Auxiliar de Design Gráfico</h3>
+            <p>Agência Criativa</p>
+          </div>
+        </div>
+        <div class="oportunidade-col">Estágio</div>
+        <div class="oportunidade-col">20h/semana</div>
+        <div class="oportunidade-col">A combinar</div>
+        <div class="oportunidade-col">Sim</div>
+        <div class="oportunidade-col compatibilidade-col incompativel">
+          <span class="status-texto">Incompatível</span>
+          <svg class="x-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </div>
+      </section>
   </main>
-
-  </body>
+</body>
 </html>

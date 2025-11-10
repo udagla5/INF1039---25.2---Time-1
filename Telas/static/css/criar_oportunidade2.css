@@ -1,0 +1,177 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #0d254c;
+    color: #ffffff;
+    /* Ajustei o padding para ficar mais próximo do original */
+    padding: 20px 0; 
+}
+
+.header-container {
+    max-width: 960px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    /* Adicionado padding horizontal para alinhamento */
+    padding: 0 32px; 
+}
+
+/* Estilo para o link da seta */
+.back-arrow {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ffffff;
+    text-decoration: none;
+    display: flex; /* Garante que o SVG seja tratado como um item flex */
+    padding: 8px; /* Adiciona área de clique, se necessário */
+}
+
+/* **CORREÇÃO PRINCIPAL: Garante que o SVG tenha um tamanho pequeno e fixo** */
+.back-arrow svg {
+    width: 28px; /* Tamanho da seta (ícone) */
+    height: 28px; /* Tamanho da seta (ícone) */
+    fill: currentColor; /* Usa a cor do pai (branco) */
+}
+
+header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+header p {
+    font-size: 1rem;
+    color: #d0d8e8;
+}
+
+main {
+    padding: 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.form-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 32px 40px;
+    width: 100%;
+    max-width: 960px;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Adicionei uma leve sombra para imitar a aparência de card */
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group .required {
+    color: #3b82f6;
+    font-weight: bold;
+    margin-left: 2px;
+}
+
+input[type="text"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 1rem;
+    font-family: inherit;
+    border: 1px solid #cdd1d4;
+    border-radius: 6px;
+    background-color: #ffffff;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px; /* Aumentei um pouco para se assemelhar mais à imagem */
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+    color: #888;
+    font-size: 0.95rem;
+}
+
+/* Dropdown estilizado */
+select {
+    appearance: none; /* Remove o estilo padrão do sistema */
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23333' stroke-width='2' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 12px;
+    cursor: pointer;
+    font-weight: 600; /* Mantém os nomes com leve negrito */
+}
+
+select:focus {
+    border-color: #5c97f2;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(92, 151, 242, 0.2);
+}
+
+/* Estilo do menu dropdown (simula visual moderno horizontal) */
+select option {
+    font-weight: 600;
+    padding: 8px;
+}
+
+/* Scroll horizontal simulado quando houver muitas opções */
+select[multiple] {
+    height: auto;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* Botão principal */
+.button-wrapper {
+    text-align: center;
+    margin-top: 40px; /* Aumentei a margem para separar melhor do último campo */
+}
+
+button[type="submit"] {
+    background-color: #5c97f2; /* Ajustei a cor para se aproximar do tom do azul na imagem */
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: auto; /* O botão não deve ser 100% da largura, mas sim do conteúdo */
+    min-width: 250px;
+}
+
+button[type="submit"]:hover {
+    background-color: #4a81d9;
+}
+
+.page-indicator {
+    position: absolute;
+    bottom: 24px;
+    right: 32px;
+    font-size: 0.9rem;
+    color: #777;
+}

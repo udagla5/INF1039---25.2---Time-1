@@ -1,0 +1,273 @@
+/* VARIÁVEIS DE CORES REUTILIZADAS */
+:root {
+    --color-puc-blue: #3A83D9;
+    --color-dark-blue: #0C1A2C;
+    --color-text-dark: #333333;
+    --color-text-light: #FFFFFF;
+    --color-gray-bg: #F5F5F5;
+    --color-input-border: #D0D0D0;
+    --color-icon-gray: #999999;
+}
+
+/* -------------------- GERAL E BODY -------------------- */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--color-gray-bg);
+    min-height: 100vh;
+}
+
+/* -------------------- CABEÇALHO (HEADER) -------------------- */
+
+.profile-header {
+    background-color: var(--color-dark-blue);
+    padding: 30px 20px 80px 20px;
+    color: var(--color-text-light);
+    position: relative;
+}
+
+.header-content-profile {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 40px;
+}
+
+/* Seta de Voltar (Extrema Esquerda) */
+.back-arrow {
+    position: absolute;
+    left: 0; 
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-puc-blue);
+    font-size: 24px; 
+}
+
+/* Texto (Centralizado) */
+.header-text {
+    text-align: center;
+}
+
+.header-text h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.header-text p {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* -------------------- CONTEÚDO PRINCIPAL E AVATAR -------------------- */
+
+.profile-main-content {
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Área do Avatar */
+.avatar-area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: -60px; 
+    margin-bottom: 30px;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    background-color: #E0E0E0;
+    border-radius: 50%;
+    border: 4px solid var(--color-text-light);
+    position: relative;
+    box-shadow: 0 0 0 2px var(--color-dark-blue);
+}
+
+/* Ícone de Edição do Avatar (Fundo Azul Escuro) */
+.edit-avatar-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background-color: var(--color-dark-blue); 
+    color: var(--color-puc-blue); 
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* BOX DO FORMULÁRIO */
+.profile-form-box {
+    background-color: var(--color-text-light);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 500px; 
+    margin: 0 auto 50px auto; 
+    position: relative; 
+}
+
+/* Seta Avançar (Canto Superior Direito) */
+.next-step-arrow {
+    position: absolute;
+    top: 15px; 
+    right: 15px; 
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1; 
+}
+
+.next-step-arrow i {
+    color: var(--color-icon-gray);
+    font-size: 20px;
+}
+
+
+/* Estilos de Grupo de Formulário */
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: var(--color-text-dark);
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--color-input-border);
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    color: var(--color-text-dark);
+}
+
+.form-group input::placeholder {
+    color: #999999;
+    font-style: italic;
+}
+
+/* Campo Mudar Senha / Título Separador */
+.separator-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    text-align: left;
+    margin: 30px 0 15px 0;
+    border-top: 1px solid #E0E0E0;
+    padding-top: 15px;
+}
+
+/* Botão de Mostrar/Esconder Senha */
+.password-group input {
+    padding-right: 40px; 
+}
+
+.toggle-password-btn {
+    position: absolute;
+    right: 5px; 
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-icon-gray);
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* BOTÃO PRINCIPAL */
+.confirmar-mudancas-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-puc-blue);
+    color: var(--color-text-light);
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.confirmar-mudancas-btn:hover {
+    background-color: #316eb5;
+}
+
+/* Indicador de Paginação */
+.pagination-indicator {
+    text-align: right;
+    font-size: 12px;
+    color: var(--color-icon-gray);
+    margin-top: 15px;
+}
+
+/* --- ESTILOS ESPECÍFICOS PARA A PARTE 2 DO PERFIL (Tags de Interesse) --- */
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    margin-bottom: 5px;
+    /* Estilos para o Título da Seção (Interesses) */
+}
+
+.section-description {
+    font-size: 14px;
+    color: #666666;
+    margin-bottom: 20px;
+}
+
+.interests-grid {
+    display: flex;
+    flex-wrap: wrap; /* CRÍTICO: PERMITE O EFEITO ENCAIXADO */
+    gap: 10px; 
+    justify-content: flex-start; 
+}
+
+.interest-tag {
+    background-color: var(--color-text-light); 
+    color: var(--color-text-dark); 
+    border: 1px solid var(--color-input-border); 
+    padding: 8px 15px;
+    border-radius: 20px; 
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    white-space: nowrap; 
+}
+
+.interest-tag:hover {
+    border-color: var(--color-puc-blue); 
+}
+
+.interest-tag.selected {
+    background-color: var(--color-puc-blue); 
+    color: var(--color-text-light); 
+    border-color: var(--color-puc-blue); 
+}

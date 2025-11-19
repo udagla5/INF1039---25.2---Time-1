@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Histórico | NOP</title>
+    <link rel="stylesheet" href="{% static 'css/historico.css' %}" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="topo" role="banner">        <div class="logo-busca-perfil">
+            <div class="pagina-header">
+                <a href="{% url 'feed' %}" class="back-arrow" aria-label="Voltar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </a>
+                <div>
+                    <h2>Oportunidades Salvas</h2>
+                    <p class="subtitle">Configure a sua experiência NOP</p>
+                </div>
+            </div>
+            
+            <div class="icones-perfil">
+                <input type="checkbox" id="user-menu-toggle" class="toggle-checkbox">
+                <label for="user-menu-toggle" class="perfil-avatar-trigger">
+                    <img src="{% static 'img/user_placeholder.png' %}" alt="Foto de Perfil">
+                </label>
+                <div class="modal-usuario">
+                    <div class="modal-header">
+                        <span class="user-email">{{ user.email }}</span>
+                        <label for="user-menu-toggle" class="fechar-modal">&times;</label>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-avatar-large">
+                            <img src="{% static 'img/user_placeholder.png' %}" alt="{{ user.username }}">
+                            <div class="camera-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                            </div>
+                        </div>
+                        <h3>Olá, {{ user.first_name|default:user.username }}!</h3>
+                        <button onclick="window.location.href='{% url 'perfil_aluno' %}'" class="btn-editar-conta">Editar sua Conta NOP</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>    <main class="historico" id="conteudo" role="main">
+        <div class="historico-grid-header">
+            <div class="historico-col-header">Nome</div>
+            <div class="historico-col-header">Tipo</div>
+            <div class="historico-col-header">Carga Horária</div>
+            <div class="historico-col-header">Remuneração</div>
+            <div class="historico-col-header">Horas Comp.</div>
+            <div class="historico-col-header"></div> 
+        </div>
+
+        {% if oportunidades_salvas %}
+            {% for oportunidade in oportunidades_salvas %}
+            <section class="historico-item">
+                <div class="historico-col">{{ oportunidade.nome }}</div>
+                <div class="historico-col">{{ oportunidade.tipo }}</div>
+                <div class="historico-col">{{ oportunidade.carga_horaria }}h/semana</div>
+                <div class="historico-col">
+                    {% if oportunidade.remuneracao %}
+                        R$ {{ oportunidade.remuneracao }}
+                    {% else %}
+                        Não
+                    {% endif %}
+                </div>
+                <div class="historico-col">
+                    {% if oportunidade.horas_complementares > 0 %}
+                        Sim
+                    {% else %}
+                        Não
+                    {% endif %}
+                </div>
+                <div class="historico-col acao-col">
+                    <form method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="oportunidade_id" value="{{ oportunidade.id }}">
+                        <button type="button" class="btn-excluir" data-oportunidade="{{ oportunidade.nome }}" data-oportunidade-id="{{ oportunidade.id }}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </section>
+            {% endfor %}
+        {% else %}
+            <div style="padding: 40px; text-align: center; color: #666;">
+                <p>Você ainda não salvou nenhuma oportunidade.</p>
+                <p><a href="{% url 'feed' %}" style="color: #007bff; text-decoration: none;">Ver oportunidades disponíveis</a></p>
+            </div>
+        {% endif %}        <input type="checkbox" id="modal-excluir-toggle" class="toggle-checkbox">
+        <div class="modal-backdrop">
+            <div class="modal-excluir">
+                <div class="modal-excluir-header">
+                    <h3>Excluir Oportunidade</h3>
+                    <label for="modal-excluir-toggle" class="fechar-modal">&times;</label>
+                </div>
+                <div class="modal-excluir-body">
+                    <p>Tem certeza de que deseja excluir a oportunidade <strong id="nome-oportunidade"></strong>?</p>
+                </div>
+                <div class="modal-excluir-footer">
+                    <label for="modal-excluir-toggle" class="btn-cancelar">Cancelar</label>
+                    <button class="btn-confirmar-exclusao">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const deleteButtons = document.querySelectorAll('.btn-excluir');
+            const modalToggle = document.getElementById('modal-excluir-toggle');
+            const confirmarBtn = document.querySelector('.btn-confirmar-exclusao');
+            const nomeOportunidadeElement = document.getElementById('nome-oportunidade');
+            let currentForm = null;
+            
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const oportunidadeNome = button.getAttribute('data-oportunidade');
+                    nomeOportunidadeElement.textContent = oportunidadeNome;
+                    currentForm = button.closest('form');
+                    modalToggle.checked = true; 
+                });
+            });
+
+            // Confirmar exclusão
+            confirmarBtn.addEventListener('click', () => {
+                if (currentForm) {
+                    currentForm.submit();
+                }
+            });
+
+            // Fechar o modal clicando fora dele (no backdrop)
+            document.querySelector('.modal-backdrop').addEventListener('click', (event) => {
+                if (event.target === document.querySelector('.modal-backdrop')) {
+                    modalToggle.checked = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

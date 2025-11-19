@@ -25,4 +25,7 @@ urlpatterns = [
     # perfil_aluno.html e perfil_aluno_parte2.html (RF9, RF13, RF17)
     path('perfil-aluno/', views.PerfilAlunoView.as_view(), name='perfil_aluno'),
     path('perfil-aluno-parte2/', views.PerfilAlunoParte2View.as_view(), name='perfil_aluno_parte2'),
+    
+    # historico.html (RF12)
+    path('historico/', views.HistoricoView.as_view(), name='historico'),
 ]

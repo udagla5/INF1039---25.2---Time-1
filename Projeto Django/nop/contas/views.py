@@ -347,3 +347,44 @@ class PerfilAlunoParte2View(LoginRequiredMixin, TemplateView):
         
         messages.success(request, 'Interesses atualizados com sucesso!')
         return redirect('perfil_aluno_parte2')
+
+
+# ===============================
+# historico.html - RF12
+# ===============================
+
+class HistoricoView(LoginRequiredMixin, ListView):
+    """RF12 - Histórico de oportunidades favoritas/salvas (historico.html)"""
+    template_name = 'historico.html'
+    context_object_name = 'oportunidades_salvas'
+    login_url = 'login'
+    
+    def get_queryset(self):
+        # Retornar todas as oportunidades favoritadas pelo usuário
+        favoritos = Favorito.objects.filter(
+            usuario=self.request.user
+        ).select_related('oportunidade').order_by('-data_adicionado')
+        
+        return [fav.oportunidade for fav in favoritos]
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_favoritos'] = len(self.get_queryset())
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        """Remover oportunidade dos favoritos"""
+        oportunidade_id = request.POST.get('oportunidade_id')
+        
+        if oportunidade_id:
+            try:
+                favorito = Favorito.objects.get(
+                    usuario=request.user,
+                    oportunidade_id=oportunidade_id
+                )
+                favorito.delete()
+                messages.success(request, 'Oportunidade removida dos favoritos!')
+            except Favorito.DoesNotExist:
+                messages.error(request, 'Oportunidade não encontrada nos favoritos.')
+        
+        return redirect('historico')

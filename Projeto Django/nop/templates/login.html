@@ -54,6 +54,27 @@
       <p class="muted">Não tem uma conta? <a href="{% url 'cadastro1' %}">Clique aqui para criar</a></p>
       <button class="ghost-btn" type="button" onclick="window.location.href='{% url 'home' %}'">Voltar para a página inicial</button>
     </main>
+<<<<<<< HEAD
+=======
+
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const input = document.getElementById("senha-input");
+      const eyeBtn = document.querySelector(".eye-btn");
+
+      eyeBtn.addEventListener("click", function () {
+          if (input.type === "password") {
+              input.type = "text";
+              eyeBtn.textContent = "🙈";
+          } else {
+              input.type = "password";
+              eyeBtn.textContent = "👁️";
+          }
+      });
+  });
+</script>
+
+>>>>>>> d242161 (Alterações login, cadastro, home e adição do javascript)
   </div>
 </body>
 </html>

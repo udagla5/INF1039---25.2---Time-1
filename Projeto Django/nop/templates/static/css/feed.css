@@ -1,0 +1,388 @@
+/* Reset básico */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html,body { height: 100%; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #121212;
+  color: #e0e0e0;
+  -webkit-font-smoothing:antialiased;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TOPO FIXO */
+.topo {
+  background: #ffffff;
+  color: #000000;
+  padding: 15px 30px; /* Ajustei o padding para ficar mais equilibrado */
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Sombra leve para destacar o topo branco */
+}
+
+.logo-busca-perfil {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  gap: 30px;
+}
+
+.logo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* --- CORREÇÃO DA BUSCA --- */
+.busca-container {
+  position: relative; /* Essencial para a lupa absoluta */
+  flex-grow: 1;
+  max-width: 1000px; /* Limita a largura para não ficar exagerada em telas grandes */
+}
+
+.busca-container input {
+  width: 100%;
+  padding: 12px 20px 12px 50px; /* Padding esquerdo maior para a lupa */
+  border-radius: 25px; /* Mais arredondado */
+  border: 1px solid #e0e0e0;
+  background: #f5f7fa; /* Fundo levemente cinza para destacar do topo branco */
+  color: #333;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s;
+}
+.busca-container input:focus {
+    background: #fff;
+    border-color: #ccc;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+}
+
+.busca-container .lupa {
+  position: absolute;
+  left: 18px; /* Posicionamento fixo à esquerda */
+  top: 50%;
+  transform: translateY(-50%); /* Centraliza verticalmente perfeitamente */
+  color: #999;
+  pointer-events: none; /* Permite clicar através da lupa no input */
+}
+
+.icones-perfil {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.icones-perfil .sino {
+  color: #333;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.icones-perfil .sino:hover { opacity: 1; }
+
+/* --- MODAL DE USUÁRIO (PURE CSS) --- */
+.perfil-wrapper {
+    position: relative;
+}
+
+/* Esconde o checkbox nativo */
+.toggle-checkbox {
+    display: none;
+}
+
+/* A imagem de perfil que age como botão */
+.perfil-avatar-trigger {
+    cursor: pointer;
+    display: block;
+    transition: transform 0.2s;
+}
+.perfil-avatar-trigger img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    border: 2px solid transparent; /* Prepara para hover */
+}
+.perfil-avatar-trigger:hover img {
+    transform: scale(1.05);
+    border-color: #e0e0e0;
+}
+
+/* O MODAL EM SI */
+.modal-usuario {
+    display: none; /* Escondido por padrão */
+    position: absolute;
+    top: 60px; /* Distância do topo */
+    right: -10px; /* Alinhado à direita */
+    width: 320px;
+    background: #ffffff;
+    color: #333;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.3);
+    padding: 24px;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+    animation: slideDown 0.2s ease-out;
+}
+/* Animação simples de entrada */
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* MÁGICA DO CSS: Quando checkbox está :checked, mostra o modal irmão */
+.toggle-checkbox:checked ~ .modal-usuario {
+    display: flex;
+}
+
+/* Estilos internos do modal */
+.modal-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    color: #666;
+}
+.fechar-modal {
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 0.8;
+    padding: 5px;
+}
+.fechar-modal:hover { color: #000; }
+
+.modal-body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.modal-avatar-large {
+    position: relative;
+    margin-bottom: 15px;
+}
+.modal-avatar-large img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.camera-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #031020;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+}
+.modal-body h3 {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+.btn-editar-conta {
+    width: 100%;
+    padding: 12px;
+    background: #6395ff; /* Azul similar ao da imagem */
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-editar-conta:hover { background: #4a80f0; }
+
+
+/* --- BARRA PRINCIPAL ALINHADA --- */
+.barra-principal {
+  background: #031020;
+  color: #99a8bd;
+  padding: 0 30px; /* Mesmo padding lateral do feed */
+  position: sticky;
+  top: 80px; /* Ajuste conforme a altura real do seu topo */
+  z-index: 40;
+  height: 50px;
+  border-bottom: 1px solid #1e2a3b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+
+  /* GRID MÁGICO: Mesma definição dos itens para garantir alinhamento */
+  display: grid;
+  grid-template-columns: 50px 2.5fr 1fr 1fr 1fr 1fr 1.5fr; /* 7 colunas idênticas */
+  align-items: center;
+  gap: 15px; /* Gap opcional, se usar, tem que usar no item também */
+}
+
+/* Área que engloba o botão de filtros, ocupando as duas primeiras colunas (bookmark + info) */
+.filtros-area {
+    grid-column: 1 / 3; /* Ocupa da linha 1 até a 3 (ou seja, colunas 1 e 2) */
+    display: flex;
+    align-items: center;
+}
+
+.filtros-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e0e0e0;
+  cursor: pointer;
+  background: #132133;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+.filtros-toggle:hover { background: #1c2e45; }
+
+/* Colunas de cabeçalho */
+.coluna-header {
+    /* Opcional: Se quiser alinhar o texto exatamente com o conteúdo das colunas abaixo */
+    padding-left: 10px; 
+}
+
+
+/* MAIN FEED */
+.feed {
+  flex-grow: 1;
+  overflow-y: auto;
+  background: #031020;
+  padding: 0 30px;
+}
+
+.oportunidade-item {
+  display: grid;
+  /* Mesma definição da barra-principal */
+  grid-template-columns: 50px 2.5fr 1fr 1fr 1fr 1fr 1.5fr;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #1e2a3b;
+  color: #e0e0e0;
+  gap: 15px; /* Se usou gap na barra, use aqui também */
+  transition: background 0.2s;
+}
+.oportunidade-item:hover {
+    background: rgba(255,255,255,0.02);
+}
+
+.oportunidade-col {
+  padding: 0 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9rem;
+}
+
+.bookmark-col {
+  display: flex;
+  justify-content: center;
+}
+.bookmark-icon {
+  color: #57677d;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.bookmark-icon:hover { color: #6395ff; }
+
+.info-col {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  overflow: hidden; /* Garante que texto longo não quebre o grid */
+}
+.info-imagem {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  border: 1px solid #1e2a3b;
+}
+.info-texto {
+    overflow: hidden;
+}
+.info-texto h3 {
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.info-texto p {
+  font-size: 0.8rem;
+  color: #99a8bd;
+}
+
+.compatibilidade-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #28a745;
+}
+.compatibilidade-col.incompativel { color: #e65252; }
+
+
+/* RESPONSIVIDADE (Adaptada para o novo Grid) */
+@media (max-width: 1024px) {
+    /* Remove colunas menos importantes em telas menores */
+  .barra-principal, .oportunidade-item {
+    grid-template-columns: 50px 3fr 1.2fr 1.5fr; /* Reduzido para 4 áreas principais */
+  }
+  
+  /* Esconde os headers e colunas que não cabem */
+  .coluna-header:nth-child(3), /* Carga Horária */
+  .coluna-header:nth-child(4), /* Remuneração */
+  .coluna-header:nth-child(5), /* Horas Comp */
+  .oportunidade-item > div:nth-child(4),
+  .oportunidade-item > div:nth-child(5),
+  .oportunidade-item > div:nth-child(6) {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+    .topo { padding: 15px 20px; }
+    .feed, .barra-principal { padding: 0 20px; }
+
+    .barra-principal, .oportunidade-item {
+        /* Layout mais compacto para tablet portrait/mobile large */
+        grid-template-columns: 40px 1fr auto; 
+        gap: 10px;
+    }
+    
+    /* Esconde quase tudo, deixa só bookmark, info e compatibilidade */
+    .coluna-header, /* Esconde todos os headers de texto */
+    .oportunidade-item > div:nth-child(3) { /* Esconde Tipo */
+        display: none;
+    }
+    
+    .filtros-area { grid-column: 1 / span 2; }
+    
+    .compatibilidade-col .status-texto { display: none; } /* Só mostra o ícone */
+    
+    .logo-busca-perfil { gap: 15px; }
+    .busca-container input { padding: 10px 15px 10px 40px; font-size: 0.9rem; }
+    .busca-container .lupa { left: 12px; width: 18px; height: 18px; }
+}

@@ -20,39 +20,37 @@
     </div>
 
     <main>
-        <form class="signup-card">
+        <form class="signup-card" method="POST">
+            {% csrf_token %}
 
             <h2 class="form-title">
                 Criar sua conta
                 <img src="{% static 'img/logo-pequena.png' %}" alt="Logo" class="inline-logo">
             </h2>
 
-            <div class="form-group">
-                <label for="curso">Curso *</label>
-                <select id="curso" name="curso" required>
-                    <option value="" disabled selected>Selecione seu curso</option>
-                    <option value="design">Design</option>
-                    <option value="sistemas">Sistemas de Informação</option>
-                    <option value="engenharia">Engenharia</option>
-                    <option value="direito">Direito</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="inicio">Início *</label>
-                <select id="inicio" name="inicio" required>
-                    <option value="" disabled selected>Selecione o seu período de início</option>
-                    <option value="2025.1">2025.1</option>
-                    <option value="2025.2">2025.2</option>
-                    <option value="2026.1">2026.1</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="interesses">Interesses (opcional)</label>
-                <div class="interests-container" id="interesses">
-                    <button type="button" class="interest-tag">Design</button>
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
                 </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label>Selecione seus interesses</label>
+                <div class="interests-container">
+                    {% for interesse in form.interesses %}
+                        <div class="interest-tag">
+                            {{ interesse.tag }}
+                            <label>{{ interesse.choice_label }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if form.interesses.errors %}
+                    <span class="error">{{ form.interesses.errors.0 }}</span>
+                {% endif %}
             </div>
 
             <button type="submit" class="submit-btn">Criar conta</button>

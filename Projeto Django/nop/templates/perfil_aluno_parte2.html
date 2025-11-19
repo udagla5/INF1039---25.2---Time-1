@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOP - Editar Perfil (Parte 2)</title>
     
-    <link rel="stylesheet" href="static/css/perfil_aluno_style.css"> 
+    <link rel="stylesheet" href="{% static 'css/perfil_aluno_style.css' %}"> 
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -16,7 +16,7 @@
 
     <header class="profile-header">
         <div class="header-content-profile">
-            <a href="perfil_aluno.html" class="back-arrow" aria-label="Voltar"><i class="fa-solid fa-arrow-left"></i></a>
+            <a href="{% url 'perfil_aluno' %}" class="back-arrow" aria-label="Voltar"><i class="fa-solid fa-arrow-left"></i></a>
             
             <div class="header-text">
                 <h1>Editar Perfil</h1>

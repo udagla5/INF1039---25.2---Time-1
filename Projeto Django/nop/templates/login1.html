@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="static/css/login1.css">
+    <link rel="stylesheet" href="{% static 'css/login1.css' %}">
 </head>
 <body>
   <div class="page">
-    <img class="logo" src="img/logo-grande.png" alt="Logo NOP">
+    <img class="logo" src="{% static 'img/logo-grande.png' %}" alt="Logo NOP">
     <main class="card" role="main" aria-label="Formulário de login">
-      <h1 class="title">Entrar na sua conta <img src="img/logo-pequena.png" alt="Logo NOP" height="15""></h1>
+      <h1 class="title">Entrar na sua conta <img src="{% static 'img/logo-pequena.png' %}" alt="Logo NOP" height="15"></h1>
       <p class="subtitle">Todas as oportunidades da PUC-Rio reunidas aqui</p>
 
       <label class="label">Selecione o tipo de conta</label>
@@ -32,11 +32,11 @@
         <button class="eye-btn" type="button" aria-label="Mostrar senha">👁️</button>
       </div>
 
-      <button class="enter-btn" type="button" onclick="window.location.href='home.html'">Entrar</button>
+      <button class="enter-btn" type="button" onclick="window.location.href='{% url 'home' %}'">Entrar</button>
 
       <div class="divider"></div>
 
-      <p class="muted">Não tem uma conta? <a href="cadastro1.html">Clique aqui para criar</a></p>
+      <p class="muted">Não tem uma conta? <a href="{% url 'cadastro1' %}">Clique aqui para criar</a></p>
       <button class="ghost-btn" type="button">Voltar para a página inicial</button>
     </main>
   </div>

@@ -31,8 +31,8 @@
                 <a href="#" class="home-icon" aria-label="Home"><i class="fa-solid fa-house"></i></a> 
                 <a href="#" class="notification-icon" aria-label="Notificações"><i class="fa-solid fa-bell"></i></a>
                 
-                <a href="login1.html" class="login-link">log in</a>
-                <a href="cadastro1.html" class="signup-btn">sign up</a>
+                <a href="{% url 'login' %}" class="login-link">log in</a>
+                <a href="{% url 'cadastro1' %}" class="signup-btn">sign up</a>
             </nav>
         </div>
     </header>
@@ -58,7 +58,7 @@
                 <div class="carousel-inner">
                     
                     <div class="carousel-item active">
-                        <img src="img/placeholder_img.png" alt="Slide 1" class="d-block w-100">
+                        <img src="{% static 'img/placeholder_img.png' %}" alt="Slide 1" class="d-block w-100">
                         <div class="carousel-caption">
                             <h5>Texto 1 Bla Bla Bla</h5>
                             <p>Aprimorando o ensino por meio da troca de conhecimento e da excelência acadêmica.</p>
@@ -66,7 +66,7 @@
                     </div>
                     
                     <div class="carousel-item">
-                        <img src="img/placeholder_img.png" alt="Slide 2" class="d-block w-100">
+                        <img src="{% static 'img/placeholder_img.png' %}" alt="Slide 2" class="d-block w-100">
                         <div class="carousel-caption">
                             <h5>Texto 2 Bla Bla Bla</h5>
                             <p>Conteúdo representativo para a oportunidade de exemplo 2.</p>
@@ -74,7 +74,7 @@
                     </div>
 
                     <div class="carousel-item">
-                        <img src="img/placeholder_img.png" alt="Slide 3" class="d-block w-100">
+                        <img src="{% static 'img/placeholder_img.png' %}" alt="Slide 3" class="d-block w-100">
                         <div class="carousel-caption">
                             <h5>Texto 3 Bla Bla Bla</h5>
                             <p>Conteúdo representativo para a oportunidade de exemplo 3.</p>
@@ -108,7 +108,7 @@
                     </select>
                 </div>
                 
-                <button type="button" onclick="window.location.href='feed.html'" class="ir-btn">IR</button>
+                <button type="button" onclick="window.location.href='{% url 'feed' %}'" class="ir-btn">IR</button>
             </form>
         </div>
     </section>

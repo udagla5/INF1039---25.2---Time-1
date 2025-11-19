@@ -5,18 +5,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Feed | nop</title>
-<<<<<<< HEAD
-  <link rel="stylesheet" href="static/css/feed.css" /> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-=======
-  <link rel="stylesheet" href="css/feed.css" />
+  <link rel="stylesheet" href="{% static 'css/feed.css' %}" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
->>>>>>> 163472f6dfa336952db57184939e98dad2ecd2c5
 </head>
 <body>
   <header class="topo" role="banner">
     <div class="logo-busca-perfil">
       <div class="logo">
-        <img src="img/logo-grande.png" alt="NOP Logo" height="50px" style="display: block"> 
+        <img src="{% static 'img/logo-grande.png' %}" alt="NOP Logo" height="50px" style="display: block"> 
       </div>
       
       <div class="busca-container">
@@ -37,7 +33,7 @@
             <input type="checkbox" id="user-menu-toggle" class="toggle-checkbox">
             
             <label for="user-menu-toggle" class="perfil-avatar-trigger">
-                <img src="img/user_placeholder.png" alt="Foto de Perfil">
+                <img src="{% static 'img/user_placeholder.png' %}" alt="Foto de Perfil">
             </label>
 
             <div class="modal-usuario">
@@ -47,13 +43,13 @@
                 </div>
                 <div class="modal-body">
                     <div class="modal-avatar-large">
-                         <img src="img/user_placeholder.png" alt="Lucas">
+                         <img src="{% static 'img/user_placeholder.png' %}" alt="Lucas">
                          <div class="camera-icon">
                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
                          </div>
                     </div>
                     <h3>Olá, Lucas!</h3>
-                    <button onclick="window.location.href='perfil_aluno.html'" class="btn-editar-conta">Editar sua Conta NOP</button>
+                    <button onclick="window.location.href='{% url 'perfil_aluno' %}'" class="btn-editar-conta">Editar sua Conta NOP</button>
                 </div>
             </div>
         </div>

@@ -23,8 +23,8 @@
             </div>
 
             <div class="search-bar-header">
-                <input type="text" placeholder="Buscar">
-                <button class="search-icon-btn" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <input type="text" id="search" placeholder="Buscar">
+                <button id="clear-btn" class="clear-search-btn">✖</button>
             </div>
 
             <nav class="auth-links">
@@ -92,6 +92,7 @@
             </div>
         </section>
 
+
     </main>
     <section class="course-filter-section">
         <div class="filter-box">
@@ -115,6 +116,50 @@
 
     
     <footer class="main-footer"></footer>
+    
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("search");
+        const clearButton = document.getElementById("clear-btn");
+
+        const palavrasChave = [
+            "vaga", "vagas",
+            "oportunidade", "oportunidades",
+            "estagio", "estágio",
+            "trabalho", "emprego",
+            "bolsa", "monitoria"
+        ];
+
+        function irParaFeed() {
+            const texto = (searchInput.value || "").trim().toLowerCase();
+            if (!texto) return;
+            const ok = palavrasChave.some(p => texto.includes(p));
+            if (ok) {
+                window.location.href = "{% url 'login' %}";
+            } else {
+                alert("Nenhuma oportunidade relacionada encontrada.");
+            }
+        }
+
+        searchInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                irParaFeed();
+            }
+        });
+
+        clearButton.addEventListener("click", function () {
+            searchInput.value = "";
+            clearButton.style.display = "none";
+            searchInput.focus();
+        });
+
+        searchInput.addEventListener("input", function () {
+            clearButton.style.display = searchInput.value ? "block" : "none";
+        });
+    });
+</script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>

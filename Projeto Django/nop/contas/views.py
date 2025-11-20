@@ -128,6 +128,18 @@ class CustomLogoutView(AuthLogoutView):
 # feed.html - RF4, RF5, RF11
 # ===============================
 
+def FeedView(request):
+
+    oportunidades = Oportunidade.objects.all()
+
+    context = {
+        'oportunidades': oportunidades
+    }
+
+    return render(request, 'feed.html', context=context)
+
+
+
 class FeedView(LoginRequiredMixin, ListView):
     """RF4, RF5, RF11 - Feed de oportunidades com filtros (feed.html)"""
     model = Oportunidade
@@ -136,45 +148,45 @@ class FeedView(LoginRequiredMixin, ListView):
     paginate_by = 12
     login_url = 'login'
     
-    def get_queryset(self):
-        queryset = Oportunidade.objects.filter(status='APROVADA')
+    # def get_queryset(self):
+    #     # queryset = Oportunidade.objects.filter(status='APROVADA')
         
-        # RF4 - Filtrar por interesses do usuário
-        if self.request.user.interesses.exists():
-            interesses_usuario = self.request.user.interesses.values_list('nome', flat=True)
-            queryset = queryset.filter(
-                Q(area__in=interesses_usuario) | Q(tipo__in=interesses_usuario)
-            ).distinct()
+    #     # # RF4 - Filtrar por interesses do usuário
+    #     # if self.request.user.interesses.exists():
+    #     #     interesses_usuario = self.request.user.interesses.values_list('nome', flat=True)
+    #     #     queryset = queryset.filter(
+    #     #         Q(area__in=interesses_usuario) | Q(tipo__in=interesses_usuario)
+    #     #     ).distinct()
         
-        # RF5 - Aplicar filtros da busca
-        busca = self.request.GET.get('busca', '')
-        if busca:
-            queryset = queryset.filter(
-                Q(nome__icontains=busca) |
-                Q(descricao__icontains=busca) |
-                Q(area__icontains=busca) |
-                Q(tipo__icontains=busca)
-            )
+    #     # # RF5 - Aplicar filtros da busca
+    #     # busca = self.request.GET.get('busca', '')
+    #     # if busca:
+    #     #     queryset = queryset.filter(
+    #     #         Q(nome__icontains=busca) |
+    #     #         Q(descricao__icontains=busca) |
+    #     #         Q(area__icontains=busca) |
+    #     #         Q(tipo__icontains=busca)
+    #     #     )
         
-        if self.request.GET.get('horas_min'):
-            queryset = queryset.filter(horas_complementares__gte=self.request.GET.get('horas_min'))
+    #     # # if self.request.GET.get('horas_min'):
+    #     # #     queryset = queryset.filter(horas_complementares__gte=self.request.GET.get('horas_min'))
         
-        if self.request.GET.get('horas_max'):
-            queryset = queryset.filter(horas_complementares__lte=self.request.GET.get('horas_max'))
+    #     # # if self.request.GET.get('horas_max'):
+    #     # #     queryset = queryset.filter(horas_complementares__lte=self.request.GET.get('horas_max'))
         
-        if self.request.GET.get('carga_horaria_min'):
-            queryset = queryset.filter(carga_horaria__gte=self.request.GET.get('carga_horaria_min'))
+    #     # # if self.request.GET.get('carga_horaria_min'):
+    #     # #     queryset = queryset.filter(carga_horaria__gte=self.request.GET.get('carga_horaria_min'))
         
-        if self.request.GET.get('remunerada'):
-            queryset = queryset.filter(remuneracao__gt=0)
+    #     # # if self.request.GET.get('remunerada'):
+    #     # #     queryset = queryset.filter(remuneracao__gt=0)
         
-        if self.request.GET.get('area'):
-            queryset = queryset.filter(area__icontains=self.request.GET.get('area'))
+    #     # # if self.request.GET.get('area'):
+    #     # #     queryset = queryset.filter(area__icontains=self.request.GET.get('area'))
         
-        # RF11 - Priorizar prazos próximos de encerrar
-        queryset = queryset.order_by('prazo_inscricao', '-data_criacao')
+    #     # # RF11 - Priorizar prazos próximos de encerrar
+    #     # queryset = queryset.order_by('prazo_inscricao', '-data_criacao')
         
-        return queryset
+    #     return render(request, 'feed.html')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

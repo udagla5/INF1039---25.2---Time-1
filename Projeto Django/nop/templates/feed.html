@@ -76,6 +76,7 @@
   </nav>
 
   <main class="feed" id="conteudo" role="main">
+    {% for oportunidade in oportunidades %}
     <section class="oportunidade-item">
       <div class="oportunidade-col bookmark-col">
         <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -85,14 +86,14 @@
       <div class="oportunidade-col info-col">
         <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/80A9FF/FFFFFF?text=🧠');"></div>
         <div class="info-texto">
-          <h3>Monitoria de Lógica</h3>
-          <p>Departamento de Filosofia</p>
+          <h3>{{oportunidade.nome}}</h3>
+          <p>{{oportunidade.area}}</p>
         </div>
       </div>
-      <div class="oportunidade-col">Monitoria</div>
-      <div class="oportunidade-col">12h/semana</div>
-      <div class="oportunidade-col">R$ 400,00</div>
-      <div class="oportunidade-col">Sim</div>
+      <div class="oportunidade-col">{{oportunidade.tipo}}</div>
+      <div class="oportunidade-col">{{oportunidade.carga_horaria}}</div>
+      <div class="oportunidade-col">{{oportunidade.remuneracao}}</div>
+      <div class="oportunidade-col">{{oportunidade.horas_complementares}}</div>
       <div class="oportunidade-col compatibilidade-col">
         <span class="status-texto">Compatível</span>
         <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -100,57 +101,7 @@
         </svg>
       </div>
     </section>
-
-    <section class="oportunidade-item">
-      <div class="oportunidade-col bookmark-col">
-        <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-        </svg>
-      </div>
-      <div class="oportunidade-col info-col">
-        <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/343a40/FFFFFF?text=💻');"></div>
-        <div class="info-texto">
-          <h3>Estágio Desenvolvimento Web</h3>
-          <p>Empresa Parceira NOP</p>
-        </div>
-      </div>
-      <div class="oportunidade-col">Estágio</div>
-      <div class="oportunidade-col">30h/semana</div>
-      <div class="oportunidade-col">R$ 2.500,00</div>
-      <div class="oportunidade-col">Não</div>
-      <div class="oportunidade-col compatibilidade-col">
-        <span class="status-texto">Compatível</span>
-        <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      </div>
-    </section>
-
-    <section class="oportunidade-item">
-        <div class="oportunidade-col bookmark-col">
-          <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-          </svg>
-        </div>
-        <div class="oportunidade-col info-col">
-          <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/DC3545/FFFFFF?text=🎨');"></div>
-          <div class="info-texto">
-            <h3>Auxiliar de Design Gráfico</h3>
-            <p>Agência Criativa</p>
-          </div>
-        </div>
-        <div class="oportunidade-col">Estágio</div>
-        <div class="oportunidade-col">20h/semana</div>
-        <div class="oportunidade-col">A combinar</div>
-        <div class="oportunidade-col">Sim</div>
-        <div class="oportunidade-col compatibilidade-col incompativel">
-          <span class="status-texto">Incompatível</span>
-          <svg class="x-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </div>
-      </section>
+    {% endfor %}
   </main>
 </body>
 </html>

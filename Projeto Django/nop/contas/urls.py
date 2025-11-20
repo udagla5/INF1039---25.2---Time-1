@@ -28,4 +28,10 @@ urlpatterns = [
     
     # historico.html (RF12)
     path('historico/', views.HistoricoView.as_view(), name='historico'),
+
+    #chat.html
+    path('chat/', views.chat_view, name='chat'),
+
+    #filtros.html
+    path('filtros/', views.filtros, name='filtros'),
 ]

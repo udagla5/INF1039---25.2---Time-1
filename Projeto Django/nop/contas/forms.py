@@ -105,16 +105,11 @@ class InteressesForm(forms.Form):
 # ===============================
 
 class CustomLoginForm(AuthenticationForm):
-<<<<<<< HEAD
     """Formulário customizado de login"""
     
     username = forms.CharField(
         widget=forms.TextInput(attrs={
-=======
-    username = forms.CharField(
-        widget=forms.TextInput(attrs={
             'id': 'username-input',
->>>>>>> d242161 (Alterações login, cadastro, home e adição do javascript)
             'class': 'form-control',
             'placeholder': 'Nome de usuário'
         })
@@ -122,10 +117,7 @@ class CustomLoginForm(AuthenticationForm):
     
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
-<<<<<<< HEAD
-=======
             'id': 'senha-input',
->>>>>>> d242161 (Alterações login, cadastro, home e adição do javascript)
             'class': 'form-control',
             'placeholder': 'Senha'
         })
@@ -316,8 +308,4 @@ class EditarPerfilForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Telefone'
             }),
-<<<<<<< HEAD
         }
-=======
-        }
->>>>>>> d242161 (Alterações login, cadastro, home e adição do javascript)

@@ -388,3 +388,17 @@ class HistoricoView(LoginRequiredMixin, ListView):
                 messages.error(request, 'Oportunidade não encontrada nos favoritos.')
         
         return redirect('historico')
+
+# ===============================
+# chat.html
+# ===============================
+
+def chat_view(request):
+    return render(request, 'chat.html')
+
+# ===============================
+# filtros.html
+# ===============================
+
+def filtros(request):
+    return render(request, 'filtros.html')

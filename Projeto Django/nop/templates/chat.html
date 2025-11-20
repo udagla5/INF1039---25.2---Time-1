@@ -6,252 +6,8 @@
 <title>Chat NOP</title>
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-  * {
-    box-sizing: border-box;
-    font-family: "Work Sans", sans-serif;
-  }
-
-  body {
-    margin: 0;
-    background: #031020;
-    height: 100vh;
-    display: flex;
-  }
-
-  /* ----------- Sidebar ----------- */
-  .sidebar {
-    width: 400px;
-    background: #031020;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 0;
-  }
-
-  .search-box {
-    padding: 0 20px;
-    margin-bottom: 15px;
-  }
-
-  .search-box input {
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    font-size: 14px;
-    background: #fff;
-    color: #000;
-  }
-
-  .search-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 20px;
-  margin-bottom: 15px;
-}
-
-.back-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 18px;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.back-btn:hover {
-  color: #69A3EF;
-}
-
-
-  .chat-list {
-    flex: 1;
-    overflow-y: auto;
-  }
-
-  .chat-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-
-  .chat-item:hover {
-    background: #2D3845;
-  }
-
-  .chat-item:hover,
-.chat-item.selected {
-  background: #2D3845;
-}
-
-
-  .chat-item img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  .chat-info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .chat-info span {
-    font-size: 18px;
-  }
-
-  .chat-info small {
-    font-size: 14px;
-    color: #adadad;
-  }
-
-  /* ----------- Chat area ----------- */
-  .chat-area {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: #ffffff;
-  }
-
-  .chat-header {
-    background: #031020;
-    color: #fff;
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .chat-header img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-
-  .chat-header .info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .chat-header .info span {
-    font-weight: 600;
-  }
-
-  .chat-header .info small {
-    color: #69A3EF;
-    font-size: 12px;
-  }
-
-  .chat-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 300px; /* ajusta conforme o tamanho da sidebar */
-}
-
-.chat-top span {
-  font-size: 18px;
-  font-weight: 500;
-  color: #fff;
-}
-
-.chat-top .time {
-  font-size: 12px;
-  color: #adadad;
-}
-
-  .chat-messages {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .msg {
-    max-width: 70%;
-    padding: 10px 15px;
-    border-radius: 18px;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .msg.received {
-    background: #E9E9EB;
-    align-self: flex-start;
-  }
-
-  .msg.sent {
-    background: #69A3EF;
-    color: #fff;
-    align-self: flex-end;
-  }
-
-  .msg small {
-    display: block;
-    margin-top: 5px;
-    font-size: 10px;
-    text-align: right;
-    color: rgba(0,0,0,0.4);
-  }
-
-  /* ----------- Footer ----------- */
-  .chat-footer {
-    border-top: 1px solid #dbdbdb;
-    padding: 10px 15px;
-    display: flex;
-    align-items: center;
-    background: #fff;
-    gap: 10px;
-  }
-
-  .chat-footer .icons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #031020;
-    font-size: 18px;
-    cursor: pointer;
-  }
-
-  .chat-footer .icons i:hover {
-    color: #69A3EF;
-  }
-
-  .chat-footer textarea {
-  flex: 1;
-  border: none;
-  background: #f3f3f3;
-  border-radius: 20px;
-  padding: 10px 15px;
-  font-size: 14px;
-  outline: none;
-  resize: none;
-  line-height: 1.4;
-  height: 40px;
-}
-
-
-  .chat-footer button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    color: #69A3EF;
-  }
-
-  .chat-footer button:hover {
-    color: #4f8de0;
-  }
-</style>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
 </head>
 <body>
   <div class="sidebar">
@@ -263,7 +19,7 @@
 </div>
     <div class="chat-list">
       <div class="chat-item selected">
-        <img src="img/giovanna.png" alt="">
+        <img src="{% static 'img/giovanna.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Giovanna</span>
@@ -273,7 +29,7 @@
         </div>
       </div>
       <div class="chat-item">
-        <img src="img/cadu.png" alt="">
+        <img src="{% static 'img/cadu.png' %}" alt="">
         <div class="chat-info">
            <div class="chat-top">
               <span>Cadu</span>
@@ -283,7 +39,7 @@
         </div>
       </div>
       <div class="chat-item" >
-        <img src="img/thayna.png" alt="">
+        <img src="{% static 'img/thayna.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Thayna</span>
@@ -293,7 +49,7 @@
         </div>
       </div>
       <div class="chat-item" >
-        <img src="img/erick.png" alt="">
+        <img src="{% static 'img/erick.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Erick</span>
@@ -303,7 +59,7 @@
         </div>
       </div>
       <div class="chat-item" >
-        <img src="img/paulo.png" alt="">
+        <img src="{% static 'img/paulo.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Paulo</span>
@@ -313,7 +69,7 @@
         </div>
       </div>
       <div class="chat-item" >
-        <img src="img/pedro.png" alt="">
+        <img src="{% static 'img/pedro.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Pedro</span>
@@ -323,7 +79,7 @@
         </div>
       </div>
       <div class="chat-item" >
-        <img src="img/nop.png" alt="">
+        <img src="{% static 'img/nop.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Suporte NOP</span>
@@ -333,7 +89,7 @@
         </div>
       </div>
       <div class="chat-item" >
-        <img src="img/placeholder.png" alt="">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Contato</span>
@@ -343,7 +99,7 @@
         </div>
       </div>
       <div class="chat-item" >
-        <img src="img/placeholder.png" alt="">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Contato</span>
@@ -353,7 +109,7 @@
         </div>
       </div>
       <div class="chat-item" >
-        <img src="img/placeholder.png" alt="">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Contato</span>
@@ -363,7 +119,7 @@
         </div>
       </div>
       <div class="chat-item" >
-        <img src="img/placeholder.png" alt="">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Contato</span>
@@ -373,7 +129,7 @@
         </div>
       </div>
       <div class="chat-item" >
-        <img src="img/placeholder.png" alt="">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Contato</span>
@@ -383,7 +139,7 @@
         </div>
       </div>
       <div class="chat-item" >
-        <img src="img/placeholder.png" alt="">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
               <span>Contato</span>
@@ -397,7 +153,7 @@
 
   <div class="chat-area">
     <div class="chat-header">
-      <img src="img/giovanna.png" alt="">
+      <img src="{% static 'img/giovanna.png' %}" alt="">
       <div class="info">
         <span>Giovanna</span>
         <small>Online</small>
@@ -457,7 +213,7 @@
     chat.scrollTop = chat.scrollHeight;
   }
 
-  // ✅ Enter envia / Shift+Enter pula linha
+  // Enter envia / Shift+Enter pula linha
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // impede nova linha

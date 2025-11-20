@@ -1,89 +1,17 @@
-body {
+.popup-filtros body {
     margin: 0;
     background: #07121f;
     color: white;
     font-family: "Inter", sans-serif;
 }
 
-.topbar {
-    background: white;
-    height: 110px;
-    display: flex;
-    align-items: center;
-    padding: 0 40px;
-    gap: 40px;
-}
-
-.logo {
-    width: 85px;
-    height: 85px;
-    background: #ebebeb;
-    border-radius: 50%;
-}
-
-.search-bar {
-    flex: 1;
-    height: 55px;
-    border: 3px solid #000;
-    border-radius: 40px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 0 20px;
-    background: white;
-}
-
-.search-bar input {
-    flex: 1;
-    font-size: 18px;
-    border: none;
-    outline: none;
-    background: transparent;
-}
-
-.search-icon {
-    width: 22px;
-    height: 22px;
-    border: 3px solid black;
-    border-radius: 50%;
-}
-
-.actions {
+.popup-filtros .actions {
     display: flex;
     align-items: center;
     gap: 30px;
 }
 
-.bell {
-    width: 22px;
-    height: 22px;
-    border-radius: 4px;
-    border: 3px solid black;
-}
-
-.profile-wrapper {
-    position: relative;
-}
-
-.profile {
-    width: 65px;
-    height: 65px;
-    background: #dcdcdc;
-    border-radius: 50%;
-    border: 3px solid black;
-}
-
-.camera {
-    position: absolute;
-    bottom: -5px;
-    right: -7px;
-    width: 23px;
-    height: 23px;
-    border: 3px solid black;
-    border-radius: 5px;
-}
-
-.filters {
+.popup-filtros .filters {
     color: white;
     display: flex;
     align-items: center;
@@ -93,83 +21,21 @@ body {
     font-weight: 600;
 }
 
-.filter-icon {
+.popup-filtros .filter-icon {
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
 
-.filter-icon div {
+.popup-filtros .filter-icon div {
     width: 18px;
     height: 3px;
     background: white;
 }
 
-.op-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
+/* SEU POPUP COMEÇA AQUI 👇 */
 
-thead th {
-    color: #cfd6e1;
-    font-size: 17px;
-    padding: 15px 0;
-    text-align: center;
-}
-
-thead th:first-child {
-    text-align: left;
-    padding-left: 150px;
-}
-
-tbody tr {
-    border-bottom: 2px solid #0f1e33;
-}
-
-.main {
-    display: flex;
-    align-items: center;
-    padding: 20px 25px;
-    gap: 25px;
-}
-
-.bookmark {
-    width: 20px;
-    height: 25px;
-    border: 3px solid white;
-    border-radius: 3px;
-}
-
-.thumb {
-    width: 190px;
-    height: 120px;
-    background: #dcdcdc;
-    border-radius: 20px;
-}
-
-.text h3 {
-    font-size: 26px;
-    margin: 0;
-}
-
-.text p {
-    margin: 5px 0 15px 0;
-}
-
-.compat {
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.center {
-    text-align: center;
-    font-size: 18px;
-}
-
-.overlay {
+.popup-filtros .overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -181,7 +47,7 @@ tbody tr {
     z-index: 10;
 }
 
-.filter-modal {
+.popup-filtros .filter-modal {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -195,48 +61,48 @@ tbody tr {
     z-index: 20;
 }
 
-.filter-modal-header {
+.popup-filtros .filter-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.filter-modal-header h2 {
+.popup-filtros .filter-modal-header h2 {
     font-size: 32px;
     color: #333;
 }
 
-.close-filter {
+.popup-filtros .close-filter {
     font-size: 26px;
     cursor: pointer;
     padding: 10px;
 }
 
-.filter-content {
+.popup-filtros .filter-content {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
-.filter-column {
+.popup-filtros .filter-column {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.filter-column h3 {
+.popup-filtros .filter-column h3 {
     font-size: 18px;
     margin-bottom: 8px;
     border-bottom: 2px solid #555;
     padding-bottom: 5px;
 }
 
-.filter-column label {
+.popup-filtros .filter-column label {
     font-size: 15px;
     color: #222;
 }
 
-input[type="range"] {
+.popup-filtros input[type="range"] {
     appearance: none;
     width: 100%;
     height: 6px;
@@ -245,7 +111,7 @@ input[type="range"] {
     outline: none;
 }
 
-input[type="range"]::-webkit-slider-thumb {
+.popup-filtros input[type="range"]::-webkit-slider-thumb {
     appearance: none;
     width: 18px;
     height: 18px;

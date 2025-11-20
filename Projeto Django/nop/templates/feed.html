@@ -6,13 +6,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Feed | nop</title>
   <link rel="stylesheet" href="{% static 'css/feed.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/filtros.css' %}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <header class="topo" role="banner">
     <div class="logo-busca-perfil">
       <div class="logo">
-        <img src="{% static 'img/logo-grande.png' %}" alt="NOP Logo" height="50px" style="display: block"> 
+        <img src="{% static 'img/logo-grande.png' %}" alt="NOP Logo" height="90px" style="display: block"> 
       </div>
       
       <div class="busca-container">
@@ -75,6 +76,61 @@
     <div></div>
   </nav>
 
+  <!-- ========= POPUP DE FILTROS ========= -->
+
+<div class="overlay" id="overlay"></div>
+
+<div class="filter-modal" id="filterModal">
+    <div class="filter-modal-header">
+        <h2>Filtros</h2>
+        <div class="close-filter" id="closeFilter">✖</div>
+    </div>
+
+    <div class="filter-content">
+
+        <div class="filter-column">
+            <h3>TIPO</h3>
+            <label><input type="checkbox"> Monitoria</label>
+            <label><input type="checkbox"> Estágio</label>
+            <label><input type="checkbox"> Iniciação Científica</label>
+            <label><input type="checkbox"> Trabalho Meio Período</label>
+            <label><input type="checkbox"> Voluntariado</label>
+            <label><input type="checkbox"> Palestra</label>
+            <label><input type="checkbox"> Equipe de Competição</label>
+            <label><input type="checkbox"> Bolsa</label>
+        </div>
+
+        <div class="filter-column">
+            <h3>CARGA HORÁRIA</h3>
+            <label><input type="checkbox"> &lt; 2 horas /dia</label>
+            <label><input type="checkbox"> &gt; 2 horas /dia</label>
+            <label><input type="checkbox"> &gt; 4 horas /dia</label>
+            <label><input type="checkbox"> &gt; 6 horas /dia</label>
+            <label><input type="checkbox"> &gt; 8 horas /dia</label>
+        </div>
+
+        <div class="filter-column">
+            <h3>REMUNERAÇÃO</h3>
+            <input type="range">
+        </div>
+
+        <div class="filter-column">
+            <h3>HORAS COMP.</h3>
+            <input type="range">
+        </div>
+
+        <div class="filter-column">
+            <h3>INTERESSES</h3>
+            <label><input type="checkbox"> Meus interesses</label>
+            <label><input type="checkbox"> Tudo</label>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========= FIM POPUP ========= -->
+
+
   <main class="feed" id="conteudo" role="main">
     {% for oportunidade in oportunidades %}
     <section class="oportunidade-item">
@@ -105,3 +161,26 @@
   </main>
 </body>
 </html>
+
+
+<script>
+    const filtrosToggle = document.querySelector(".filtros-toggle");
+    const overlay = document.getElementById("overlay");
+    const filterModal = document.getElementById("filterModal");
+    const closeFilter = document.getElementById("closeFilter");
+
+    filtrosToggle.onclick = () => {
+        overlay.style.display = "block";
+        filterModal.style.display = "block";
+    };
+
+    closeFilter.onclick = () => {
+        overlay.style.display = "none";
+        filterModal.style.display = "none";
+    };
+
+    overlay.onclick = () => {
+        overlay.style.display = "none";
+        filterModal.style.display = "none";
+    };
+</script>

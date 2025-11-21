@@ -1,0 +1,117 @@
+<!-- templates/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{% block title %}NOP{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- HEADER UNIVERSAL -->
+    <header class="header" role="banner">
+        <div class="header-container">
+            <!-- Logo no canto esquerdo -->
+            <div class="header-logo">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'img/logo-grande.png' %}" alt="NOP Logo" height="50">
+                </a>
+            </div>
+            
+            <!-- Barra de pesquisa central -->
+            <div class="header-search">
+                <a href="{% url 'feed' %}" class="search-link">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" class="search-input" placeholder="Buscar oportunidades..." readonly>
+                </a>
+            </div>
+            
+            <!-- Área do usuário no canto direito -->
+            <div class="header-user">
+                {% if user.is_authenticated %}
+                    <!-- USUÁRIO LOGADO -->
+                    <div class="user-icons">
+                        <!-- Ícone do Chat -->
+                        <a href="{% url 'chat' %}" class="icon-link chat-icon" title="Chat">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </a>
+
+                        <!-- Ícone de Notificações -->
+                        <button class="icon-link notifications-icon" title="Notificações">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Menu de Perfil com Foto -->
+                        <div class="profile-menu">
+                            <input type="checkbox" id="profile-toggle" class="profile-toggle">
+                            
+                            <label for="profile-toggle" class="profile-trigger">
+                                {% if user.foto_perfil %}
+                                    <img src="{{ user.foto_perfil.url }}" alt="Foto de Perfil" class="profile-avatar">
+                                {% else %}
+                                    <img src="{% static 'img/user_placeholder.png' %}" alt="Foto de Perfil" class="profile-avatar">
+                                {% endif %}
+                            </label>
+                            
+                            <div class="profile-dropdown">
+                                <div class="dropdown-header">
+                                    <span class="user-email">{{ user.email }}</span>
+                                    <label for="profile-toggle" class="dropdown-close">&times;</label>
+                                </div>
+                                <div class="dropdown-body">
+                                    <div class="profile-image-large">
+                                        {% if user.foto_perfil %}
+                                            <img src="{{ user.foto_perfil.url }}" alt="{{ user.first_name }}">
+                                        {% else %}
+                                            <img src="{% static 'img/user_placeholder.png' %}" alt="{{ user.first_name }}">
+                                        {% endif %}
+                                        <div class="camera-overlay">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                                <circle cx="12" cy="13" r="4"></circle>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <h3>Olá, {{ user.first_name }}!</h3>
+                                    <button onclick="window.location.href='{% url 'perfil_aluno' %}'" class="btn-edit-profile">Editar sua Conta NOP</button>
+                                    <form method="post" action="{% url 'logout' %}" class="logout-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-logout">Sair</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% else %}
+                    <!-- USUÁRIO NÃO LOGADO -->
+                    <div class="auth-buttons">
+                        <a href="{% url 'login' %}" class="btn-login">Entrar</a>
+                        <a href="{% url 'cadastro1' %}" class="btn-signup">Criar Conta</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-content" role="main">
+        {% block content %}
+        <!-- O conteúdo das páginas filhas vai aqui -->
+        {% endblock %}
+    </main>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

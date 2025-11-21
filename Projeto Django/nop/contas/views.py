@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.views.generic import FormView
+from django.views.generic import FormView, ListView
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from .forms import UsuarioCreationForm, OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm
@@ -12,14 +12,15 @@ from .models import Oportunidade
 def home(request):
     return render(request, 'home.html')
 
-def feed(request):
-    oportunidades = Oportunidade.objects.all()
+class FeedView(LoginRequiredMixin, ListView):
+    model = Oportunidade
+    template_name = 'feed.html'
+    context_object_name = 'oportunidades'
+    paginate_by = 12
+    login_url = 'login'  # aqui define para onde redireciona
+    redirect_field_name = 'redirect_to'
 
-    context = {
-        'oportunidades': oportunidades
-    }
 
-    return render(request, 'feed.html', context=context)
 
 # ========== AUTENTICAÇÃO ==========
 def cadastro1(request):

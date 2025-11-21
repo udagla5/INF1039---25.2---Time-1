@@ -2,11 +2,13 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
+from .views import FeedView
+
 
 urlpatterns = [
     # ========== PÁGINAS PRINCIPAIS ==========
     path('', views.home, name='home'),
-    path('feed/', views.feed, name='feed'),
+    path('feed/', FeedView.as_view(), name='feed'),
     
     # ========== AUTENTICAÇÃO ==========
     path('login/', views.custom_login, name='login'),

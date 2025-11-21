@@ -208,11 +208,11 @@ class BuscaOportunidadeForm(forms.Form):
 
 
 # ===============================
-# criar_oportunidade1.html - RF6 ÚNICO
+# criar_oportunidade.html - RF6 ÚNICO
 # ===============================
 
 class OportunidadeForm(forms.ModelForm):
-    """Formulário ÚNICO para criar oportunidade (criar_oportunidade1.html)"""
+    """Formulário ÚNICO para criar oportunidade (criar_oportunidade.html)"""
     
     # ETAPA 1 - Informações Básicas
     nome = forms.CharField(

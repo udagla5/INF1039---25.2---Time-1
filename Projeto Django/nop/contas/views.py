@@ -85,7 +85,7 @@ def perfil_aluno_parte2(request):
 
 # ========== OPORTUNIDADES ==========
 @login_required
-def criar_oportunidade1(request):
+def criar_oportunidade(request):
     if request.method == 'POST':
         form = OportunidadeForm(request.POST)
         if form.is_valid():
@@ -97,12 +97,12 @@ def criar_oportunidade1(request):
             return redirect('feed')
     else:
         form = OportunidadeForm()
-    return render(request, 'criar_oportunidade1.html', {'form': form})
+    return render(request, 'criar_oportunidade.html', {'form': form})
 
 # Versão com Class-Based View (alternativa)
 class CriarOportunidadeView(LoginRequiredMixin, FormView):
-    """RF6 - Criar oportunidade em um único passo (criar_oportunidade1.html)"""
-    template_name = 'criar_oportunidade1.html'
+    """RF6 - Criar oportunidade em um único passo (criar_oportunidade.html)"""
+    template_name = 'criar_oportunidade.html'
     form_class = OportunidadeForm
     login_url = 'login'
     

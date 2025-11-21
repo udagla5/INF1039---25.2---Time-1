@@ -22,8 +22,9 @@ body {
     overflow-x: hidden; 
 }
 
+/* Container principal - APENAS para o conteúdo centralizado */
 .main-content {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 20px;
     padding-bottom: 50px; 
@@ -40,126 +41,53 @@ body {
     border: 0;
 }
 
-/* -------------------- 1. CABEÇALHO -------------------- */
+/* ========== REMOVIDO: ESTILOS DO HEADER (AGORA ESTÃO NO BASE.CSS) ========== */
+/* ❌ REMOVIDO:
+.main-header {}
+.header-content {}
+.logo-area {}
+.header-logo-grande {}
+.header-logo-pequena {}
+.search-bar-header {}
+.search-bar-header input {}
+.clear-search-btn {}
+.auth-links {}
+.auth-links a {}
+.auth-links i {}
+.signup-btn {}
+*/
 
-.main-header {
-    background-color: var(--color-text-light);
-    border-bottom: 1px solid #E0E0E0;
-    padding: 10px 0;
-    z-index: 10;
-    position: relative;
-}
-
-.header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 30px; 
-}
-
-/* Logos na Esquerda */
-.logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px; 
-}
-
-.header-logo-grande {
-    width: 40px; 
-    height: auto;
-}
-
-.header-logo-pequena {
-    width: 30px; 
-    height: auto;
-}
-
-/* Barra de Busca */
-.search-bar-header {
-    position: relative;
-    width: 260px;
-}
-
-.search-bar-header input {
-    width: 100%;
-    height: 38px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    padding: 0 40px 0 15px;
-    font-size: 14px;
-    outline: none;
-    transition: 0.2s;
-}
-
-.search-bar-header input:focus {
-    border-color: #999;
-}
-
-.clear-search-btn {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    display: none;
-    color: #555;
-    padding: 0;
-}
-
-
-/* Ícones e Links de Autenticação */
-.auth-links {
-    display: flex;
-    align-items: center;
-    gap: 25px; 
-}
-
-.auth-links a {
-    text-decoration: none;
-    color: var(--color-text-dark);
-    font-size: 14px;
-    font-weight: 500;
-    padding: 5px 0;
-}
-
-.auth-links i {
-    font-size: 20px;
-    color: var(--color-text-dark);
-}
-
-/* Botão Sign Up */
-.signup-btn {
-    background-color: var(--color-dark-blue);
-    color: var(--color-text-light) !important;
-    padding: 8px 25px; 
-    border-radius: 4px;
-    font-weight: 500;
-}
-
-/* -------------------- 2. BANNER HERO -------------------- */
+/* -------------------- 2. BANNER HERO (LARGURA TOTAL) -------------------- */
 
 .hero-banner {
     background-color: var(--color-puc-blue);
     color: var(--color-text-light);
     text-align: center;
-    padding: 40px 20px;
+    padding: 80px 20px;
     margin-bottom: 30px;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 .main-message {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    line-height: 1.2;
 }
 
 .secondary-message {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 400;
     opacity: 0.9;
 }
@@ -174,7 +102,7 @@ body {
 }
 
 #opportunityCarousel {
-    width: 900px; 
+    width: 1000px; 
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -203,8 +131,6 @@ body {
     display: block; 
 }
 
-/* FIM DAS REGRAS ESSENCIAIS */
-
 .carousel-item img {
     height: 400px;
     width: 100%; 
@@ -226,7 +152,6 @@ body {
     color: var(--color-text-light);
 }
 
-
 .carousel-caption h5 {
     font-size: 24px;
     font-weight: 700;
@@ -239,7 +164,6 @@ body {
     margin-bottom: 5px; 
     color: var(--color-text-light);
 }
-
 
 /* Controles de Navegação */
 .carousel-control-prev,
@@ -265,12 +189,10 @@ body {
     background-color: var(--color-text-light); 
 }
 
-/* Posição Extrema Esquerda */
 #opportunityCarousel .carousel-control-prev {
     left: 20px; 
 }
 
-/* Posição Extrema Direita */
 #opportunityCarousel .carousel-control-next {
     right: 20px; 
 }
@@ -294,7 +216,6 @@ body {
     position: static; 
     left: auto; 
 }
-
 
 /* Indicadores (Pontinhos) */
 .carousel-indicators {
@@ -322,15 +243,20 @@ body {
     background-color: var(--color-text-light);
 }
 
-/* -------------------- 4. SEÇÃO DE FILTRO POR CURSO - CORREÇÕES APLICADAS -------------------- */
+/* -------------------- 4. SEÇÃO DE FILTRO POR CURSO (LARGURA TOTAL) -------------------- */
 
 .course-filter-section {
     background-color: var(--color-dark-blue);
     color: var(--color-text-light);
-    padding: 50px 20px;
+    padding: 90px 20px;
     text-align: center;
     margin-top: 50px; 
-    width: 100%;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
 }
 
 .filter-box {
@@ -385,27 +311,16 @@ body {
     line-height: 20px; 
 }
 
-.current-selection {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%); 
-    left: 15px;
-    font-size: 16px;
-    font-weight: 500;
-    pointer-events: none;
-    text-transform: uppercase;
-    display: none; 
-}
-
 .select-wrapper::after {
-    content: "v"; 
+    content: "▼"; 
     font-family: Arial, sans-serif;
     color: var(--color-text-light);
     position: absolute;
     right: 15px;
     top: 50%;
-    transform: translateY(-50%) rotate(0deg);
+    transform: translateY(-50%);
     pointer-events: none;
+    font-size: 12px;
 }
 
 .ir-btn {
@@ -425,7 +340,120 @@ body {
     background-color: #316eb5;
 }
 
-#clear-btn {
-  margin-left: 5px;
-  cursor: pointer;
+/* -------------------- FOOTER (LARGURA TOTAL) -------------------- */
+
+.main-footer {
+    background-color: var(--color-dark-blue);
+    height: 60px;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+/* -------------------- RESPONSIVIDADE -------------------- */
+
+@media (max-width: 1024px) {
+    #opportunityCarousel {
+        width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-banner {
+        padding: 60px 15px;
+    }
+    
+    .main-message {
+        font-size: 26px;
+    }
+    
+    .secondary-message {
+        font-size: 16px;
+    }
+    
+    #opportunityCarousel {
+        width: 100%;
+        min-height: 300px;
+    }
+    
+    .carousel-item img {
+        height: 300px;
+    }
+    
+    .carousel-caption h5 {
+        font-size: 20px;
+    }
+    
+    .carousel-caption p {
+        font-size: 14px;
+    }
+    
+    .filter-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .select-wrapper {
+        width: 100%;
+    }
+    
+    .ir-btn {
+        width: 100%;
+    }
+    
+    .filter-title {
+        font-size: 24px;
+    }
+    
+    .course-filter-section {
+        padding: 60px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 0 15px;
+    }
+    
+    .hero-banner {
+        padding: 40px 10px;
+    }
+    
+    .main-message {
+        font-size: 22px;
+    }
+    
+    .secondary-message {
+        font-size: 14px;
+    }
+    
+    #opportunityCarousel {
+        min-height: 250px;
+    }
+    
+    .carousel-item img {
+        height: 250px;
+    }
+    
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .carousel-control-prev-icon i,
+    .carousel-control-next-icon i {
+        font-size: 16px;
+    }
+    
+    .filter-title {
+        font-size: 22px;
+    }
+    
+    .course-filter-section {
+        padding: 40px 10px;
+    }
 }

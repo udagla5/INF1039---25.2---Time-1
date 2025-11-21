@@ -1,37 +1,29 @@
+# contas/urls.py
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from . import views
 
-# URLs para os HTMLs existentes
 urlpatterns = [
-    # home.html
-    path('', views.HomeView.as_view(), name='home'),
+    # ========== PÁGINAS PRINCIPAIS ==========
+    path('', views.home, name='home'),
+    path('feed/', views.feed, name='feed'),
     
-    # cadastro1.html e cadastro2.html (RF1, RF2, RF3)
-    path('cadastro1/', views.CadastroEtapa1View.as_view(), name='cadastro1'),
-    path('cadastro2/', views.CadastroEtapa2View.as_view(), name='cadastro2'),
+    # ========== AUTENTICAÇÃO ==========
+    path('login/', views.custom_login, name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('cadastro1/', views.cadastro1, name='cadastro1'),
+    path('cadastro2/', views.cadastro2, name='cadastro2'),
+    path('criar-conta/', views.criar_conta, name='criar_conta'),
     
-    # login.html e login1.html
-    path('login/', views.CustomLoginView.as_view(), name='login'),
-    path('logout/', views.CustomLogoutView.as_view(), name='logout'),
+    # ========== PERFIL ==========
+    path('perfil-aluno/', views.perfil_aluno, name='perfil_aluno'),
+    path('perfil-aluno-parte2/', views.perfil_aluno_parte2, name='perfil_aluno_parte2'),
     
-    # feed.html (RF4, RF5, RF11)
-    path('feed/', views.FeedView.as_view(), name='feed'),
+    # ========== OPORTUNIDADES ==========
+    path('criar-oportunidade/', views.criar_oportunidade1, name='criar_oportunidade1'),
+    # Ou use a class-based view:
+    # path('criar-oportunidade/', views.CriarOportunidadeView.as_view(), name='criar_oportunidade1'),
     
-    # criar_oportunidade1.html, criar_oportunidade2.html, criar_oportunidade3.html (RF6)
-    path('criar-oportunidade/etapa1/', views.CriarOportunidadeEtapa1View.as_view(), name='criar_oportunidade1'),
-    path('criar-oportunidade/etapa2/', views.CriarOportunidadeEtapa2View.as_view(), name='criar_oportunidade2'),
-    path('criar-oportunidade/etapa3/', views.CriarOportunidadeEtapa3View.as_view(), name='criar_oportunidade3'),
-    
-    # perfil_aluno.html e perfil_aluno_parte2.html (RF9, RF13, RF17)
-    path('perfil-aluno/', views.PerfilAlunoView.as_view(), name='perfil_aluno'),
-    path('perfil-aluno-parte2/', views.PerfilAlunoParte2View.as_view(), name='perfil_aluno_parte2'),
-    
-    # historico.html (RF12)
-    path('historico/', views.HistoricoView.as_view(), name='historico'),
-
-    #chat.html
-    path('chat/', views.chat_view, name='chat'),
-
-    #filtros.html
-    path('filtros/', views.filtros, name='filtros'),
+    # ========== OUTRAS PÁGINAS ==========
+    path('chat/', views.chat, name='chat'),
 ]

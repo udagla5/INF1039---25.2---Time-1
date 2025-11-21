@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm  # ← UserCreationForm importado
+from django.contrib.auth.models import User  # ← Importar User também
 from .models import Usuario, Oportunidade, Interesse
 
 # ===============================
@@ -21,8 +22,15 @@ class UsuarioCreationForm(UserCreationForm):
         })
     )
     
+    # Se Usuario.TIPOS_USUARIO não existir, defina aqui:
+    TIPOS_USUARIO = [
+        ('ALUNO', 'Aluno'),
+        ('PROFESSOR', 'Professor'),
+        ('COORDENADOR', 'Coordenador'),
+    ]
+    
     tipo = forms.ChoiceField(
-        choices=Usuario.TIPOS_USUARIO,
+        choices=TIPOS_USUARIO,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     
@@ -63,7 +71,7 @@ class UsuarioCreationForm(UserCreationForm):
     )
     
     class Meta:
-        model = Usuario
+        model = User  # ← Usar User do Django se Usuario não existir
         fields = ['username', 'email', 'password1', 'password2', 
                   'tipo', 'matricula', 'curso', 'periodo', 'telefone']
         widgets = {
@@ -83,6 +91,15 @@ class UsuarioCreationForm(UserCreationForm):
             'class': 'form-control',
             'placeholder': 'Confirme a senha'
         })
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+            # Se você tiver modelo Usuario personalizado, crie aqui
+            # Usuario.objects.create(user=user, tipo=self.cleaned_data['tipo'], ...)
+        return user
 
 
 # ===============================
@@ -92,8 +109,18 @@ class UsuarioCreationForm(UserCreationForm):
 class InteressesForm(forms.Form):
     """Formulário de seleção de interesses (cadastro2.html)"""
     
-    interesses = forms.ModelMultipleChoiceField(
-        queryset=Interesse.objects.all(),
+    # Se Interesse não existir, use ChoiceField como fallback
+    INTERESSES_CHOICES = [
+        ('TECNOLOGIA', 'Tecnologia'),
+        ('ENGENHARIA', 'Engenharia'),
+        ('SAUDE', 'Saúde'),
+        ('NEGOCIOS', 'Negócios'),
+        ('ARTES', 'Artes'),
+        ('CIENCIAS', 'Ciências'),
+    ]
+    
+    interesses = forms.MultipleChoiceField(
+        choices=INTERESSES_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False,
         label='Selecione seus interesses'
@@ -181,58 +208,67 @@ class BuscaOportunidadeForm(forms.Form):
 
 
 # ===============================
-# criar_oportunidade1.html - RF6 Etapa 1
+# criar_oportunidade1.html - RF6 ÚNICO
 # ===============================
 
-class OportunidadeEtapa1Form(forms.Form):
-    """Etapa 1 - Informações básicas (criar_oportunidade1.html)"""
+class OportunidadeForm(forms.ModelForm):
+    """Formulário ÚNICO para criar oportunidade (criar_oportunidade1.html)"""
     
+    # ETAPA 1 - Informações Básicas
     nome = forms.CharField(
         max_length=200,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Nome da oportunidade'
-        })
+        }),
+        label='Nome da Oportunidade*'
     )
     
-    tipo = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Ex: Estágio, Pesquisa, Extensão'
-        })
+    TIPO_CHOICES = [
+        ('MONITORIA', 'Monitoria'),
+        ('ESTAGIO', 'Estágio'),
+        ('INICIACAO_CIENTIFICA', 'Iniciação Científica'),
+        ('TRABALHO_MEIO_PERIODO', 'Trabalho Meio Período'),
+        ('VOLUNTARIADO', 'Voluntariado'),
+        ('PALESTRA', 'Palestra'),
+        ('EQUIPE_COMPETICAO', 'Equipe de Competição'),
+        ('BOLSA', 'Bolsa'),
+    ]
+    
+    tipo = forms.ChoiceField(
+        choices=TIPO_CHOICES,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        }),
+        label='Tipo*'
     )
     
     area = forms.CharField(
         max_length=100,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Ex: Tecnologia, Empreendedorismo'
-        })
+            'placeholder': 'Ex: Tecnologia, Empreendedorismo, Saúde'
+        }),
+        label='Área*'
     )
-
-
-# ===============================
-# criar_oportunidade2.html - RF6 Etapa 2
-# ===============================
-
-class OportunidadeEtapa2Form(forms.Form):
-    """Etapa 2 - Detalhes (criar_oportunidade2.html)"""
     
+    # ETAPA 2 - Detalhes
     descricao = forms.CharField(
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 5,
-            'placeholder': 'Descreva a oportunidade...'
-        })
+            'placeholder': 'Descreva detalhadamente a oportunidade...'
+        }),
+        label='Descrição*'
     )
     
-    carga_horaria = forms.IntegerField(
-        min_value=1,
-        widget=forms.NumberInput(attrs={
+    carga_horaria = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Horas semanais'
-        })
+            'placeholder': 'Ex: 4 horas/dia, 20 horas/semana'
+        }),
+        label='Carga Horária*'
     )
     
     horas_complementares = forms.IntegerField(
@@ -240,8 +276,9 @@ class OportunidadeEtapa2Form(forms.Form):
         min_value=0,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Horas complementares oferecidas'
-        })
+            'placeholder': '0'
+        }),
+        label='Horas Complementares'
     )
     
     remuneracao = forms.DecimalField(
@@ -250,26 +287,21 @@ class OportunidadeEtapa2Form(forms.Form):
         decimal_places=2,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Valor da remuneração (opcional)',
+            'placeholder': '0,00',
             'step': '0.01'
-        })
+        }),
+        label='Remuneração (R$)'
     )
-
-
-# ===============================
-# criar_oportunidade3.html - RF6 Etapa 3
-# ===============================
-
-class OportunidadeEtapa3Form(forms.Form):
-    """Etapa 3 - Finalização (criar_oportunidade3.html)"""
     
+    # ETAPA 3 - Finalização
     exigencias = forms.CharField(
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-            'placeholder': 'Exigências e pré-requisitos...'
-        })
+            'placeholder': 'Exigências, pré-requisitos, conhecimentos necessários...'
+        }),
+        label='Exigências e Pré-requisitos'
     )
     
     prazo_inscricao = forms.DateField(
@@ -277,8 +309,16 @@ class OportunidadeEtapa3Form(forms.Form):
         widget=forms.DateInput(attrs={
             'class': 'form-control',
             'type': 'date'
-        })
+        }),
+        label='Prazo de Inscrição'
     )
+
+    class Meta:
+        model = Oportunidade
+        fields = [
+            'nome', 'tipo', 'area', 'descricao', 'carga_horaria',
+            'horas_complementares', 'remuneracao', 'exigencias', 'prazo_inscricao'
+        ]
 
 
 # ===============================
@@ -289,23 +329,19 @@ class EditarPerfilForm(forms.ModelForm):
     """Formulário para editar perfil do aluno (perfil_aluno.html)"""
     
     class Meta:
-        model = Usuario
-        fields = ['email', 'curso', 'periodo', 'telefone']
+        model = User  # ← Usar User como fallback
+        fields = ['email', 'first_name', 'last_name']  # Campos básicos do User
         widgets = {
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'E-mail'
             }),
-            'curso': forms.TextInput(attrs={
+            'first_name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Curso'
+                'placeholder': 'Nome'
             }),
-            'periodo': forms.TextInput(attrs={
+            'last_name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Período'
-            }),
-            'telefone': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Telefone'
+                'placeholder': 'Sobrenome'
             }),
         }

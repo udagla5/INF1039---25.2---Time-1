@@ -49,25 +49,11 @@ Name: 'feed'
 Template: feed.html
 ```
 
-### 7. **Criar Oportunidade - Etapa 1**
+### 7. **Criar Oportunidade**
 ```
-URL: http://localhost:8000/criar-oportunidade/etapa1/
+URL: http://localhost:8000/criar-oportunidade/
 Name: 'criar_oportunidade1'
 Template: criar_oportunidade1.html
-```
-
-### 8. **Criar Oportunidade - Etapa 2**
-```
-URL: http://localhost:8000/criar-oportunidade/etapa2/
-Name: 'criar_oportunidade2'
-Template: criar_oportunidade2.html
-```
-
-### 9. **Criar Oportunidade - Etapa 3**
-```
-URL: http://localhost:8000/criar-oportunidade/etapa3/
-Name: 'criar_oportunidade3'
-Template: criar_oportunidade3.html
 ```
 
 ### 10. **Perfil do Aluno - Parte 1**

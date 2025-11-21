@@ -1,41 +1,5 @@
-.popup-filtros body {
-    margin: 0;
-    background: #07121f;
-    color: white;
-    font-family: "Inter", sans-serif;
-}
-
-.popup-filtros .actions {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
-.popup-filtros .filters {
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 25px 45px;
-    font-size: 22px;
-    font-weight: 600;
-}
-
-.popup-filtros .filter-icon {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.popup-filtros .filter-icon div {
-    width: 18px;
-    height: 3px;
-    background: white;
-}
-
-/* SEU POPUP COMEÇA AQUI 👇 */
-
-.popup-filtros .overlay {
+/* filtros.css - CORRIGIDO */
+.overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -44,10 +8,10 @@
     background: rgba(0,0,0,0.6);
     backdrop-filter: blur(3px);
     display: none;
-    z-index: 10;
+    z-index: 1000;
 }
 
-.popup-filtros .filter-modal {
+.filter-modal {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -58,64 +22,106 @@
     border-radius: 12px;
     padding: 35px;
     display: none;
-    z-index: 20;
+    z-index: 1010;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
-.popup-filtros .filter-modal-header {
+.filter-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 }
 
-.popup-filtros .filter-modal-header h2 {
+.filter-modal-header h2 {
     font-size: 32px;
     color: #333;
+    margin: 0;
 }
 
-.popup-filtros .close-filter {
+.close-filter {
     font-size: 26px;
     cursor: pointer;
-    padding: 10px;
+    padding: 5px 10px;
+    color: #333;
+    transition: color 0.2s;
 }
 
-.popup-filtros .filter-content {
+.close-filter:hover {
+    color: #000;
+}
+
+.filter-content {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-.popup-filtros .filter-column {
+.filter-column {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    flex: 1;
+    min-width: 150px;
 }
 
-.popup-filtros .filter-column h3 {
+.filter-column h3 {
     font-size: 18px;
     margin-bottom: 8px;
     border-bottom: 2px solid #555;
     padding-bottom: 5px;
+    color: #333;
 }
 
-.popup-filtros .filter-column label {
+.filter-column label {
     font-size: 15px;
     color: #222;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
 }
 
-.popup-filtros input[type="range"] {
+.filter-column input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.filter-column input[type="range"] {
     appearance: none;
     width: 100%;
     height: 6px;
     background: #072046;
     border-radius: 5px;
     outline: none;
+    margin: 10px 0;
 }
 
-.popup-filtros input[type="range"]::-webkit-slider-thumb {
+.filter-column input[type="range"]::-webkit-slider-thumb {
     appearance: none;
     width: 18px;
     height: 18px;
     background: #072046;
     border-radius: 50%;
     cursor: pointer;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .filter-modal {
+        width: 90%;
+        padding: 20px;
+    }
+    
+    .filter-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .filter-column {
+        min-width: 100%;
+    }
 }

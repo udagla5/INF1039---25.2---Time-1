@@ -1,150 +1,152 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chat NOP</title>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Chat | NOP{% endblock %}
+
+{% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-{% load static %}
 <link rel="stylesheet" href="{% static 'css/chat.css' %}">
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
+<!-- REMOVA a tag <body> daqui -->
+<div class="chat-container">
   <div class="sidebar">
     <div class="search-box">
-  <button class="back-btn">
-    <i class="fa-solid fa-arrow-left"></i>
-  </button>
-  <input type="text" placeholder="Procure uma conversa">
-</div>
+      <button class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <input type="text" placeholder="Procure uma conversa">
+    </div>
     <div class="chat-list">
       <div class="chat-item selected">
         <img src="{% static 'img/giovanna.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Giovanna</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Giovanna</span>
+            <small class="time">16:07</small>
+          </div>
           <small>foto</small>
         </div>
       </div>
       <div class="chat-item">
         <img src="{% static 'img/cadu.png' %}" alt="">
         <div class="chat-info">
-           <div class="chat-top">
-              <span>Cadu</span>
-              <small class="time">16:07</small>
-           </div>
+          <div class="chat-top">
+            <span>Cadu</span>
+            <small class="time">16:07</small>
+          </div>
           <small>Oi, amigo!</small>
         </div>
       </div>
-      <div class="chat-item" >
+      <div class="chat-item">
         <img src="{% static 'img/thayna.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Thayna</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Thayna</span>
+            <small class="time">16:07</small>
+          </div>
           <small>Mal posso esperar para estagiar!!</small>
         </div>
       </div>
-      <div class="chat-item" >
+      <div class="chat-item">
         <img src="{% static 'img/erick.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Erick</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Erick</span>
+            <small class="time">16:07</small>
+          </div>
           <small>Esse design ficou incrivel!</small>
         </div>
       </div>
-      <div class="chat-item" >
+      <div class="chat-item">
         <img src="{% static 'img/paulo.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Paulo</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Paulo</span>
+            <small class="time">16:07</small>
+          </div>
           <small>Kkkkkkk Adorei!</small>
         </div>
       </div>
-      <div class="chat-item" >
+      <div class="chat-item">
         <img src="{% static 'img/pedro.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Pedro</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Pedro</span>
+            <small class="time">16:07</small>
+          </div>
           <small>video</small>
         </div>
       </div>
-      <div class="chat-item" >
+      <div class="chat-item">
         <img src="{% static 'img/nop.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Suporte NOP</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Suporte NOP</span>
+            <small class="time">16:07</small>
+          </div>
           <small>Olá! Como podemos ajudar?</small>
         </div>
       </div>
-      <div class="chat-item" >
+      <div class="chat-item">
         <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Contato</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
           <small>mensagem</small>
         </div>
       </div>
-      <div class="chat-item" >
+      <div class="chat-item">
         <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Contato</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
           <small>mensagem</small>
         </div>
       </div>
-      <div class="chat-item" >
+      <div class="chat-item">
         <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Contato</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
           <small>mensagem</small>
         </div>
       </div>
-      <div class="chat-item" >
+      <div class="chat-item">
         <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Contato</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
           <small>mensagem</small>
         </div>
       </div>
-      <div class="chat-item" >
+      <div class="chat-item">
         <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Contato</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
           <small>mensagem</small>
         </div>
       </div>
-      <div class="chat-item" >
+      <div class="chat-item">
         <img src="{% static 'img/placeholder.png' %}" alt="">
         <div class="chat-info">
           <div class="chat-top">
-              <span>Contato</span>
-              <small class="time">16:07</small>
-           </div>
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
           <small>mensagem</small>
         </div>
       </div>
@@ -169,7 +171,7 @@
         Qual?? Me manda o link!!
         <small>16:05</small>
       </div>
-       <div class="msg received">
+      <div class="msg received">
         <a href="https://www.nop.puc-rio.br" target="_blank">https://www.nop.puc-rio.br</a>
         <small>16:05</small>
       </div>
@@ -177,7 +179,7 @@
         E como é por lá?
         <small>16:05</small>
       </div>
-       <div class="msg received">
+      <div class="msg received">
         [foto]
         <small>16:05</small>
       </div>
@@ -191,36 +193,40 @@
         <i class="fa-solid fa-upload"></i>
       </div>
       <textarea id="msgInput" placeholder="Digite sua mensagem..." rows="1"></textarea>
-
       <button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
   </div>
+</div>
+<!-- REMOVA a tag </body> daqui -->
+{% endblock %}
 
-  <script>
-  const chat = document.getElementById("chat");
-  const input = document.getElementById("msgInput");
+{% block extra_js %}
+<script>
+const chat = document.getElementById("chat");
+const input = document.getElementById("msgInput");
 
-  function sendMessage() {
-    const text = input.value.trim();
-    if (!text) return;
+function sendMessage() {
+  const text = input.value.trim();
+  if (!text) return;
 
-    const msg = document.createElement("div");
-    msg.classList.add("msg", "sent");
-    msg.innerHTML = `${text.replace(/\n/g, "<br>")}<small>${new Date().toLocaleTimeString().slice(0,5)}</small>`;
-    chat.appendChild(msg);
+  const msg = document.createElement("div");
+  msg.classList.add("msg", "sent");
+  msg.innerHTML = `${text.replace(/\n/g, "<br>")}<small>${new Date().toLocaleTimeString().slice(0,5)}</small>`;
+  chat.appendChild(msg);
 
-    input.value = "";
-    chat.scrollTop = chat.scrollHeight;
+  input.value = "";
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// Enter envia / Shift+Enter pula linha
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault(); // impede nova linha
+    sendMessage();
   }
+});
 
-  // Enter envia / Shift+Enter pula linha
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); // impede nova linha
-      sendMessage();
-    }
-  });
-  const backBtn = document.querySelector(".back-btn");
+const backBtn = document.querySelector(".back-btn");
 backBtn.addEventListener("click", () => {
   history.back(); // volta pra página anterior
 });
@@ -236,6 +242,4 @@ chatItems.forEach(item => {
   });
 });
 </script>
-
-</body>
-</html>
+{% endblock %}

@@ -10,97 +10,58 @@ from .models import Usuario, Oportunidade, Interesse
 # ===============================
 # cadastro1.html - RF1, RF2
 # ===============================
-
-class UsuarioCreationForm(UserCreationForm):
-    """Formulário de cadastro de usuário (cadastro1.html)"""
-    
-    email = forms.EmailField(
-        required=True,
-        widget=forms.EmailInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'seu.email@example.com'
-        })
-    )
-    
-    # Se Usuario.TIPOS_USUARIO não existir, defina aqui:
-    TIPOS_USUARIO = [
-        ('ALUNO', 'Aluno'),
-        ('PROFESSOR', 'Professor'),
-        ('COORDENADOR', 'Coordenador'),
-    ]
-    
-    tipo = forms.ChoiceField(
-        choices=TIPOS_USUARIO,
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
-    
-    matricula = forms.CharField(
-        max_length=20,
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Matrícula'
-        })
-    )
-    
-    curso = forms.CharField(
-        max_length=100,
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Nome do curso'
-        })
-    )
-    
-    periodo = forms.CharField(
-        max_length=20,
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Ex: 5º período'
-        })
-    )
-    
-    telefone = forms.CharField(
-        max_length=20,
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': '(00) 00000-0000'
-        })
-    )
-    
+class UsuarioForm(forms.ModelForm):
     class Meta:
-        model = User  # ← Usar User do Django se Usuario não existir
-        fields = ['username', 'email', 'password1', 'password2', 
-                  'tipo', 'matricula', 'curso', 'periodo', 'telefone']
+        model = Usuario
+        fields = ['username', 'email', 'tipo', 'matricula', 'curso', 'periodo', 'telefone']
         widgets = {
-            'username': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Nome de usuário'
-            }),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome de usuário'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'seu.email@example.com'}),
+            'tipo': forms.Select(attrs={'class': 'form-control'}),
+            'matricula': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Matrícula'}),
+            'curso': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome do curso'}),
+            'periodo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Período'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Telefone'}),
         }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['password1'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Senha'
-        })
-        self.fields['password2'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Confirme a senha'
-        })
-    
+
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Senha'}),
+        label="Senha"
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirmar senha'}),
+        label="Confirmar Senha"
+    )
+
+    # Validar se as senhas coincidem
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("As senhas não coincidem.")
+        
+        return cleaned_data
+
+    # Validar se o nome de usuário (campo 'usuario') já está em uso
+    def clean_usuario(self):
+        usuario = self.cleaned_data.get('usuario')
+        if Usuario.objects.filter(usuario=usuario).exists():  # Verificar no campo 'usuario', não 'username'
+            raise forms.ValidationError('Este nome de usuário já está em uso.')
+        return usuario
+
     def save(self, commit=True):
+        # Sobrescrever o método save para garantir que a senha seja criptografada
         user = super().save(commit=False)
-        user.email = self.cleaned_data['email']
+        
+        # Definir a senha do usuário de forma segura
+        user.set_password(self.cleaned_data['password1'])
+        
         if commit:
             user.save()
-            # Se você tiver modelo Usuario personalizado, crie aqui
-            # Usuario.objects.create(user=user, tipo=self.cleaned_data['tipo'], ...)
+        
         return user
-
 
 # ===============================
 # cadastro2.html - RF3

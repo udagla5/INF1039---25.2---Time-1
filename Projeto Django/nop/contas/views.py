@@ -2,11 +2,19 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import FormView, ListView
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
-from .forms import UsuarioCreationForm, OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm
-from .models import Oportunidade
+from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm
+from .models import Oportunidade, Usuario
+from django.contrib.auth.models import User
+
+# ========== AUTENTICAÇÃO ==========
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib import messages
+from .models import Usuario  # Importa o seu modelo Usuario personalizado
 
 # ========== PÁGINAS PRINCIPAIS ==========
 def home(request):
@@ -21,18 +29,23 @@ class FeedView(LoginRequiredMixin, ListView):
     redirect_field_name = 'redirect_to'
 
 
-
-# ========== AUTENTICAÇÃO ==========
 def cadastro1(request):
     if request.method == 'POST':
-        form = UsuarioCreationForm(request.POST)
+        form = UsuarioForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, 'Cadastro realizado com sucesso!')
-            return redirect('cadastro2')
+            # Criar o usuário sem salvar ainda (commit=False)
+            usuario = form.save(commit=False)
+            
+            # Criptografar a senha
+            usuario.set_password(form.cleaned_data['password1'])
+            
+            # Salvar o usuário
+            usuario.save()
+            messages.success(request, 'Usuário criado com sucesso!')
+            return redirect('login')  # Direcionar para a página de login ou outra
     else:
-        form = UsuarioCreationForm()
+        form = UsuarioForm()
+
     return render(request, 'cadastro1.html', {'form': form})
 
 def cadastro2(request):

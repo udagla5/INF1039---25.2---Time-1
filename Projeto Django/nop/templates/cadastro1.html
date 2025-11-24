@@ -33,77 +33,11 @@
             <form method="POST">
                 {% csrf_token %}
                 
-                <div class="form-group">
-                    <label for="{{ form.username.id_for_label }}">Nome de usuário<span class="required">*</span></label>
-                    {{ form.username }}
-                    {% if form.username.errors %}
-                        <span class="error">{{ form.username.errors.0 }}</span>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.email.id_for_label }}">E-mail<span class="required">*</span></label>
-                    {{ form.email }}
-                    {% if form.email.errors %}
-                        <span class="error">{{ form.email.errors.0 }}</span>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.tipo.id_for_label }}">Tipo de conta<span class="required">*</span></label>
-                    {{ form.tipo }}
-                    {% if form.tipo.errors %}
-                        <span class="error">{{ form.tipo.errors.0 }}</span>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.matricula.id_for_label }}">Matrícula</label>
-                    {{ form.matricula }}
-                    {% if form.matricula.errors %}
-                        <span class="error">{{ form.matricula.errors.0 }}</span>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.curso.id_for_label }}">Curso</label>
-                    {{ form.curso }}
-                    {% if form.curso.errors %}
-                        <span class="error">{{ form.curso.errors.0 }}</span>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.periodo.id_for_label }}">Período</label>
-                    {{ form.periodo }}
-                    {% if form.periodo.errors %}
-                        <span class="error">{{ form.periodo.errors.0 }}</span>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.telefone.id_for_label }}">Telefone (opcional)</label>
-                    {{ form.telefone }}
-                    {% if form.telefone.errors %}
-                        <span class="error">{{ form.telefone.errors.0 }}</span>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.password1.id_for_label }}">Senha<span class="required">*</span></label>
-                    {{ form.password1 }}
-                    {% if form.password1.errors %}
-                        <span class="error">{{ form.password1.errors.0 }}</span>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.password2.id_for_label }}">Confirme a senha<span class="required">*</span></label>
-                    {{ form.password2 }}
-                    {% if form.password2.errors %}
-                        <span class="error">{{ form.password2.errors.0 }}</span>
-                    {% endif %}
-                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </form>
 
                 <button type="submit" class="btn btn-submit">
                     Próxima etapa

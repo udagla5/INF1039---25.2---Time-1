@@ -7,6 +7,9 @@ from django.utils import timezone
 # ===============================
 
 class Usuario(AbstractUser):
+    username = models.CharField(max_length=20, unique=True)
+    email = models.CharField(max_length=20, unique=True)
+    senha = models.CharField(max_length=20)
     TIPOS_USUARIO = [
         ('ALUNO', 'Aluno PUC-Rio'),
         ('PROFESSOR', 'Professor/Gestor'),
@@ -17,7 +20,8 @@ class Usuario(AbstractUser):
     curso = models.CharField(max_length=100, blank=True, null=True)
     periodo = models.CharField(max_length=20, blank=True, null=True)
     telefone = models.CharField(max_length=20, blank=True, null=True)
-    interesses = models.ManyToManyField('Interesse', blank=True, related_name='usuarios')
+
+    REQUIRED_FIELDS = ['email']  # Outros campos que são obrigatórios
 
     def __str__(self):
         return f"{self.username} ({self.get_tipo_display()})"

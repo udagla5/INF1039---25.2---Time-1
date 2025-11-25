@@ -26,12 +26,12 @@ class Usuario(AbstractUser):
     def __str__(self):
         return f"{self.username} ({self.get_tipo_display()})"
 
-
 class Interesse(models.Model):
     nome = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.nome
+
 
 # ===============================
 # 2️⃣ OPORTUNIDADES

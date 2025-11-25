@@ -1,50 +1,53 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar sua Conta NOP</title>
-    
-    <link rel="stylesheet" href="{% static 'css/cadastro1.css' %}">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-</head>
-<body>
 
-    <div class="container">
-        <div class="logo">
-            <img src="{% static 'img/logo-grande.png' %}" alt="Logo NOP" class="main-logo">
-        </div>
+{% block title %}Cadastro | NOP{% endblock %}
 
-        <div class="card">
-            <h1>Criar sua conta <img src="{% static 'img/logo-pequena.png' %}" alt="NOP" class="inline-nop-logo"></h1>
-            
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cadastro1.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="cadastro-page">
+    <div class="cadastro-container">
+
+        <div class="cadastro-card">
+            <h1>Criar sua conta <img src="{% static 'img/logo-pequena.png' %}" alt="NOP" class="cadastro-inline-logo"></h1>
+                
             {% if messages %}
-                <div class="messages">
+                <div class="cadastro-messages">
                     {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">
+                        <div class="cadastro-alert cadastro-alert-{{ message.tags }}">
                             {{ message }}
                         </div>
                     {% endfor %}
                 </div>
             {% endif %}
-            
-            <form method="POST">
+                
+            <form method="POST" class="cadastro-form">
                 {% csrf_token %}
                 
-                <form method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary">Cadastrar</button>
-                </form>
+                {% for field in form %}
+                    <div class="cadastro-form-group">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                            {% if field.field.required %}<span class="cadastro-required">*</span>{% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="cadastro-error">{{ field.errors }}</div>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <small class="cadastro-help">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
 
-                <button type="submit" class="btn btn-submit">
+                <button type="submit" class="cadastro-btn cadastro-btn-submit">
                     Próxima etapa
                 </button>
             </form>
         </div>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}

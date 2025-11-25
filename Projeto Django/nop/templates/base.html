@@ -71,19 +71,17 @@
                                 </div>
                                 <div class="dropdown-body">
                                     <div class="profile-image-large">
-                                        {% if user.foto_perfil %}
-                                            <img src="{{ user.foto_perfil.url }}" alt="{{ user.first_name }}">
+                                        {% if user.profile.avatar %}
+                                            <img src="{{ user.profile.avatar.url }}" alt="Foto de perfil" class="profile-avatar-img">
+                                        {% elif user.avatar %}
+                                            <img src="{{ user.avatar.url }}" alt="Foto de perfil" class="profile-avatar-img">
                                         {% else %}
-                                            <img src="{% static 'img/user_placeholder.png' %}" alt="{{ user.first_name }}">
+                                            <div class="profile-default-avatar">
+                                            {{ user.get_full_name|default:user.username|first|upper }}
+                                            </div>
                                         {% endif %}
-                                        <div class="camera-overlay">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                                                <circle cx="12" cy="13" r="4"></circle>
-                                            </svg>
-                                        </div>
                                     </div>
-                                    <h3>Olá, {{ user.first_name }}!</h3>
+                                    <h3>Olá, {{ user.username }}!</h3>
                                     <button onclick="window.location.href='{% url 'perfil_aluno' %}'" class="btn-edit-profile">Editar sua Conta NOP</button>
                                     <form method="post" action="{% url 'logout' %}" class="logout-form">
                                         {% csrf_token %}

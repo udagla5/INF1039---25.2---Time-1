@@ -1,70 +1,66 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar sua conta</title>
-    <link rel="stylesheet" href="{% static 'css/cadastro2.css' %}">
+{% block title %}Cadastro | NOP{% endblock %}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cadastro2.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% endblock %}
 
-<body>
+{% block content %}
 
-    <div class="logo-container">
-        <img src="{% static 'img/logo-grande.png' %}" alt="Logo principal" class="main-logo">
-    </div>
+<div class="logo-container">
+    <img src="{% static 'img/logo-grande.png' %}" alt="Logo principal" class="main-logo">
+</div>
 
-    <main>
-        <form class="signup-card" method="POST">
-            {% csrf_token %}
+<main>
+    <form class="signup-card" method="POST">
+        {% csrf_token %}
 
-            <h2 class="form-title">
-                Criar sua conta
-                <img src="{% static 'img/logo-pequena.png' %}" alt="Logo" class="inline-logo">
-            </h2>
+        <h2 class="form-title">
+            Criar sua conta
+            <img src="{% static 'img/logo-pequena.png' %}" alt="Logo" class="inline-logo">
+        </h2>
 
-            {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            <div class="form-group">
-                <label>Selecione seus interesses</label>
-                <div class="interests-container">
-                    {% for interesse in form.interesses %}
-                        <div class="interest-tag">
-                            {{ interesse.tag }}
-                            <label>{{ interesse.choice_label }}</label>
-                        </div>
-                    {% endfor %}
-                </div>
-                {% if form.interesses.errors %}
-                    <span class="error">{{ form.interesses.errors.0 }}</span>
-                {% endif %}
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             </div>
+        {% endif %}
 
-            <button type="submit" class="submit-btn">Criar conta</button>
+        <div class="form-group">
+            <label>Selecione seus interesses</label>
+            <div class="interests-container">
+                {% for interesse in form.interesses %}
+                    <div class="interest-tag">
+                        {{ interesse.tag }}
+                        <label>{{ interesse.choice_label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if form.interesses.errors %}
+                <span class="error">{{ form.interesses.errors.0 }}</span>
+            {% endif %}
+        </div>
 
-        </form>
-    </main>
+        <button type="submit" class="submit-btn">Criar conta</button>
 
+    </form>
+</main>
+{% endblock %}
     
-    <script>
-    const mensagemSucesso = document.querySelector(".alert-success");
-    if (mensagemSucesso) {
-        alert("Cadastro concluído com sucesso!");
-    }
+{% block extra_js %}
+<script>
+const mensagemSucesso = document.querySelector(".alert-success");
+if (mensagemSucesso) {
+    alert("Cadastro concluído com sucesso!");
+}
 </script>
-</body>
-
-</html>
+{% endblock %}

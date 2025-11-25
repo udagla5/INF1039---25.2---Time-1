@@ -41,27 +41,12 @@ body {
     border: 0;
 }
 
-/* ========== REMOVIDO: ESTILOS DO HEADER (AGORA ESTÃO NO BASE.CSS) ========== */
-/* ❌ REMOVIDO:
-.main-header {}
-.header-content {}
-.logo-area {}
-.header-logo-grande {}
-.header-logo-pequena {}
-.search-bar-header {}
-.search-bar-header input {}
-.clear-search-btn {}
-.auth-links {}
-.auth-links a {}
-.auth-links i {}
-.signup-btn {}
-*/
 
 /* -------------------- 2. BANNER HERO (LARGURA TOTAL) -------------------- */
 
 .hero-banner {
     background-color: var(--color-puc-blue);
-    color: var(--color-text-light);
+    color: var(--color-text-dark);
     text-align: center;
     padding: 80px 20px;
     margin-bottom: 30px;

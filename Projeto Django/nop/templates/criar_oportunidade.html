@@ -1,67 +1,89 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Oportunidade</title>
-    <link rel="stylesheet" href="{% static 'css/criar_oportunidade1.css' %}">
-</head>
-<body>
 
-    <header>
-        <nav>
-            <a href="#" class="back-arrow" aria-label="Voltar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="19" y1="12" x2="5" y2="12"></line>
-                    <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
-            </a>
-            <div class="header-text">
-                <h1>Criar Oportunidade</h1>
-                <p>Conecte alunos com oportunidades acadêmicas criadas por você</p>
-            </div>
-        </nav>
-    </header>
+{% block title %}Criar Oportunidade{% endblock %}
 
-    <main>
-        <div class="form-container">
-            <form>
-                <div class="form-group">
-                    <label for="titulo">Título <span class="required">*</span></label>
-                    <input type="text" id="titulo" placeholder="Título da oportunidade">
-                    <span class="char-counter">0/100</span>
-                </div>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/criar_oportunidade.css' %}">
+{% endblock %}
 
-                <div class="form-group">
-                    <label for="descricao">Descrição <span class="required">*</span></label>
-                    <textarea id="descricao" rows="5" placeholder="Forneça uma descrição concisa do propósito e funcionamento da atividade"></textarea>
-                    <span class="char-counter">0/5000</span>
-                </div>
+{% block content %}
+<div class="opportunity-page">
+  <header class="opportunity-header">
+    <div class="opportunity-back-button">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+        <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
 
-                <div class="form-group">
-                    <label>Tipo de atividade <span class="required">*</span></label>
-                    <div class="activity-types">
-                        <button type="button">Monitoria Acadêmica</button>
-                        <button type="button">Iniciação Científica</button>
-                        <button type="button">Estágio</button>
-                        <button type="button">Laboratório de Pesquisa</button>
-                    </div>
-                </div>
+    <div class="opportunity-header-title">Criar Oportunidade</div>
+    <div class="opportunity-header-subtitle">Conecte alunos com oportunidades acadêmicas criadas por você</div>
+  </header>
 
-                <div class="form-group">
-                    <label for="local">Local de realização da atividade <span class="required">*</span></label>
-                    <textarea id="local" rows="3" placeholder="Especifique a carga horária total e/ou semanal, bem como a quantidade de horas que podem ser aproveitadas como extensão"></textarea>
-                </div>
+  <div class="opportunity-container">
+    <label class="opportunity-label">Título *</label>
+    <input class="opportunity-input" required placeholder="Adicione um título que descreve a sua oportunidade" maxlength="100"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
 
-                <button type="submit" class="submit-btn">Confirmar mudanças</button>
-            </form>
-            
-            <div class="form-footer">
-                <span class="page-counter">1/3</span>
-            </div>
-        </div>
-    </main>
+    <label class="opportunity-label">Descrição *</label>
+    <textarea class="opportunity-input" required placeholder="Forneça uma descrição concisa do propósito e funcionamento da atividade" 
+      maxlength="5000" 
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')"></textarea>
 
-</body>
-</html>
+    <label class="opportunity-label">Tipo de atividade *</label>
+    <div class="opportunity-activity-group">
+      <div class="opportunity-activity-btn">Monitoria Acadêmica</div>
+      <div class="opportunity-activity-btn">Iniciação Científica</div>
+      <div class="opportunity-activity-btn">Estágio</div>
+      <div class="opportunity-activity-btn">Laboratório de Pesquisa</div>
+    </div>
+
+    <label class="opportunity-label">Local de realização da atividade *</label>
+    <input class="opportunity-input" required placeholder="Indique o local da atividade"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
+
+    <label class="opportunity-label">Cursos elegíveis para participação *</label>
+    <input class="opportunity-input" required placeholder="Indique quais cursos podem participar"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
+
+    <label class="opportunity-label">Carga horária *</label>
+    <input class="opportunity-input" required placeholder="Informe a carga horária"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
+
+    <label class="opportunity-label">Número de vagas disponíveis *</label>
+    <input class="opportunity-input" required placeholder="Informe a quantidade de vagas"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
+
+    <label class="opportunity-label">Processo seletivo *</label>
+    <input class="opportunity-input" required placeholder="Explique como funciona o processo seletivo"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
+
+    <label class="opportunity-label">Data de encerramento do processo seletivo *</label>
+    <div class="opportunity-flex-date">
+      <input class="opportunity-input opportunity-date-input" placeholder="Dia" required inputmode="numeric" maxlength="2" pattern="[0-9]{2}"
+             oninvalid="this.setCustomValidity('Obrigatório')" oninput="this.setCustomValidity('')" />
+
+      <input class="opportunity-input opportunity-date-input" placeholder="Mês" required inputmode="numeric" maxlength="2" pattern="[0-9]{2}"
+             oninvalid="this.setCustomValidity('Obrigatório')" oninput="this.setCustomValidity('')" />
+
+      <input class="opportunity-input opportunity-date-input" placeholder="Ano" required inputmode="numeric" maxlength="4" pattern="[0-9]{4}"
+             oninvalid="this.setCustomValidity('Obrigatório')" oninput="this.setCustomValidity('')" />
+    </div>
+
+    <button class="opportunity-confirm">Confirmar</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const buttons = document.querySelectorAll('.opportunity-activity-btn');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
+</script>
+{% endblock %}

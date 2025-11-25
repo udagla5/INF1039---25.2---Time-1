@@ -1,167 +1,186 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
+/* static/css/criar_oportunidade.css */
+/* ESTILOS ESPECÍFICOS PARA A PÁGINA CRIAR OPORTUNIDADE */
+
+.opportunity-page {
+    background: var(--background-dark);
+    min-height: 100vh;
     padding: 0;
 }
 
-body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background-color: #F8F9FA;
-    color: #1F2937;
-    line-height: 1.5;
-}
-
-header {
-    background-color: #0F172A;
-    color: #FFFFFF;
-    padding: 20px;
-}
-
-header nav {
-    max-width: 900px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.opportunity-header {
+    background: var(--primary-dark);
+    color: var(--text-light);
+    padding: 32px 48px;
+    text-align: center;
     position: relative;
+    font-family: 'Inter', sans-serif;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.opportunity-back-button {
+    position: absolute;
+    left: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    color: var(--primary-blue);
+}
+
+.opportunity-header-title {
+    font-size: 32px;
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.opportunity-header-subtitle {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text-gray);
+}
+
+.opportunity-container {
+    background: var(--primary-dark-light);
+    width: 78%;
+    max-width: 1200px;
+    margin: 48px auto;
+    border-radius: var(--border-radius-lg);
+    padding: 48px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.opportunity-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-light);
+}
+
+.opportunity-input {
+    width: 100%;
+    padding: 16px;
+    font-size: 15px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    background: var(--background-dark);
+    color: var(--text-light);
+    margin-bottom: 32px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+}
+
+.opportunity-input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    background: var(--primary-dark);
+}
+
+.opportunity-input::placeholder {
+    color: var(--text-gray);
+}
+
+textarea.opportunity-input {
+    height: 120px;
+    resize: vertical;
+    min-height: 120px;
+}
+
+.opportunity-activity-group {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.opportunity-activity-btn {
+    padding: 14px 28px;
+    border-radius: 32px;
+    border: 1px solid var(--border-color);
+    background: var(--background-dark);
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.15s;
+    user-select: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.opportunity-activity-btn:hover {
+    border-color: var(--primary-blue);
+    background: var(--primary-dark);
+}
+
+.opportunity-activity-btn.selected {
+    background: rgba(99, 149, 255, 0.1);
+    border: 2px solid var(--primary-blue);
+    font-weight: 600;
+    color: var(--primary-blue);
+}
+
+.opportunity-flex-date {
+    display: flex;
+    gap: 16px;
+}
+
+.opportunity-date-input {
+    width: 120px;
     text-align: center;
 }
 
-.back-arrow {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #FFFFFF;
-    text-decoration: none;
-}
-
-.back-arrow svg {
-    stroke: #FFFFFF;
-}
-
-.header-text h1 {
-    font-size: 22px;
-    font-weight: 600;
-    margin: 0;
-}
-
-.header-text p {
-    font-size: 14px;
-    color: #E5E7EB;
-    margin-top: 4px;
-}
-
-main {
-    padding: 20px;
-}
-
-.form-container {
-    max-width: 900px;
-    margin: 20px auto;
-    background-color: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-.form-group {
-    margin-bottom: 24px;
-}
-
-label {
+.opportunity-confirm {
+    width: 260px;
+    padding: 16px;
+    margin: 40px auto 0;
     display: block;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #374151;
-}
-
-.required {
-    color: #3B82F6;
-    margin-left: 2px;
-}
-
-input[type="text"],
-textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    font-size: 16px;
-    font-family: inherit;
-    background-color: #FFFFFF;
-}
-
-input[type="text"]::placeholder,
-textarea::placeholder {
-    color: #9CA3AF;
-}
-
-input[type="text"]:focus,
-textarea:focus {
-    outline: none;
-    border-color: #3B82F6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-textarea {
-    resize: vertical;
-}
-
-.char-counter {
-    display: block;
-    text-align: right;
-    font-size: 12px;
-    color: #6B7280;
-    margin-top: 6px;
-}
-
-.activity-types {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
-.activity-types button {
-    padding: 10px 15px;
-    font-size: 14px;
-    font-weight: 500;
-    background-color: #FFFFFF;
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    cursor: pointer;
-    color: #374151;
-    transition: background-color 0.2s, border-color 0.2s;
-}
-
-.activity-types button:hover {
-    background-color: #F9FAFB;
-    border-color: #9CA3AF;
-}
-
-.submit-btn {
-    width: 100%;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #FFFFFF;
-    background-color: #3B82F6;
+    background: var(--primary-blue);
     border: none;
-    border-radius: 6px;
+    color: white;
+    border-radius: var(--border-radius);
+    font-size: 18px;
     cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
 }
 
-.submit-btn:hover {
-    background-color: #2563EB;
+.opportunity-confirm:hover {
+    background: #4a80f0;
+    transform: translateY(-1px);
 }
 
-.form-footer {
-    text-align: right;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #6B7280;
+/* Responsividade */
+@media (max-width: 768px) {
+    .opportunity-container {
+        width: 95%;
+        padding: 24px;
+        margin: 24px auto;
+    }
+    
+    .opportunity-header {
+        padding: 24px 16px;
+    }
+    
+    .opportunity-back-button {
+        left: 16px;
+    }
+    
+    .opportunity-activity-group {
+        flex-direction: column;
+    }
+    
+    .opportunity-flex-date {
+        flex-direction: column;
+    }
+    
+    .opportunity-date-input {
+        width: 100%;
+    }
+    
+    .opportunity-confirm {
+        width: 100%;
+    }
 }

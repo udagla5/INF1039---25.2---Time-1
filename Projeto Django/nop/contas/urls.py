@@ -3,6 +3,9 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 from .views import FeedView
+from django.urls import path
+from . import views
+
 
 
 urlpatterns = [
@@ -24,6 +27,7 @@ urlpatterns = [
     # ========== OPORTUNIDADES ==========
     # URL de criação (que já deve estar funcionando)
     path('criar-oportunidade/', views.criar_oportunidade, name='criar_oportunidade'), 
+    path('oportunidade/<int:id>/', views.detalhe_oportunidade, name='detalhe_oportunidade'),
     
     # 🔑 ADICIONE ESTA LINHA: O nome 'lista_oportunidades' é o que o redirect procura.
     path('', views.lista_oportunidades, name='lista_oportunidades'),

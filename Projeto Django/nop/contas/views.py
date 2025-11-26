@@ -10,6 +10,13 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm
 from .models import Oportunidade, Usuario, Mensagem
+from django.shortcuts import render, get_object_or_404
+from .models import Oportunidade
+
+def detalhe_oportunidade(request, id):
+    # Busca a oportunidade pelo ID ou retorna erro 404 se não existir
+    oportunidade = get_object_or_404(Oportunidade, pk=id)
+    return render(request, 'oportunidade.html', {'oportunidade': oportunidade})
 
 # ========== PÁGINAS PRINCIPAIS ==========
 def home(request):

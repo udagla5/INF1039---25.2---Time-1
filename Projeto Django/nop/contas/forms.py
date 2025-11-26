@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm  # ← UserCreationForm importado
 from django.contrib.auth.models import User  # ← Importar User também
-from .models import Usuario, Oportunidade, Interesse
+from .models import Usuario, Oportunidade, Interesse, Mensagem
 
 # ===============================
 # FORMS PARA OS HTMLS EXISTENTES
@@ -220,3 +220,28 @@ class EditarPerfilForm(forms.ModelForm):
                 'placeholder': 'Sobrenome'
             }),
         }
+
+# ===============================
+# chat.html - RF14 (Sistema de Mensagens)
+# ===============================
+class MensagemForm(forms.ModelForm):
+    """Formulário para enviar mensagens no chat"""
+    
+    class Meta:
+        model = Mensagem
+        fields = ['conteudo']
+        widgets = {
+            'conteudo': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Digite sua mensagem...',
+                'rows': 1,
+                'style': 'resize: none; min-height: 40px;'
+            }),
+        }
+        labels = {
+            'conteudo': ''
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['conteudo'].required = True

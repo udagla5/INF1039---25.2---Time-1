@@ -29,6 +29,8 @@ urlpatterns = [
     path('', views.lista_oportunidades, name='lista_oportunidades'),
     
     
-    # ========== OUTRAS PÁGINAS ==========
-    path('chat/', views.chat, name='chat'),
+    # ========== SISTEMA DE CHAT (RF14) ==========
+    path('chat/', views.ChatView.as_view(), name='chat'),
+    path('chat/enviar/', views.EnviarMensagemView.as_view(), name='enviar_mensagem'),
+    path('chat/usuarios/', views.ListarUsuariosView.as_view(), name='usuarios_chat'),
 ]

@@ -173,114 +173,28 @@ class BuscaOportunidadeForm(forms.Form):
 # ===============================
 
 class OportunidadeForm(forms.ModelForm):
-    """Formulário ÚNICO para criar oportunidade (criar_oportunidade.html)"""
-    
-    # ETAPA 1 - Informações Básicas
-    nome = forms.CharField(
-        max_length=200,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Nome da oportunidade'
-        }),
-        label='Nome da Oportunidade*'
-    )
-    
-    TIPO_CHOICES = [
-        ('MONITORIA', 'Monitoria'),
-        ('ESTAGIO', 'Estágio'),
-        ('INICIACAO_CIENTIFICA', 'Iniciação Científica'),
-        ('TRABALHO_MEIO_PERIODO', 'Trabalho Meio Período'),
-        ('VOLUNTARIADO', 'Voluntariado'),
-        ('PALESTRA', 'Palestra'),
-        ('EQUIPE_COMPETICAO', 'Equipe de Competição'),
-        ('BOLSA', 'Bolsa'),
-    ]
-    
-    tipo = forms.ChoiceField(
-        choices=TIPO_CHOICES,
-        widget=forms.Select(attrs={
-            'class': 'form-control'
-        }),
-        label='Tipo*'
-    )
-    
-    area = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Ex: Tecnologia, Empreendedorismo, Saúde'
-        }),
-        label='Área*'
-    )
-    
-    # ETAPA 2 - Detalhes
-    descricao = forms.CharField(
-        widget=forms.Textarea(attrs={
-            'class': 'form-control',
-            'rows': 5,
-            'placeholder': 'Descreva detalhadamente a oportunidade...'
-        }),
-        label='Descrição*'
-    )
-    
-    carga_horaria = forms.CharField(
-        max_length=50,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Ex: 4 horas/dia, 20 horas/semana'
-        }),
-        label='Carga Horária*'
-    )
-    
-    horas_complementares = forms.IntegerField(
-        required=False,
-        min_value=0,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'placeholder': '0'
-        }),
-        label='Horas Complementares'
-    )
-    
-    remuneracao = forms.DecimalField(
-        required=False,
-        max_digits=10,
-        decimal_places=2,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'placeholder': '0,00',
-            'step': '0.01'
-        }),
-        label='Remuneração (R$)'
-    )
-    
-    # ETAPA 3 - Finalização
-    exigencias = forms.CharField(
-        required=False,
-        widget=forms.Textarea(attrs={
-            'class': 'form-control',
-            'rows': 3,
-            'placeholder': 'Exigências, pré-requisitos, conhecimentos necessários...'
-        }),
-        label='Exigências e Pré-requisitos'
-    )
-    
-    prazo_inscricao = forms.DateField(
-        required=False,
-        widget=forms.DateInput(attrs={
-            'class': 'form-control',
-            'type': 'date'
-        }),
-        label='Prazo de Inscrição'
-    )
-
     class Meta:
         model = Oportunidade
-        fields = [
-            'nome', 'tipo', 'area', 'descricao', 'carga_horaria',
-            'horas_complementares', 'remuneracao', 'exigencias', 'prazo_inscricao'
-        ]
-
+        # 🔑 Todos os campos do modelo devem estar aqui:
+        fields = ['titulo', 'descricao', 'tipo', 'local', 'cursos_elegiveis', 'carga_horaria', 'num_vagas', 'processo_seletivo', 'data_encerramento']
+        
+        widgets = {
+            'titulo': forms.TextInput(attrs={'placeholder': 'Título da oportunidade', 'maxlength': 100}),
+            'descricao': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Forneça uma descrição concisa do propósito e funcionamento da atividade', 'maxlength': 5000}),
+            'local': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Indique o local da atividade'}),
+            'cursos_elegiveis': forms.TextInput(attrs={'placeholder': 'Indique quais cursos podem participar'}),
+            'carga_horaria': forms.TextInput(attrs={'placeholder': 'Informe a carga horária'}),
+            'num_vagas': forms.NumberInput(attrs={'placeholder': 'Informe a quantidade de vagas'}),
+            'processo_seletivo': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Explique como funciona o processo seletivo'}),
+            'data_encerramento': forms.DateInput(attrs={'type': 'date'}), # Usamos type="date" para simplificar o campo de data
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 🔑 Aplicando a classe CSS 'opportunity-input' a todos os campos
+        for field_name, field in self.fields.items():
+            if field_name not in ['tipo', 'data_encerramento']: # 'tipo' e 'data_encerramento' são tratados separadamente ou já têm widget específico
+                field.widget.attrs.update({'class': 'opportunity-input'})
 
 # ===============================
 # perfil_aluno.html - RF17

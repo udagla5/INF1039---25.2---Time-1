@@ -22,9 +22,12 @@ urlpatterns = [
     path('perfil-aluno-parte2/', views.perfil_aluno_parte2, name='perfil_aluno_parte2'),
     
     # ========== OPORTUNIDADES ==========
-    path('criar-oportunidade/', views.criar_oportunidade, name='criar_oportunidade'),
-    # Ou use a class-based view:
-    # path('criar-oportunidade/', views.CriarOportunidadeView.as_view(), name='criar_oportunidade'),
+    # URL de criação (que já deve estar funcionando)
+    path('criar-oportunidade/', views.criar_oportunidade, name='criar_oportunidade'), 
+    
+    # 🔑 ADICIONE ESTA LINHA: O nome 'lista_oportunidades' é o que o redirect procura.
+    path('', views.lista_oportunidades, name='lista_oportunidades'),
+    
     
     # ========== OUTRAS PÁGINAS ==========
     path('chat/', views.chat, name='chat'),

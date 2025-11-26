@@ -101,15 +101,18 @@ def perfil_aluno_parte2(request):
 def criar_oportunidade(request):
     if request.method == 'POST':
         form = OportunidadeForm(request.POST)
+        
         if form.is_valid():
-            oportunidade = form.save(commit=False)
-            oportunidade.criador = request.user
-            oportunidade.status = 'PENDENTE'
-            oportunidade.save()
-            messages.success(request, 'Oportunidade criada com sucesso! Aguarde a validação do sistema.')
-            return redirect('feed')
+            # Salva o novo objeto Oportunidade no banco de dados
+            form.save()
+            
+            # ⚠️ Substitua 'lista_oportunidades' pelo nome da URL de destino no seu urls.py
+            return redirect('lista_oportunidades') 
+    
     else:
         form = OportunidadeForm()
+    
+    # Passa o objeto 'form' para o template
     return render(request, 'criar_oportunidade.html', {'form': form})
 
 # Versão com Class-Based View (alternativa)
@@ -130,3 +133,10 @@ class CriarOportunidadeView(LoginRequiredMixin, FormView):
 # ========== OUTRAS PÁGINAS ==========
 def chat(request):
     return render(request, 'chat.html')
+
+def lista_oportunidades(request):
+    # Obtém todas as oportunidades do banco de dados (ordenadas pela mais recente)
+    oportunidades = Oportunidade.objects.all().order_by('-data_publicacao')
+    
+    # Renderiza um template chamado 'lista_oportunidades.html'
+    return render(request, 'lista_oportunidades.html', {'oportunidades': oportunidades})

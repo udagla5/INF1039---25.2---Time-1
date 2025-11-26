@@ -227,23 +227,15 @@ class EditarPerfilForm(forms.ModelForm):
 # chat.html - RF14 (Sistema de Mensagens)
 # ===============================
 class MensagemForm(forms.ModelForm):
-    """Formulário para enviar mensagens no chat"""
-    
     class Meta:
         model = Mensagem
         fields = ['conteudo']
         widgets = {
             'conteudo': forms.Textarea(attrs={
+                'id': 'mensagem-input',  
                 'class': 'form-control',
                 'placeholder': 'Digite sua mensagem...',
                 'rows': 1,
-                'style': 'resize: none; min-height: 40px;'
+                'style': 'resize: none; min-height: 40px; width: 100%;' 
             }),
         }
-        labels = {
-            'conteudo': ''
-        }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['conteudo'].required = True

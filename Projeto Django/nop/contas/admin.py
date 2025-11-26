@@ -36,24 +36,41 @@ class InteresseAdmin(admin.ModelAdmin):
 
 @admin.register(Oportunidade)
 class OportunidadeAdmin(admin.ModelAdmin):
-    """Admin para Oportunidades"""
-    list_display = ['nome', 'tipo', 'area', 'status', 'criador', 'data_criacao']
-    list_filter = ['status', 'tipo', 'area', 'data_criacao']
-    search_fields = ['nome', 'descricao', 'criador__username']
-    date_hierarchy = 'data_criacao'
-    
-    fieldsets = (
-        ('Informações Básicas', {
-            'fields': ('nome', 'tipo', 'area', 'status', 'criador')
-        }),
-        ('Detalhes', {
-            'fields': ('descricao', 'exigencias', 'carga_horaria', 'horas_complementares', 'remuneracao')
-        }),
-        ('Prazos', {
-            'fields': ('prazo_inscricao', 'data_criacao')
-        }),
+    # 1. list_display: Exibe os campos na lista de oportunidades no Admin
+    list_display = (
+        'titulo',       # Substitui 'nome'
+        'tipo',         # Campo existente
+        'data_publicacao', # Substitui 'data_criacao'
+        # Removido 'area', 'status', 'criador' pois não existem no modelo atual
     )
-    readonly_fields = ['data_criacao']
+
+    # 2. list_filter: Permite filtrar por tipo e data de publicação
+    list_filter = (
+        'tipo',
+        'data_publicacao', # Substitui 'data_criacao' e 'status', 'area'
+    )
+    
+    # 3. readonly_fields: Torna a data de publicação somente leitura no formulário de edição
+    readonly_fields = (
+        'data_publicacao', # Substitui 'data_criacao'
+    )
+
+    # 4. date_hierarchy: Adiciona uma navegação hierárquica por data
+    date_hierarchy = 'data_publicacao' # Substitui 'data_criacao'
+
+    # 5. search_fields (Opcional, mas útil): Permite buscar por título e descrição
+    search_fields = ('titulo', 'descricao', 'local')
+
+    # 6. fieldsets (Opcional): Organiza o formulário de edição
+    fieldsets = (
+        (None, {
+            'fields': ('titulo', 'tipo', 'local', 'descricao')
+        }),
+        ('Informações de Sistema', {
+            'fields': ('data_publicacao',),
+            'classes': ('collapse',),
+        })
+    )
 
 
 @admin.register(Participacao)

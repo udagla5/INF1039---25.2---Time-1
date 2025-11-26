@@ -12,6 +12,8 @@ from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerf
 from .models import Oportunidade, Usuario, Mensagem
 from django.shortcuts import render, get_object_or_404
 from .models import Oportunidade
+from .models import Favorito
+
 
 def detalhe_oportunidade(request, id):
     # Busca a oportunidade pelo ID ou retorna erro 404 se não existir
@@ -274,3 +276,16 @@ def upload_avatar(request):
 
     # Se alguém acessar diretamente via GET, redireciona ou retorna erro
     return redirect('perfil_aluno')
+
+@login_required
+def oportunidades_salvas(request):
+    oportunidades = Favorito.objects.filter(usuario=request.user)
+    return render(request, 'oportunidades_salvas.html', {
+        'oportunidades': [f.vaga for f in oportunidades]
+    })
+
+@login_required
+def remover_salva(request, id):
+    Favorito.objects.filter(usuario=request.user, vaga_id=id).delete()
+    return redirect('oportunidades_salvas')
+

@@ -1,6 +1,7 @@
 /* perfil_aluno_style.css - CLASSES ESPECÍFICAS PARA EVITAR CONFLITOS */
 
 .profile-edit-container {
+    max-width: 100%;
     min-height: 100vh;
     background: var(--background-dark);
 }
@@ -42,7 +43,7 @@
 
 /* CONTEÚDO PRINCIPAL */
 .profile-edit-main {
-    max-width: 700px;
+    max-width: 100%;
     margin: 0 auto;
     position: relative;
     padding: 0 20px;

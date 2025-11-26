@@ -1,6 +1,7 @@
 /* perfil_aluno_style.css - CLASSES ESPECÍFICAS PARA EVITAR CONFLITOS */
 
 .profile-edit-container {
+    max-width: 100%;
     min-height: 100vh;
     background: var(--background-dark);
 }
@@ -42,7 +43,7 @@
 
 /* CONTEÚDO PRINCIPAL */
 .profile-edit-main {
-    max-width: 700px;
+    max-width: 100%;
     margin: 0 auto;
     position: relative;
     padding: 0 20px;
@@ -259,4 +260,113 @@
     background: #4a80f0;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(99, 149, 255, 0.3);
+}
+
+/* NOVO: Estilos para o Modal/Popup de Edição de Avatar */
+.profile-modal {
+    display: none;
+    position: fixed; 
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    padding-top: 60px;
+    animation: fadeIn 0.3s;
+}
+
+.profile-modal-content {
+    background-color: var(--background-light);
+    margin: 10% auto; 
+    padding: 30px;
+    border-radius: var(--border-radius-lg);
+    width: 90%; 
+    max-width: 400px;
+    box-shadow: var(--shadow-xl);
+    text-align: center;
+    position: relative;
+    animation: slideUp 0.3s ease-out;
+}
+
+.profile-modal-close-btn {
+    color: var(--text-gray);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    position: absolute;
+    top: 10px;
+    right: 18px;
+    transition: color 0.2s;
+}
+
+.profile-modal-close-btn:hover,
+.profile-modal-close-btn:focus {
+    color: var(--text-dark);
+}
+
+.profile-modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 25px;
+}
+
+.profile-modal-avatar-preview {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 30px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+.profile-modal-img,
+.profile-modal-default-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    font-weight: bold;
+    background: var(--primary-blue);
+    color: var(--text-light);
+}
+
+.profile-modal-img {
+    background: none;
+}
+
+
+.profile-modal-action-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-blue);
+    color: var(--text-light);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: not-allowed;
+    opacity: 0.6;
+    margin-top: 20px;
+    transition: opacity 0.3s ease;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }

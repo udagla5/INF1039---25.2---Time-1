@@ -237,3 +237,33 @@ def lista_oportunidades(request):
     
     # Renderiza o template feed.html que já existe
     return render(request, 'feed.html', {'oportunidades': oportunidades})
+
+@login_required
+def upload_avatar(request):
+    if request.method == 'POST':
+        # 1. Tenta obter o arquivo enviado
+        if 'avatar' in request.FILES:
+            novo_avatar = request.FILES['avatar']
+            
+            # 2. Salva o avatar no modelo do usuário
+            # (A lógica exata depende do seu modelo de Usuário/Perfil)
+            try:
+                # Exemplo, assumindo que o campo 'avatar' está no Profile
+                profile = request.user.profile
+                profile.avatar = novo_avatar
+                profile.save()
+                
+                messages.success(request, 'Foto de perfil atualizada com sucesso!')
+            
+            except AttributeError:
+                messages.error(request, 'Erro: O modelo de perfil não pôde ser encontrado.')
+            
+            except Exception as e:
+                # Trata erros de validação ou outros erros de upload
+                messages.error(request, f'Erro ao salvar a imagem: {e}')
+        
+        # 3. Redireciona de volta para a página de edição de perfil
+        return redirect('perfil_aluno') 
+
+    # Se alguém acessar diretamente via GET, redireciona ou retorna erro
+    return redirect('perfil_aluno')

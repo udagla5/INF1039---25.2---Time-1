@@ -20,7 +20,7 @@ urlpatterns = [
     # ========== PERFIL ==========
     path('perfil-aluno/', views.perfil_aluno, name='perfil_aluno'),
     path('perfil-aluno-parte2/', views.perfil_aluno_parte2, name='perfil_aluno_parte2'),
-    
+    path('perfil/upload_avatar/', views.upload_avatar, name='upload_avatar'),
     # ========== OPORTUNIDADES ==========
     # URL de criação (que já deve estar funcionando)
     path('criar-oportunidade/', views.criar_oportunidade, name='criar_oportunidade'), 

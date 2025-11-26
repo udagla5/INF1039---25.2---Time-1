@@ -139,40 +139,6 @@
         </div>
     </main>
 </div>
-
-<div id="avatarEditModal" class="profile-modal">
-    <div class="profile-modal-content">
-        <span class="profile-modal-close-btn">&times;</span>
-        
-        <h3 class="profile-modal-title">Sua Foto de Perfil</h3>
-
-        <form id="avatarUploadForm" method="POST" enctype="multipart/form-data" action="{% url 'upload_avatar' %}">
-            {% csrf_token %}
-
-            <div class="profile-modal-avatar-preview">
-                {% if user.profile.avatar %}
-                    <img id="modalAvatarPreviewImg" src="{{ user.profile.avatar.url }}" alt="Prévia da Foto de perfil" class="profile-modal-img">
-                {% elif user.avatar %}
-                    <img id="modalAvatarPreviewImg" src="{{ user.avatar.url }}" alt="Prévia da Foto de perfil" class="profile-modal-img">
-                {% else %}
-                    <div id="modalAvatarPreviewDefault" class="profile-modal-default-avatar">
-                        {{ user.get_full_name|default:user.username|first|upper }}
-                    </div>
-                {% endif %}
-            </div>
-
-            <input 
-                type="file" 
-                id="avatarFileInput" 
-                name="avatar" 
-                accept="image/*" 
-                style="display: none;">             <button type="button" id="changeImageBtn" class="profile-modal-action-btn">Alterar Imagem</button>
-
-                        <button type="submit" id="saveImageBtn" class="profile-confirm-btn" style="display: none; margin-top: 15px;">Salvar Foto</button>
-        
-        </form>
-    </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -217,85 +183,5 @@
             this.classList.toggle('profile-interest-selected');
         });
     });
-
-
-// Seleção de novos elementos do modal
-const modal = document.getElementById('avatarEditModal');
-const btnCamera = document.querySelector('.profile-edit-avatar-btn');
-const spanClose = document.querySelector('.profile-modal-close-btn');
-
-const avatarFileInput = document.getElementById('avatarFileInput');
-const changeImageBtn = document.getElementById('changeImageBtn');
-const saveImageBtn = document.getElementById('saveImageBtn');
-
-// Elementos de pré-visualização (não precisa declarar aqui se for buscar dentro da função)
-const avatarPreviewContainer = document.querySelector('.profile-modal-avatar-preview');
-
-// --- Lógica de Abertura e Fechamento do Modal (Existente) ---
-btnCamera.addEventListener('click', function() {
-    modal.style.display = 'block';
-    // Oculta o botão Salvar ao abrir, até que um novo arquivo seja selecionado
-    saveImageBtn.style.display = 'none'; 
-});
-
-spanClose.addEventListener('click', function() {
-    modal.style.display = 'none';
-    // Opcional: Limpar o input se o usuário fechar o modal
-    avatarFileInput.value = ""; 
-});
-
-window.addEventListener('click', function(event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-        avatarFileInput.value = ""; 
-    }
-});
-
-// --- NOVO: Lógica de Upload de Arquivo CORRIGIDA ---
-
-// 1. Conecta o botão de "Alterar Imagem" ao input escondido
-changeImageBtn.addEventListener('click', function() {
-    // Clica no input de arquivo, abrindo a janela de seleção
-    avatarFileInput.click(); 
-});
-
-// 2. Pré-visualiza a imagem e mostra o botão de Salvar
-avatarFileInput.addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    
-    if (file) {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            // Verifica se o placeholder DIV existe e o remove se a imagem for carregada
-            let defaultAvatarElement = document.getElementById('modalAvatarPreviewDefault');
-            if (defaultAvatarElement) {
-                defaultAvatarElement.remove();
-            }
-            
-            // Tenta usar a tag <img> existente ou cria uma nova
-            let imgElement = document.getElementById('modalAvatarPreviewImg');
-            
-            if (!imgElement) {
-                imgElement = document.createElement('img');
-                imgElement.id = 'modalAvatarPreviewImg';
-                imgElement.alt = 'Prévia da nova foto';
-                imgElement.classList.add('profile-modal-img');
-                avatarPreviewContainer.appendChild(imgElement);
-            }
-            
-            // Atualiza a fonte da imagem
-            imgElement.src = e.target.result;
-            
-            // Exibe o botão de salvar
-            saveImageBtn.style.display = 'block';
-        };
-        
-        reader.readAsDataURL(file);
-    } else {
-        // Se o usuário cancelar a seleção, esconde o botão de Salvar
-        saveImageBtn.style.display = 'none';
-    }
-});
 </script>
 {% endblock %}

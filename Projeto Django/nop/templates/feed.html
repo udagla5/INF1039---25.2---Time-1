@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block content %}
+<!-- BARRA DE FILTROS -->
 <nav class="barra-principal" role="navigation" aria-label="Menu principal">
     <div class="filtros-area">
         <div class="filtros-toggle" id="filtrosToggle">
@@ -23,9 +24,11 @@
     <div class="coluna-header">TIPO</div>
     <div class="coluna-header">CARGA HORÁRIA</div>
     <div class="coluna-header">REMUNERAÇÃO</div>
-    <div class="coluna-header">HORAS COMP.</div>
-    <div></div> </nav>
+    <div class="coluna-header">HORAS COMPLEMENTARES</div>
+    <div></div>
+</nav>
 
+<!-- POPUP DE FILTROS -->
 <div class="overlay" id="overlay"></div>
 
 <div class="filter-modal" id="filterModal">
@@ -74,76 +77,93 @@
     </div>
 </div>
 
+<!-- FEED DE OPORTUNIDADES -->
 <main class="feed" id="conteudo" role="main">
     {% for oportunidade in oportunidades %}
     <section class="oportunidade-item">
-        
         <div class="oportunidade-col bookmark-col">
             <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
             </svg>
         </div>
-
         <div class="oportunidade-col info-col">
-            <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/333/666?text={{ oportunidade.titulo|slice:":1" }}');"></div>
+            <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/80A9FF/FFFFFF?text=🧠');"></div>
             <div class="info-texto">
-                <h3>{{ oportunidade.titulo }}</h3>
-                <p>{{ oportunidade.area }}</p>
+                <h3>{{oportunidade.titulo}}</h3>
+                <p>{{oportunidade.area}}</p>s
             </div>
         </div>
-
-        <div class="oportunidade-col">{{ oportunidade.get_tipo_display }}</div>
-        <div class="oportunidade-col">{{ oportunidade.carga_horaria }}</div>
-        <div class="oportunidade-col">R$ {{ oportunidade.remuneracao }}</div>
-        <div class="oportunidade-col">{{ oportunidade.horas_complementares }}h</div>
-
-        <div class="oportunidade-col acao-col">
-            <a href="{% url 'detalhe_oportunidade' oportunidade.id %}" class="btn-ver-mais">
-                Ver mais
-            </a>
+        <div class="oportunidade-col">{{oportunidade.tipo}}</div>
+        <div class="oportunidade-col">{{oportunidade.carga_horaria}}</div>
+        <div class="oportunidade-col">{{oportunidade.remuneracao}}</div>
+        <div class="oportunidade-col">{{oportunidade.horas_complementares}}</div>
+        <div class="oportunidade-col compatibilidade-col">
+            <span class="status-texto">Compatível</span>
+            <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
         </div>
-
     </section>
-    {% empty %}
-        <p style="text-align: center; padding: 40px; color: #99a8bd;">Nenhuma oportunidade encontrada.</p>
     {% endfor %}
 </main>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Seletores
+    // Seletores mais específicos
     const filtrosToggle = document.getElementById("filtrosToggle");
     const overlay = document.getElementById("overlay");
     const filterModal = document.getElementById("filterModal");
     const closeFilter = document.getElementById("closeFilter");
 
+    console.log("Elementos encontrados:", {
+        filtrosToggle: !!filtrosToggle,
+        overlay: !!overlay,
+        filterModal: !!filterModal,
+        closeFilter: !!closeFilter
+    });
+
     function openFilterModal() {
-        if(overlay && filterModal) {
-            overlay.style.display = "block";
-            filterModal.style.display = "block";
-            document.body.style.overflow = "hidden";
-        }
+        console.log("Abrindo modal...");
+        overlay.style.display = "block";
+        filterModal.style.display = "block";
+        document.body.style.overflow = "hidden";
     }
 
     function closeFilterModal() {
-        if(overlay && filterModal) {
-            overlay.style.display = "none";
-            filterModal.style.display = "none";
-            document.body.style.overflow = "";
-        }
+        console.log("Fechando modal...");
+        overlay.style.display = "none";
+        filterModal.style.display = "none";
+        document.body.style.overflow = "";
     }
 
     // Event listeners
-    if (filtrosToggle) filtrosToggle.addEventListener('click', openFilterModal);
-    if (closeFilter) closeFilter.addEventListener('click', closeFilterModal);
-    if (overlay) overlay.addEventListener('click', closeFilterModal);
+    if (filtrosToggle) {
+        filtrosToggle.addEventListener('click', openFilterModal);
+    } else {
+        console.error("Botão de filtros não encontrado!");
+    }
+
+    if (closeFilter) {
+        closeFilter.addEventListener('click', closeFilterModal);
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', closeFilterModal);
+    }
 
     // Fechar com ESC
     document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && overlay && overlay.style.display === 'block') {
+        if (event.key === 'Escape' && overlay.style.display === 'block') {
             closeFilterModal();
         }
     });
+
+    // Prevenir que cliques dentro do modal fechem ele
+    if (filterModal) {
+        filterModal.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    }
 </script>
 {% endblock %}

@@ -49,6 +49,8 @@ class Oportunidade(models.Model):
     cursos_elegiveis = models.CharField(max_length=255, verbose_name='Cursos elegíveis para participação')
     carga_horaria = models.CharField(max_length=50, verbose_name='Carga horária')
     num_vagas = models.IntegerField(verbose_name='Número de vagas disponíveis')
+    horas_complementares = models.IntegerField(verbose_name='Número de horas complementares')
+    remuneracao = models.IntegerField(verbose_name='Remuneracao')
     processo_seletivo = models.TextField(verbose_name='Processo seletivo')
     data_encerramento = models.DateField(verbose_name='Data de encerramento do processo seletivo') 
     

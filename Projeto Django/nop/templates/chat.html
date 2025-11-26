@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block title %}Chat | NOP{% endblock %}
 
 {% block extra_css %}
@@ -11,78 +10,180 @@
 {% endblock %}
 
 {% block content %}
+<div><span>...</span></div>
 <div class="chat-container">
   <div class="sidebar">
     <div class="search-box">
-      <a href="{% url 'feed' %}" class="back-btn">
+      <button class="back-btn">
         <i class="fa-solid fa-arrow-left"></i>
-      </a>
+      </button>
       <input type="text" placeholder="Procure uma conversa">
-      <a href="{% url 'usuarios_chat' %}" style="margin-left: 10px; color: #007bff; text-decoration: none;">
-        <i class="fa-solid fa-plus"></i>
-      </a>
     </div>
     <div class="chat-list">
-      {% if conversas %}
-        {% for conversa in conversas %}
-        <div class="chat-item {% if conversa.id|stringformat:'s' == request.GET.conversa_com %}selected{% endif %}">
-          <a href="?conversa_com={{ conversa.id }}" style="display: flex; align-items: center; text-decoration: none; color: inherit; width: 100%;">
-            <img src="{% static 'img/user_placeholder.png' %}" alt="{{ conversa.username }}">
-            <div class="chat-info">
-              <div class="chat-top">
-                <span>{{ conversa.first_name|default:conversa.username }}</span>
-                <small class="time">{{ conversa.ultima_mensagem_data|date:"H:i" }}</small>
-              </div>
-              <small>{{ conversa.tipo_display|default:"Usuário" }}</small>
-            </div>
-          </a>
+      <div class="chat-item selected">
+        <img src="{% static 'img/giovanna.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Giovanna</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>foto</small>
         </div>
-        {% endfor %}
-      {% else %}
-        <div style="padding: 20px; text-align: center; color: #666;">
-          <p>Nenhuma conversa ainda.</p>
-          <a href="{% url 'usuarios_chat' %}" style="color: #007bff;">Iniciar nova conversa</a>
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/cadu.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Cadu</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>Oi, amigo!</small>
         </div>
-      {% endif %}
-
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/thayna.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Thayna</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>Mal posso esperar para estagiar!!</small>
+        </div>
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/erick.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Erick</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>Esse design ficou incrivel!</small>
+        </div>
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/paulo.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Paulo</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>Kkkkkkk Adorei!</small>
+        </div>
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/pedro.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Pedro</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>video</small>
+        </div>
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/nop.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Suporte NOP</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>Olá! Como podemos ajudar?</small>
+        </div>
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>mensagem</small>
+        </div>
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>mensagem</small>
+        </div>
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>mensagem</small>
+        </div>
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>mensagem</small>
+        </div>
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>mensagem</small>
+        </div>
+      </div>
+      <div class="chat-item">
+        <img src="{% static 'img/placeholder.png' %}" alt="">
+        <div class="chat-info">
+          <div class="chat-top">
+            <span>Contato</span>
+            <small class="time">16:07</small>
+          </div>
+          <small>mensagem</small>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="chat-area">
-    {% if destinatario %}
     <div class="chat-header">
-      <img src="{% static 'img/user_placeholder.png' %}" alt="{{ destinatario.username }}">
+      <img src="{% static 'img/giovanna.png' %}" alt="">
       <div class="info">
-        <span>{{ destinatario.first_name|default:destinatario.username }}</span>
-        <small>{{ destinatario.get_tipo_display|default:"Usuário" }}</small>
+        <span>Giovanna</span>
+        <small>Online</small>
       </div>
     </div>
 
     <div class="chat-messages" id="chat">
-      {% if mensagens %}
-        {% for mensagem in mensagens %}
-        <div class="msg {% if mensagem.remetente == user %}sent{% else %}received{% endif %}">
-          {{ mensagem.conteudo }}
-          <small>{{ mensagem.data_envio|date:"H:i" }}</small>
-        </div>
-        {% endfor %}
-      {% else %}
-        <div style="padding: 40px; text-align: center; color: #666;">
-          <p>Nenhuma mensagem ainda. Comece a conversa!</p>
-        </div>
-      {% endif %}
-    </div>
-    {% else %}
-    <div style="display: flex; align-items: center; justify-content: center; flex: 1;">
-      <div style="text-align: center; color: #666;">
-        <h3>Selecione uma conversa</h3>
-        <p>Escolha um contato na lista à esquerda para começar a conversar.</p>
-        <a href="{% url 'usuarios_chat' %}" style="color: #007bff; text-decoration: none;">
-          Ver todos os usuários
-        </a>
+      <div class="msg received">
+        Ei, amigo, olha essa oportunidade nova que apareceu aqui!
+        <small>16:05</small>
+      </div>
+      <div class="msg sent">
+        Qual?? Me manda o link!!
+        <small>16:05</small>
+      </div>
+      <div class="msg received">
+        <a href="https://www.nop.puc-rio.br" target="_blank">https://www.nop.puc-rio.br</a>
+        <small>16:05</small>
+      </div>
+      <div class="msg sent">
+        E como é por lá?
+        <small>16:05</small>
+      </div>
+      <div class="msg received">
+        [foto]
+        <small>16:05</small>
       </div>
     </div>
-    {% endif %}
 
     <div class="chat-footer">
       <div class="icons">
@@ -91,105 +192,54 @@
         <i class="fa-regular fa-calendar"></i>
         <i class="fa-solid fa-upload"></i>
       </div>
-      {% if destinatario %}
-      <form id="mensagemForm" method="post" action="{% url 'enviar_mensagem' %}" style="display: flex; align-items: center; flex: 1;">
-        {% csrf_token %}
-        <input type="hidden" name="destinatario_id" value="{{ destinatario.id }}">
-        {{ form_mensagem.conteudo }}
-        <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
-      </form>
-      {% else %}
-      <textarea placeholder="Selecione uma conversa para enviar mensagens..." rows="1" disabled></textarea>
-      <button disabled><i class="fa-solid fa-paper-plane"></i></button>
-      {% endif %}
+      <textarea id="msgInput" placeholder="Digite sua mensagem..." rows="1"></textarea>
+      <button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
   </div>
 </div>
+<!-- REMOVA a tag </body> daqui -->
 {% endblock %}
 
 {% block extra_js %}
 <script>
 const chat = document.getElementById("chat");
-const form = document.getElementById("mensagemForm");
+const input = document.getElementById("msgInput");
 
-// Envio de mensagens via AJAX
-if (form) {
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(form);
-    const conteudo = formData.get('conteudo').trim();
-    
-    if (!conteudo) return;
-    
-    // Enviar via AJAX
-    fetch(form.action, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // Adicionar mensagem na tela
-        const msg = document.createElement("div");
-        msg.classList.add("msg", "sent");
-        msg.innerHTML = `${data.mensagem.conteudo.replace(/\n/g, "<br>")}<small>${data.mensagem.data_envio}</small>`;
-        chat.appendChild(msg);
-        
-        // Limpar form
-        form.reset();
-        
-        // Scroll para baixo
-        chat.scrollTop = chat.scrollHeight;
-      } else {
-        alert('Erro ao enviar mensagem: ' + (data.error || 'Erro desconhecido'));
-      }
-    })
-    .catch(error => {
-      console.error('Erro:', error);
-      alert('Erro ao enviar mensagem');
-    });
-  });
+function sendMessage() {
+  const text = input.value.trim();
+  if (!text) return;
 
-  // Enter envia / Shift+Enter pula linha
-  const textarea = form.querySelector('textarea');
-  if (textarea) {
-    textarea.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        form.dispatchEvent(new Event('submit'));
-      }
-    });
-  }
-}
+  const msg = document.createElement("div");
+  msg.classList.add("msg", "sent");
+  msg.innerHTML = `${text.replace(/\n/g, "<br>")}<small>${new Date().toLocaleTimeString().slice(0,5)}</small>`;
+  chat.appendChild(msg);
 
-const backBtn = document.querySelector(".back-btn");
-if (backBtn) {
-  backBtn.addEventListener("click", () => {
-    history.back();
-  });
-}
-
-// Auto-scroll para última mensagem
-if (chat) {
+  input.value = "";
   chat.scrollTop = chat.scrollHeight;
 }
 
-// Atualizar mensagens periodicamente (polling simples)
-function atualizarMensagens() {
-  const destinatarioId = new URLSearchParams(window.location.search).get('conversa_com');
-  if (destinatarioId) {
-    // Recarregar a página a cada 10 segundos para buscar novas mensagens
-    // Em produção, seria melhor usar WebSockets
-    setTimeout(() => {
-      location.reload();
-    }, 10000);
+// Enter envia / Shift+Enter pula linha
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault(); // impede nova linha
+    sendMessage();
   }
-}
+});
 
-atualizarMensagens();
+const backBtn = document.querySelector(".back-btn");
+backBtn.addEventListener("click", () => {
+  history.back(); // volta pra página anterior
+});
+
+const chatItems = document.querySelectorAll('.chat-item');
+
+chatItems.forEach(item => {
+  item.addEventListener('click', () => {
+    // Remove seleção anterior
+    chatItems.forEach(i => i.classList.remove('selected'));
+    // Marca o novo
+    item.classList.add('selected');
+  });
+});
 </script>
 {% endblock %}

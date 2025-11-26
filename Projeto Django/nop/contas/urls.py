@@ -20,17 +20,12 @@ urlpatterns = [
     # ========== PERFIL ==========
     path('perfil-aluno/', views.perfil_aluno, name='perfil_aluno'),
     path('perfil-aluno-parte2/', views.perfil_aluno_parte2, name='perfil_aluno_parte2'),
-    path('perfil/upload_avatar/', views.upload_avatar, name='upload_avatar'),
+    
     # ========== OPORTUNIDADES ==========
-    # URL de criação (que já deve estar funcionando)
-    path('criar-oportunidade/', views.criar_oportunidade, name='criar_oportunidade'), 
+    path('criar-oportunidade/', views.criar_oportunidade, name='criar_oportunidade'),
+    # Ou use a class-based view:
+    # path('criar-oportunidade/', views.CriarOportunidadeView.as_view(), name='criar_oportunidade'),
     
-    # 🔑 ADICIONE ESTA LINHA: O nome 'lista_oportunidades' é o que o redirect procura.
-    path('', views.lista_oportunidades, name='lista_oportunidades'),
-    
-    
-    # ========== SISTEMA DE CHAT (RF14) ==========
-    path('chat/', views.ChatView.as_view(), name='chat'),
-    path('chat/enviar/', views.EnviarMensagemView.as_view(), name='enviar_mensagem'),
-    path('chat/usuarios/', views.ListarUsuariosView.as_view(), name='usuarios_chat'),
+    # ========== OUTRAS PÁGINAS ==========
+    path('chat/', views.chat, name='chat'),
 ]

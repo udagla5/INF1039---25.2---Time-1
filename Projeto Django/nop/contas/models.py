@@ -38,32 +38,39 @@ class Interesse(models.Model):
 # ===============================
 
 class Oportunidade(models.Model):
-    # Campos que você já tinha:
-    titulo = models.CharField(max_length=100)
-    descricao = models.TextField(max_length=5000)
-    TIPO_CHOICES = [('MON', 'Monitoria Acadêmica'), ('IC', 'Iniciação Científica'), ('EST', 'Estágio'), ('LP', 'Laboratório de Pesquisa'), ('OUT', 'Outro')]
-    tipo = models.CharField(max_length=3, choices=TIPO_CHOICES, default='OUT')
-    local = models.TextField(verbose_name='Local de realização da atividade') 
+    STATUS_CHOICES = [
+        ('PENDENTE', 'Pendente de Validação'),
+        ('APROVADA', 'Aprovada'),
+        ('REJEITADA', 'Rejeitada'),
+    ]
 
-    # 🚀 Novos campos adicionados:
-    cursos_elegiveis = models.CharField(max_length=255, verbose_name='Cursos elegíveis para participação')
-    carga_horaria = models.CharField(max_length=50, verbose_name='Carga horária')
-    num_vagas = models.IntegerField(verbose_name='Número de vagas disponíveis')
-    horas_complementares = models.IntegerField(verbose_name='Número de horas complementares')
-    remuneracao = models.IntegerField(verbose_name='Remuneracao')
-    processo_seletivo = models.TextField(verbose_name='Processo seletivo')
-    data_encerramento = models.DateField(verbose_name='Data de encerramento do processo seletivo') 
-    
-    data_publicacao = models.DateTimeField(auto_now_add=True)
-    
-    # Adicione outros campos, como prazo_final, criador, etc., se necessário.
+    nome = models.CharField(max_length=200)
+    tipo = models.CharField(max_length=100)
+    area = models.CharField(max_length=100)
+    descricao = models.TextField()
+    carga_horaria = models.PositiveIntegerField()
+    horas_complementares = models.PositiveIntegerField(default=0)
+    remuneracao = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    exigencias = models.TextField(blank=True, null=True)
+    data_criacao = models.DateTimeField(default=timezone.now)
+    prazo_inscricao = models.DateField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDENTE')
 
-    class Meta:
-        verbose_name = "Oportunidade"
-        verbose_name_plural = "Oportunidades"
+    criador = models.ForeignKey(
+        Usuario,
+        on_delete=models.CASCADE,
+        related_name='oportunidades_criadas'
+    )
+
+    interessados = models.ManyToManyField(
+        Usuario,
+        through='Participacao',
+        related_name='oportunidades_participadas',
+        blank=True
+    )
 
     def __str__(self):
-        return self.titulo
+        return f"{self.nome} ({self.status})"
 
 # ===============================
 # 3️⃣ PARTICIPAÇÕES (RF7, RF13)

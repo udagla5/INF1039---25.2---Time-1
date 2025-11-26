@@ -3,13 +3,11 @@
   font-family: "Work Sans", sans-serif;
 }
 
-html, body {
+body {
   margin: 0;
-  padding: 0;
   background: #031020;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+  height: 100vh;
+  display: flex;
 }
 
 /* ----------- Sidebar ----------- */
@@ -19,8 +17,6 @@ html, body {
   color: #fff;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  border-right: 1px solid #2D3845;
 }
 
 
@@ -28,7 +24,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 20px 20px 10px 20px;
+  padding: 0 20px;
   margin-bottom: 15px;
 }
 
@@ -157,7 +153,6 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: calc(100vh - 160px); /* Para deixar espaço para header e footer */
 }
 
 .msg {
@@ -242,8 +237,7 @@ html, body {
 
 .chat-container {
   display: flex;
-  height: 100vh;
+  height: calc(100vh - 80px);
   width: 100%;
   background: #031020;
-  margin: 0;
 }

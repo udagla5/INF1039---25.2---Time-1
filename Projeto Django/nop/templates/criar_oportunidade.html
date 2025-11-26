@@ -9,179 +9,81 @@
 
 {% block content %}
 <div class="opportunity-page">
-    <header class="opportunity-header">
-        <div class="opportunity-back-button">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
+  <header class="opportunity-header">
+    <div class="opportunity-back-button">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+        <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
 
-        <div class="opportunity-header-title">Criar Oportunidade</div>
-        <div class="opportunity-header-subtitle">Conecte alunos com oportunidades acadêmicas criadas por você</div>
-    </header>
+    <div class="opportunity-header-title">Criar Oportunidade</div>
+    <div class="opportunity-header-subtitle">Conecte alunos com oportunidades acadêmicas criadas por você</div>
+  </header>
 
-    <form method="POST">
-        {% csrf_token %} 
+  <div class="opportunity-container">
+    <label class="opportunity-label">Título *</label>
+    <input class="opportunity-input" required placeholder="Adicione um título que descreve a sua oportunidade" maxlength="100"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
 
-        <div class="form-group">
-            <label for="{{ form.titulo.id_for_label }}">Título <span class="required">*</span></label>
-            {{ form.titulo }} 
-            {% for error in form.titulo.errors %}
-                <span class="error-message">{{ error }}</span>
-            {% endfor %}
-            <span class="char-counter">0/100</span>
-        </div>
+    <label class="opportunity-label">Descrição *</label>
+    <textarea class="opportunity-input" required placeholder="Forneça uma descrição concisa do propósito e funcionamento da atividade" 
+      maxlength="5000" 
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')"></textarea>
 
-        <div class="form-group">
-            <label class="opportunity-label" for="{{ form.descricao.id_for_label }}">Descrição <span class="required">*</span></label>
-            {{ form.descricao }}
-            {% for error in form.descricao.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-            <span class="char-counter">0/5000</span>
-        </div>
+    <label class="opportunity-label">Tipo de atividade *</label>
+    <div class="opportunity-activity-group">
+      <div class="opportunity-activity-btn">Monitoria Acadêmica</div>
+      <div class="opportunity-activity-btn">Iniciação Científica</div>
+      <div class="opportunity-activity-btn">Estágio</div>
+      <div class="opportunity-activity-btn">Laboratório de Pesquisa</div>
+    </div>
 
-        <div class="form-group">
-            <label class="opportunity-label" for="{{ form.tipo.id_for_label }}">Tipo de atividade <span class="required">*</span></label>
-            {{ form.tipo }} 
-            {% for error in form.tipo.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-            
-            <div class="opportunity-activity-group" style="margin-top: 8px;">
-                 <div class="opportunity-activity-btn">Monitoria Acadêmica</div>
-                 <div class="opportunity-activity-btn">Iniciação Científica</div>
-                 <div class="opportunity-activity-btn">Estágio</div>
-                 <div class="opportunity-activity-btn">Laboratório de Pesquisa</div>
-            </div>
-        </div>
+    <label class="opportunity-label">Local de realização da atividade *</label>
+    <input class="opportunity-input" required placeholder="Indique o local da atividade"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
 
-        <div class="form-group">
-            <label class="opportunity-label" for="{{ form.local.id_for_label }}">Local de realização da atividade <span class="required">*</span></label>
-            {{ form.local }}
-            {% for error in form.local.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-        </div>
-        
-        <div class="form-group">
-            <label class="opportunity-label" for="{{ form.cursos_elegiveis.id_for_label }}">Cursos elegíveis para participação <span class="required">*</span></label>
-            {{ form.cursos_elegiveis }}
-            {% for error in form.cursos_elegiveis.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-        </div>
-        
-        <div class="form-group">
-            <label class="opportunity-label" for="{{ form.carga_horaria.id_for_label }}">Carga horária <span class="required">*</span></label>
-            {{ form.carga_horaria }}
-            {% for error in form.carga_horaria.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-        </div>
-        
-        <div class="form-group">
-            <label class="opportunity-label" for="{{ form.num_vagas.id_for_label }}">Número de vagas disponíveis <span class="required">*</span></label>
-            {{ form.num_vagas }}
-            {% for error in form.num_vagas.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-        </div>
+    <label class="opportunity-label">Cursos elegíveis para participação *</label>
+    <input class="opportunity-input" required placeholder="Indique quais cursos podem participar"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
 
-        <div class="form-group">
-            <label class="opportunity-label" for="{{ form.horas_complementares.id_for_label }}">Número de horas complementares <span class="required">*</span></label>
-            {{ form.horas_complementares }}
-            {% for error in form.horas_complementares.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-        </div>
+    <label class="opportunity-label">Carga horária *</label>
+    <input class="opportunity-input" required placeholder="Informe a carga horária"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
 
-        <div class="form-group">
-            <label class="opportunity-label" for="{{ form.remuneracao.id_for_label }}">Remuneracao <span class="required">*</span></label>
-            {{ form.remuneracao }}
-            {% for error in form.remuneracao.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-        </div>
+    <label class="opportunity-label">Número de vagas disponíveis *</label>
+    <input class="opportunity-input" required placeholder="Informe a quantidade de vagas"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
 
-        <div class="form-group">
-            <label class="opportunity-label" for="{{ form.processo_seletivo.id_for_label }}">Processo seletivo <span class="required">*</span></label>
-            {{ form.processo_seletivo }}
-            {% for error in form.processo_seletivo.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-        </div>
+    <label class="opportunity-label">Processo seletivo *</label>
+    <input class="opportunity-input" required placeholder="Explique como funciona o processo seletivo"
+      oninvalid="this.setCustomValidity('Preenchimento obrigatório')" oninput="this.setCustomValidity('')" />
 
-        <div class="form-group">
-            <label class="opportunity-label" for="{{ form.data_encerramento.id_for_label }}">Data de encerramento do processo seletivo <span class="required">*</span></label>
-            {{ form.data_encerramento }}
-            {% for error in form.data_encerramento.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-            </div>
+    <label class="opportunity-label">Data de encerramento do processo seletivo *</label>
+    <div class="opportunity-flex-date">
+      <input class="opportunity-input opportunity-date-input" placeholder="Dia" required inputmode="numeric" maxlength="2" pattern="[0-9]{2}"
+             oninvalid="this.setCustomValidity('Obrigatório')" oninput="this.setCustomValidity('')" />
 
-        <button type="submit" class="opportunity-confirm">Confirmar</button>
-    </form>
+      <input class="opportunity-input opportunity-date-input" placeholder="Mês" required inputmode="numeric" maxlength="2" pattern="[0-9]{2}"
+             oninvalid="this.setCustomValidity('Obrigatório')" oninput="this.setCustomValidity('')" />
+
+      <input class="opportunity-input opportunity-date-input" placeholder="Ano" required inputmode="numeric" maxlength="4" pattern="[0-9]{4}"
+             oninvalid="this.setCustomValidity('Obrigatório')" oninput="this.setCustomValidity('')" />
+    </div>
+
+    <button class="opportunity-confirm">Confirmar</button>
+  </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // 💡 OBS: O JavaScript aqui só lida com a seleção visual dos botões.
-    // Ele NÃO envia o valor para o campo 'tipo' do Django automaticamente.
-    // Para funcionar com o Django, o JS precisaria: 
-    // 1. Pegar o valor do botão clicado.
-    // 2. Definir este valor no campo SELECT oculto/visível ({{ form.tipo }}).
-    
-    const activityGroup = document.querySelector('.opportunity-activity-group');
-    const buttons = activityGroup ? activityGroup.querySelectorAll('.opportunity-activity-btn') : [];
+  const buttons = document.querySelectorAll('.opportunity-activity-btn');
 
-    // Lógica visual para selecionar o botão
-    buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            buttons.forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            
-            // Exemplo de como você teria que definir o valor no campo real do Django:
-            // document.getElementById('id_tipo').value = 'MON'; // O valor real do choice (MON, IC, EST, etc.)
-        });
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
     });
-
-    // Adicione aqui a lógica de JavaScript para os contadores de caracteres (char-counter), se necessário.
-    const charCounterSetup = (textareaId, counterClass, maxLength) => {
-        const textarea = document.getElementById(textareaId);
-        const counter = textarea ? textarea.closest('.form-group').querySelector(counterClass) : null;
-
-        if (textarea && counter) {
-            const updateCounter = () => {
-                counter.textContent = `${textarea.value.length}/${maxLength}`;
-            };
-            textarea.addEventListener('input', updateCounter);
-            updateCounter(); // Initial count
-        }
-    };
-
-    // Exemplo para o título e descrição:
-    charCounterSetup('id_titulo', '.char-counter', 100);
-    charCounterSetup('id_descricao', '.char-counter', 5000);
+  });
 </script>
-
-<style>
-/* Estilo básico para exibir os erros do Django no template */
-.error-message {
-    color: #DC2626; /* Cor vermelha para erros */
-    font-size: 13px;
-    display: block;
-    margin-top: 4px;
-}
-
-/* Adicionando estilo para o campo de data, que agora é um input type="date" */
-input[type="date"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    font-size: 16px;
-}
-/* Estilo para o campo select do tipo de oportunidade */
-select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    font-size: 16px;
-    background-color: #FFFFFF;
-}
-
-/* Estilo para os inputs e textareas do forms.py que recebem a classe opportunity-input via __init__ */
-.opportunity-input, .opportunity-input[type="number"] {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    font-size: 16px;
-    font-family: inherit;
-    background-color: #FFFFFF;
-}
-</style>
 {% endblock %}

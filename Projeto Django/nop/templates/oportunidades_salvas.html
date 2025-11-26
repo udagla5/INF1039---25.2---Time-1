@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Oportunidades Salvas — NOP{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/oportunidades_salvas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="saved-container">
+
+    <h1 class="saved-title">Oportunidades Salvas</h1>
+
+    {% if oportunidades %}
+        <div class="saved-grid">
+            {% for vaga in oportunidades %}
+                <article class="saved-card" aria-labelledby="vaga-{{ vaga.id }}">
+                    <div class="saved-info">
+                        <h2 id="vaga-{{ vaga.id }}" class="saved-job-title">{{ vaga.titulo }}</h2>
+
+                        <div class="saved-meta">
+                            <span class="tag">{{ vaga.get_tipo_display }}</span>
+                            {% if vaga.local %}
+                                <span class="tag">{{ vaga.local }}</span>
+                            {% endif %}
+                            <span class="saved-deadline">Encerramento: {{ vaga.data_encerramento|date:"d/m/Y" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="saved-actions">
+                        <a href="{% url 'detalhe_oportunidade' vaga.id %}" class="btn-visit">Ver detalhes</a>
+
+                        <form method="post" action="{% url 'remover_salva' vaga.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-remove" aria-label="Remover {{ vaga.titulo }}">Remover</button>
+                        </form>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-saved">Você ainda não salvou nenhuma oportunidade.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

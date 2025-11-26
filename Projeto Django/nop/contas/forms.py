@@ -176,7 +176,7 @@ class OportunidadeForm(forms.ModelForm):
     class Meta:
         model = Oportunidade
         # 🔑 Todos os campos do modelo devem estar aqui:
-        fields = ['titulo', 'descricao', 'tipo', 'local', 'cursos_elegiveis', 'carga_horaria', 'num_vagas', 'processo_seletivo', 'data_encerramento']
+        fields = ['titulo', 'descricao', 'tipo', 'local', 'remuneracao', 'cursos_elegiveis', 'carga_horaria', 'num_vagas', 'processo_seletivo', 'data_encerramento']
         
         widgets = {
             'titulo': forms.TextInput(attrs={'placeholder': 'Título da oportunidade', 'maxlength': 100}),
@@ -185,7 +185,9 @@ class OportunidadeForm(forms.ModelForm):
             'cursos_elegiveis': forms.TextInput(attrs={'placeholder': 'Indique quais cursos podem participar'}),
             'carga_horaria': forms.TextInput(attrs={'placeholder': 'Informe a carga horária'}),
             'num_vagas': forms.NumberInput(attrs={'placeholder': 'Informe a quantidade de vagas'}),
-            'processo_seletivo': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Explique como funciona o processo seletivo'}),
+            'horas_complementares': forms.NumberInput(attrs={'placeholder': 'Informe a quantidade de horas complementares'}),
+            'processo_seletivo': forms.Textarea(attrs={'rows': 7, 'placeholder': 'Explique como funciona o processo seletivo'}),
+            'remuneracao': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Explique como funciona a remuneracao'}),
             'data_encerramento': forms.DateInput(attrs={'type': 'date'}), # Usamos type="date" para simplificar o campo de data
         }
         

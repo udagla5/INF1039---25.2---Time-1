@@ -4,44 +4,93 @@
 {% block title %}Oportunidades Salvas — NOP{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/feed.css' %}">
 <link rel="stylesheet" href="{% static 'css/oportunidades_salvas.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="saved-container">
-
+<div class="saved-container feed-like-container">
     <h1 class="saved-title">Oportunidades Salvas</h1>
 
-    {% if oportunidades %}
-        <div class="saved-grid">
-            {% for vaga in oportunidades %}
-                <article class="saved-card" aria-labelledby="vaga-{{ vaga.id }}">
-                    <div class="saved-info">
-                        <h2 id="vaga-{{ vaga.id }}" class="saved-job-title">{{ vaga.titulo }}</h2>
-
-                        <div class="saved-meta">
-                            <span class="tag">{{ vaga.get_tipo_display }}</span>
-                            {% if vaga.local %}
-                                <span class="tag">{{ vaga.local }}</span>
-                            {% endif %}
-                            <span class="saved-deadline">Encerramento: {{ vaga.data_encerramento|date:"d/m/Y" }}</span>
-                        </div>
-                    </div>
-
-                    <div class="saved-actions">
-                        <a href="{% url 'detalhe_oportunidade' vaga.id %}" class="btn-visit">Ver detalhes</a>
-
-                        <form method="post" action="{% url 'remover_salva' vaga.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn-remove" aria-label="Remover {{ vaga.titulo }}">Remover</button>
-                        </form>
-                    </div>
-                </article>
-            {% endfor %}
+    <nav class="barra-principal" role="navigation" aria-label="Menu de colunas">
+        <div class="filtros-area">
+            <div class="filtros-toggle">
+                <span>OPORTUNIDADES SALVAS</span>
+            </div>
         </div>
-    {% else %}
-        <p class="no-saved">Você ainda não salvou nenhuma oportunidade.</p>
-    {% endif %}
+        <div class="coluna-header">TIPO</div>
+        <div class="coluna-header">CARGA HORÁRIA</div>
+        <div class="coluna-header">REMUNERAÇÃO</div>
+        <div class="coluna-header">HORAS COMP.</div>
+        <div></div> </nav>
+    
+    <main class="feed" id="conteudo" role="main">
+    {% if oportunidades %}
+        {% for vaga in oportunidades %}
+        <section class="oportunidade-item">
 
+            <div class="oportunidade-col bookmark-col">
+                <form method="post" action="{% url 'remover_salva' vaga.id %}" id="fav-form-{{ vaga.id }}" class="fav-form-feed" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="display:none;"></button>
+                </form>
+                
+                <a href="#" 
+                   class="btn-favorito-link favorito" 
+                   data-form-id="fav-form-{{ vaga.id }}" 
+                   aria-label="Remover {{ vaga.titulo }} das salvas">
+                    <svg class="heart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="oportunidade-col info-col">
+                <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/333/666?text={{ vaga.titulo|slice:":1" }}');"></div>
+                <div class="info-texto">
+                    <h3>{{ vaga.titulo }}</h3>
+                    <p>{{ vaga.local }}</p>
+                </div>
+            </div>
+
+            <div class="oportunidade-col">{{ vaga.get_tipo_display }}</div>
+            <div class="oportunidade-col">{{ vaga.carga_horaria }}</div>
+            <div class="oportunidade-col">R$ {{ vaga.remuneracao }}</div>
+            <div class="oportunidade-col">{{ vaga.horas_complementares }}h</div>
+
+            <div class="oportunidade-col acao-col">
+                <a href="{% url 'detalhe_oportunidade' vaga.id %}" class="btn-ver-mais">
+                    Ver detalhes
+                </a>
+            </div>
+
+        </section>
+        {% endfor %}
+    {% else %}
+        <p class="no-saved no-results-message">Você ainda não salvou nenhuma oportunidade.</p>
+    {% endif %}
+    </main>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 🚀 SCRIPT PARA REMOVER VIA LINK/BOTÃO DE FAVORITAR
+    document.addEventListener('DOMContentLoaded', function() {
+        // Usa a mesma classe do feed, mas aqui a ação é remover
+        const removerLinks = document.querySelectorAll('.btn-favorito-link');
+        
+        removerLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Impede o link de navegar
+                const formId = this.getAttribute('data-form-id');
+                const form = document.getElementById(formId);
+                
+                if (form) {
+                    form.submit(); // Envia o formulário de remoção
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

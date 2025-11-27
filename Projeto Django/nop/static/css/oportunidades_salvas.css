@@ -1,10 +1,10 @@
-@import url('base.css');
+/* Este CSS agora complementa o feed.css, que será importado no HTML */
 
-/* Container principal */
+/* Container principal para centralizar e adicionar margem */
 .saved-container {
-    max-width: 1100px;
-    margin: 40px auto;
-    padding: 0 20px;
+    max-width: 100%;
+    margin: 20px 5px;
+    padding: 0 0px;
 }
 
 .saved-title {
@@ -12,129 +12,37 @@
     font-weight: 700;
     margin-bottom: 24px;
     color: var(--text-light);
+    /* Garante que o título esteja alinhado com o feed-like-container */
+    padding: 0 5px; 
 }
 
-/* Grid de cards */
-.saved-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
+/* Ajustes na barra de título (header) para esta tela */
+.feed-like-container .barra-principal {
+    /* Garante que o header use as mesmas margens do feed */
+    padding: 5px 5px; 
 }
 
-/* Card */
-.saved-card {
-    background: var(--primary-dark-light);
-    padding: 20px;
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border: 1px solid var(--border-color);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.saved-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-}
-
-/* Informações */
-.saved-job-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--text-light);
-}
-
-.saved-meta {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 14px;
-}
-
-.tag {
-    background: var(--primary-dark);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    color: var(--text-light);
-    border: 1px solid var(--border-color);
-}
-
-.saved-deadline {
-    font-size: 0.8rem;
-    color: var(--text-gray);
-    margin-left: auto;
-}
-
-/* Ações */
-.saved-actions {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin-top: 8px;
-}
-
-.btn-visit {
-    padding: 10px 16px;
-    background: var(--primary-blue);
-    color: white;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-block;
-    transition: background 0.16s;
-}
-
-.btn-visit:hover {
-    background: #4a80f0;
-}
-
-.btn-remove {
-    padding: 10px 16px;
-    background: transparent;
-    color: var(--text-light);
-    border: 1px solid var(--error-color);
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.16s, color 0.16s;
-}
-
-.btn-remove:hover {
-    background: var(--error-color);
-    color: white;
-}
-
-/* Mensagem quando vazio */
+/* Mensagem quando vazio (Centraliza a mensagem dentro da área do feed) */
 .no-saved {
+    text-align: center; 
+    padding: 40px; 
+    color: var(--text-gray); /* Usando a variável do feed.css */
     font-size: 1.05rem;
-    color: var(--text-gray);
-    margin-top: 24px;
-    text-align: center;
+    margin-top: 0;
 }
 
-/* Responsividade */
+/* Garantir que o container do feed não tenha limite de largura, herdando do feed.css */
+.feed-like-container .feed {
+    width: 100%;
+    max-width: none;
+    padding: 0; 
+    margin: 0;
+}
+
+/* Responsividade: Ajusta a mensagem de "Oportunidades Salvas" quando a barra principal sumir (em telas muito pequenas) */
 @media (max-width: 768px) {
-    .saved-container {
-        margin: 24px auto;
-    }
-
-    .saved-meta .saved-deadline {
-        width: 100%;
-        margin-left: 0;
-        margin-top: 8px;
-    }
-
-    .saved-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .btn-visit, .btn-remove {
-        width: 100%;
+    .saved-title {
+        text-align: center;
+        padding: 20px;
     }
 }

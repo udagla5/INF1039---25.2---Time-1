@@ -49,10 +49,11 @@ class Oportunidade(models.Model):
     cursos_elegiveis = models.CharField(max_length=255, verbose_name='Cursos elegíveis para participação')
     carga_horaria = models.CharField(max_length=50, verbose_name='Carga horária')
     num_vagas = models.IntegerField(verbose_name='Número de vagas disponíveis')
+    horas_complementares = models.IntegerField(verbose_name='Número de horas complementares')
+    remuneracao = models.IntegerField(verbose_name='Remuneracao')
     processo_seletivo = models.TextField(verbose_name='Processo seletivo')
     data_encerramento = models.DateField(verbose_name='Data de encerramento do processo seletivo') 
-    remuneracao = models.CharField(verbose_name='Valor da remuneracao do processo seletivo') 
-
+    
     data_publicacao = models.DateTimeField(auto_now_add=True)
     
     # Adicione outros campos, como prazo_final, criador, etc., se necessário.
@@ -158,4 +159,3 @@ class Avaliacao(models.Model):
 
     def __str__(self):
         return f"Avaliação {self.nota}/10 por {self.autor.username}"
-

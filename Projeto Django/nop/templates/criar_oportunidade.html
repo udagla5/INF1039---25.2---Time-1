@@ -95,23 +95,11 @@
         </div>
 
         <div class="form-group">
-            <label class="opportunity-label" for="{{ form.horas_complementares.id_for_label }}">Número de horas complementares <span class="required">*</span></label>
-            {{ form.horas_complementares }}
-            {% for error in form.horas_complementares.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-        </div>
-
-        <div class="form-group">
-            <label class="opportunity-label" for="{{ form.remuneracao.id_for_label }}">Remuneracao <span class="required">*</span></label>
-            {{ form.remuneracao }}
-            {% for error in form.remuneracao.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
-        </div>
-
-        <div class="form-group">
             <label class="opportunity-label" for="{{ form.data_encerramento.id_for_label }}">Data de encerramento do processo seletivo <span class="required">*</span></label>
             {{ form.data_encerramento }}
             {% for error in form.data_encerramento.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
             </div>
-                
+
         <button type="submit" class="opportunity-confirm">Confirmar</button>
     </form>
 </div>

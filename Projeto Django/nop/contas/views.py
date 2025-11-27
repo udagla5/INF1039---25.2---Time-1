@@ -288,4 +288,3 @@ def oportunidades_salvas(request):
 def remover_salva(request, id):
     Favorito.objects.filter(usuario=request.user, vaga_id=id).delete()
     return redirect('oportunidades_salvas')
-

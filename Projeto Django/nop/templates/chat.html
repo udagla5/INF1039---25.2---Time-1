@@ -199,6 +199,25 @@ if (form) {
     });
   }
 }
-// ... (resto do script)
+
+const searchInput = document.getElementById('searchInput');
+const usuarioItems = document.querySelectorAll('.usuario-item');
+
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    
+    usuarioItems.forEach(item => {
+      const nomeUsuario = item.querySelector('.chat-top span').textContent.toLowerCase();
+      const emailUsuario = item.querySelector('.chat-info small:last-child').textContent.toLowerCase();
+      
+      if (nomeUsuario.includes(searchTerm) || emailUsuario.includes(searchTerm)) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  });
+}
 </script>
 {% endblock %}

@@ -3,12 +3,19 @@
 /* --- Variável de Grid (Ajuste Fino) --- */
 :root {
     /* A mágica acontece aqui:
-       1. Bookmark: 60px
-       2. Título (Info): minmax(300px, 4fr) -> Ocupa todo o espaço livre
-       3. Colunas de dados: 1fr cada -> Tamanhos iguais
-       4. Botão: 120px -> Tamanho fixo suficiente para o botão
+        1. Bookmark: 60px
+        2. Título (Info): minmax(300px, 4fr) -> Ocupa todo o espaço livre
+        3. Colunas de dados: 1fr cada -> Tamanhos iguais
+        4. Botão: 120px -> Tamanho fixo suficiente para o botão
     */
     --feed-grid-template: 60px minmax(300px, 4fr) 1.2fr 1.2fr 1.2fr 1.2fr 120px;
+    /* Variáveis de cores (Assumidas ou importadas de um base.css) */
+    --primary-dark-light: #1e293b; /* Exemplo de um fundo escuro */
+    --border-color: #334155; /* Exemplo de cor da borda */
+    --text-gray: #94a3b8; /* Exemplo de texto cinza */
+    --primary-blue: #3b82f6; /* Exemplo de azul principal */
+    --text-light: #f8fafc; /* Exemplo de texto claro */
+    --border-radius: 8px; /* Exemplo de border radius */
 }
 
 /* --- Container Principal --- */
@@ -94,10 +101,16 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    color: var(--text-gray);
-    cursor: pointer;
+    /* Removido color/cursor daqui para serem definidos no .btn-favorito */
 }
-.bookmark-col:hover { color: var(--primary-blue); }
+
+/* Garante que o FORM dentro da coluna não tenha fundo, se aplicável */
+.bookmark-col form {
+    background: transparent !important;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
 
 /* 2. Info Principal */
 .info-col {
@@ -135,16 +148,15 @@
 .info-texto p { font-size: 13px; color: var(--text-gray); }
 
 /* 3, 4, 5, 6. Colunas de Dados (Tipo, Carga, etc) */
-/* Isso garante que as bordas apareçam em todas as colunas do meio */
 .oportunidade-item > div:nth-child(3),
 .oportunidade-item > div:nth-child(4),
 .oportunidade-item > div:nth-child(5),
 .oportunidade-item > div:nth-child(6) {
     display: flex;
     align-items: center;
-    height: 100%; /* Estica a altura para a borda ficar completa */
+    height: 100%; 
     padding-left: 20px;
-    border-left: 1px solid var(--border-color); /* A LINHA DIVISÓRIA */
+    border-left: 1px solid var(--border-color); 
     font-size: 14px;
     color: var(--text-light);
 }
@@ -156,7 +168,7 @@
     justify-content: center; /* Centraliza o botão */
     height: 100%;
     padding: 0 15px;
-    border-left: 1px solid var(--border-color); /* Linha divisória antes do botão */
+    border-left: 1px solid var(--border-color); 
 }
 
 .btn-ver-mais {
@@ -179,6 +191,48 @@
     background: var(--primary-blue);
     color: white;
     border-color: var(--primary-blue);
+}
+
+/* ==================================== */
+/* Ajustes do Botão de Favoritar (CORRIGIDO) */
+/* ==================================== */
+
+/* 1. Remove o estilo padrão de botão, deixando-o limpo e sem fundo branco */
+.btn-favorito {
+    background-color: transparent !important; /* FORÇA o fundo transparente */
+    border: none !important; /* Remove a borda padrão */
+    padding: 0; 
+    margin: 0; /* Remove margens que podem afetar o espaçamento */
+    cursor: pointer; 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    color: var(--text-gray, #99a8bd); /* Cor padrão do ícone (cinza) */
+    transition: color 0.2s;
+}
+
+/* 2. Estilo do SVG */
+.btn-favorito svg {
+    fill: none;
+    stroke: currentColor;
+    display: block;
+}
+
+/* 3. Cor ao passar o mouse */
+.btn-favorito:hover {
+    color: var(--primary-blue, #3b82f6);
+}
+
+/* 4. Estilo para quando JÁ ESTÁ FAVORITADO (o botão AZULZINHO) */
+.btn-favorito.favorito {
+    color: #3b82f6 !important; /* FORÇA a cor azul (usando o primary-blue) */
+}
+
+/* 5. Preencher o ícone quando favoritado (para ficar sólido) */
+.btn-favorito.favorito svg {
+    fill: currentColor !important; /* FORÇA o preenchimento com a cor azul */
+    stroke: none !important; /* Remove o contorno */
 }
 
 /* --- Responsividade --- */
@@ -227,30 +281,4 @@
     
     .bookmark-col { display: none; }
     .acao-col { border: none; }
-}
-/* Remove o estilo padrão de botão */
-.btn-favorito {
-    background-color: transparent; /* Remove o fundo branco */
-    border: none;                  /* Remove a borda */
-    padding: 0;                    /* Remove espaçamento interno */
-    cursor: pointer;               /* Mantém o ponteiro de clique */
-    display: flex;                 /* Centraliza o ícone */
-    align-items: center;
-    justify-content: center;
-    color: #64748b;                /* Cor padrão do ícone (cinza azulado, ajuste se quiser) */
-    transition: color 0.2s;
-}
-
-.btn-favorito:hover {
-    color: #334155;                /* Cor ao passar o mouse */
-}
-
-/* Estilo para quando já está favoritado (você já tem essa lógica no HTML) */
-.btn-favorito.favorito {
-    color: #eab308; /* Amarelo/Dourado */
-}
-
-/* Opcional: Se quiser preencher o ícone quando favoritado */
-.btn-favorito.favorito svg {
-    fill: currentColor;
 }

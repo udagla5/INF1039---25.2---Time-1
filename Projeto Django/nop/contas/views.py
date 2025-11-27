@@ -28,7 +28,7 @@ class FeedView(LoginRequiredMixin, ListView):
     template_name = 'feed.html'
     context_object_name = 'oportunidades'
     paginate_by = 12
-    login_url = 'login'  # aqui define para onde redireciona
+    login_url = 'login' # aqui define para onde redireciona
     redirect_field_name = 'redirect_to'
 
 
@@ -39,7 +39,7 @@ def cadastro1(request):
             # O método save() do form já cuida da criptografia da senha
             usuario = form.save()
             messages.success(request, 'Usuário criado com sucesso!')
-            return redirect('cadastro2')  # Ir para etapa 2 (interesses)
+            return redirect('cadastro2') # Ir para etapa 2 (interesses)
     else:
         form = UsuarioForm()
 
@@ -62,7 +62,7 @@ def cadastro2(request):
     return render(request, 'cadastro2.html', {'form': form})
 
 def criar_conta(request):
-    return redirect('cadastro1')  # Redireciona para cadastro1
+    return redirect('cadastro1') # Redireciona para cadastro1
 
 def custom_login(request):
     if request.method == 'POST':
@@ -113,7 +113,7 @@ def criar_oportunidade(request):
             
             # ⚠️ Substitua 'lista_oportunidades' pelo nome da URL de destino no seu urls.py
             return redirect('lista_oportunidades') 
-    
+        
     else:
         form = OportunidadeForm()
     
@@ -182,7 +182,7 @@ class ChatView(LoginRequiredMixin, TemplateView):
             except Usuario.DoesNotExist:
                 context['destinatario'] = None
                 context['mensagens'] = []
-        
+                
         return context
 
 class EnviarMensagemView(LoginRequiredMixin, TemplateView):
@@ -224,7 +224,7 @@ class EnviarMensagemView(LoginRequiredMixin, TemplateView):
                 'success': False,
                 'errors': form.errors
             })
-    
+        
     def get(self, request, *args, **kwargs):
         return JsonResponse({'success': False, 'error': 'Método não permitido'})
 
@@ -276,7 +276,7 @@ def upload_avatar(request):
     # Se alguém acessar diretamente via GET, redireciona ou retorna erro
     return redirect('perfil_aluno')
 
-#Exibe as oportunidades em oportunidades_salvas.html
+# Exibe as oportunidades em oportunidades_salvas.html
 @login_required
 def oportunidades_salvas(request):
     oportunidades = Favorito.objects.filter(usuario=request.user)
@@ -287,12 +287,17 @@ def oportunidades_salvas(request):
 # Remove a oportunidade salva
 @login_required
 def remover_salva(request, id):
-    Favorito.objects.filter(usuario=request.user, vaga_id=id).delete()
+    Favorito.objects.filter(usuario=request.user, oportunidade_id=id).delete()
+    messages.info(request, 'Oportunidade removida dos seus favoritos.')
     return redirect('oportunidades_salvas')
 
 # Salva a oportunidade como favorita
 @login_required
 def favoritar_oportunidade(request, id):
     oportunidade = get_object_or_404(Oportunidade, pk=id)
-    Favorito.objects.get_or_create(usuario=request.user, oportunidade=oportunidade)
-    return redirect('feed')
+    # Garante que a oportunidade seja favoritada (se já não estiver)
+    Favorito.objects.get_or_create(usuario=request.user, oportunidade=oportunidade) 
+    
+    # AÇÃO CORRIGIDA: Redireciona para a lista de salvos
+    messages.success(request, 'Oportunidade salva com sucesso! 🎉')
+    return redirect('oportunidades_salvas') # << CORRIGIDO PARA A PÁGINA DE SALVOS

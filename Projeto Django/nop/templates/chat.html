@@ -1,16 +1,15 @@
-{% extends 'base.html' %}
 {% load static %}
-
-
-{% block title %}Chat | NOP{% endblock %}
-
-{% block extra_css %}
-<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="{% static 'css/chat.css' %}">
-{% endblock %}
-
-{% block content %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat | NOP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+</head>
+<body>
 <div class="chat-container">
   <div class="sidebar">
     <div class="search-box">
@@ -23,46 +22,28 @@
       </a>
     </div>
     <div class="chat-list">
-      {% if destinatario %}
-        <div class="chat-item selected" style="border-left: 3px solid #69A3EF; background: #2D3845;">
-          <a href="?conversa_com={{ destinatario.id }}" style="display: flex; align-items: center; text-decoration: none; color: inherit; width: 100%;">
-            <img src="{% static 'img/user_placeholder.png' %}" alt="{{ destinatario.username }}">
+      {% if conversas %}
+        {% for conversa in conversas %}
+        <div class="chat-item {% if conversa.id|stringformat:'s' == request.GET.conversa_com %}selected{% endif %}">
+          <a href="?conversa_com={{ conversa.id }}" style="display: flex; align-items: center; text-decoration: none; color: inherit; width: 100%;">
+            <img src="{% static 'img/user_placeholder.png' %}" alt="{{ conversa.username }}">
             <div class="chat-info">
               <div class="chat-top">
-                <span>{{ destinatario.first_name|default:destinatario.username }}</span>
-                <small class="time">Agora</small>
+                <span>{{ conversa.first_name|default:conversa.username }}</span>
+                <small class="time">{{ conversa.ultima_mensagem_data|date:"H:i" }}</small>
               </div>
-              <small>Nova conversa</small>
+              <small>{{ conversa.tipo_display|default:"Usuário" }}</small>
             </div>
           </a>
         </div>
-      {% endif %}
-
-      {% if conversas %}
-        {% for conversa in conversas %}
-          {% if conversa.id != destinatario.id %}
-            <div class="chat-item {% if conversa.id|stringformat:'s' == request.GET.conversa_com %}selected{% endif %}">
-              <a href="?conversa_com={{ conversa.id }}" style="display: flex; align-items: center; text-decoration: none; color: inherit; width: 100%;">
-                <img src="{% static 'img/user_placeholder.png' %}" alt="{{ conversa.username }}">
-                <div class="chat-info">
-                  <div class="chat-top">
-                    <span>{{ conversa.first_name|default:conversa.username }}</span>
-                    <small class="time">{{ conversa.ultima_mensagem_data|date:"H:i" }}</small>
-                  </div>
-                  <small>{{ conversa.tipo_display|default:"Usuário" }}</small>
-                </div>
-              </a>
-            </div>
-          {% endif %}
         {% endfor %}
-      {% endif %}
-      
-      {% if not conversas and not destinatario %}
+      {% else %}
         <div style="padding: 20px; text-align: center; color: #666;">
           <p>Nenhuma conversa ainda.</p>
           <a href="{% url 'usuarios_chat' %}" style="color: #007bff;">Iniciar nova conversa</a>
         </div>
       {% endif %}
+
     </div>
   </div>
 
@@ -106,118 +87,107 @@
       <div class="icons">
         <i class="fa-regular fa-face-smile"></i>
         <i class="fa-solid fa-paperclip"></i>
+        <i class="fa-regular fa-calendar"></i>
+        <i class="fa-solid fa-upload"></i>
       </div>
-
       {% if destinatario %}
-      <form id="mensagemForm" method="post" action="{% url 'enviar_mensagem' %}" style="display: flex; align-items: center; width: 100%; margin: 0;">
+      <form id="mensagemForm" method="post" action="{% url 'enviar_mensagem' %}" style="display: flex; align-items: center; flex: 1;">
         {% csrf_token %}
         <input type="hidden" name="destinatario_id" value="{{ destinatario.id }}">
-        
-        <div style="flex: 1; margin-right: 10px;">
-            {{ form_mensagem.conteudo }}
-        </div>
-
-        <button type="submit" style="border: none; background: none; color: #007bff; cursor: pointer; font-size: 1.2rem;">
-            <i class="fa-solid fa-paper-plane"></i>
-        </button>
+        {{ form_mensagem.conteudo }}
+        <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
       </form>
       {% else %}
-      <textarea placeholder="Selecione uma conversa para enviar mensagens..." rows="1" disabled style="width: 100%; flex: 1;"></textarea>
-      <button disabled style="border: none; background: none; color: #ccc;"><i class="fa-solid fa-paper-plane"></i></button>
+      <textarea placeholder="Selecione uma conversa para enviar mensagens..." rows="1" disabled></textarea>
+      <button disabled><i class="fa-solid fa-paper-plane"></i></button>
       {% endif %}
     </div>
   </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
 <script>
 const chat = document.getElementById("chat");
 const form = document.getElementById("mensagemForm");
-const textarea = document.getElementById('mensagem-input'); // ⬅️ Pegar o textarea pelo ID
 
-// Função para enviar via AJAX
-function enviarMensagem(e) {
-  e.preventDefault();
-  
-  const conteudo = textarea.value.trim(); // ⬅️ Acesso direto ao valor
-  
-  if (!conteudo) return;
-  
-  // Usar FormData para enviar
-  const formData = new FormData(form);
-  // O FormData já pega o 'conteudo' porque o textarea tem name="conteudo"
-  
-  // Enviar via AJAX
-  fetch(form.action, {
-    method: 'POST',
-    body: formData,
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      // Adicionar mensagem na tela
-      const msg = document.createElement("div");
-      msg.classList.add("msg", "sent");
-      // Substituir quebras de linha por <br> e adicionar o horário
-      msg.innerHTML = `${data.mensagem.conteudo.replace(/\n/g, "<br>")}<small>${data.mensagem.data_envio}</small>`;
-      chat.appendChild(msg);
-      
-      // Limpar form e resetar textarea
-      textarea.value = '';
-      textarea.style.height = '40px'; // Resetar a altura
-      
-      // Scroll para baixo
-      chat.scrollTop = chat.scrollHeight;
-    } else {
-      alert('Erro ao enviar mensagem: ' + (data.error || 'Erro desconhecido'));
-    }
-  })
-  .catch(error => {
-    console.error('Erro:', error);
-    alert('Erro ao enviar mensagem');
-  });
-}
-
-// 1. Envio de mensagens via AJAX
+// Envio de mensagens via AJAX
 if (form) {
-  form.addEventListener('submit', enviarMensagem);
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    const conteudo = formData.get('conteudo').trim();
+    
+    if (!conteudo) return;
+    
+    // Enviar via AJAX
+    fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Adicionar mensagem na tela
+        const msg = document.createElement("div");
+        msg.classList.add("msg", "sent");
+        msg.innerHTML = `${data.mensagem.conteudo.replace(/\n/g, "<br>")}<small>${data.mensagem.data_envio}</small>`;
+        chat.appendChild(msg);
+        
+        // Limpar form
+        form.reset();
+        
+        // Scroll para baixo
+        chat.scrollTop = chat.scrollHeight;
+      } else {
+        alert('Erro ao enviar mensagem: ' + (data.error || 'Erro desconhecido'));
+      }
+    })
+    .catch(error => {
+      console.error('Erro:', error);
+      alert('Erro ao enviar mensagem');
+    });
+  });
 
-  // 2. Enter envia / Shift+Enter pula linha
+  // Enter envia / Shift+Enter pula linha
+  const textarea = form.querySelector('textarea');
   if (textarea) {
     textarea.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        enviarMensagem(e); // Chamar a função de envio
+        form.dispatchEvent(new Event('submit'));
       }
-    });
-    
-    // 3. Auto-redimensionamento do textarea
-    textarea.addEventListener('input', () => {
-      textarea.style.height = 'auto';
-      textarea.style.height = (textarea.scrollHeight) + 'px';
     });
   }
 }
 
-const searchInput = document.getElementById('searchInput');
-const usuarioItems = document.querySelectorAll('.usuario-item');
-
-if (searchInput) {
-  searchInput.addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    
-    usuarioItems.forEach(item => {
-      const nomeUsuario = item.querySelector('.chat-top span').textContent.toLowerCase();
-      const emailUsuario = item.querySelector('.chat-info small:last-child').textContent.toLowerCase();
-      
-      if (nomeUsuario.includes(searchTerm) || emailUsuario.includes(searchTerm)) {
-        item.style.display = 'block';
-      } else {
-        item.style.display = 'none';
-      }
-    });
+const backBtn = document.querySelector(".back-btn");
+if (backBtn) {
+  backBtn.addEventListener("click", () => {
+    history.back();
   });
 }
+
+// Auto-scroll para última mensagem
+if (chat) {
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// Atualizar mensagens periodicamente (polling simples)
+function atualizarMensagens() {
+  const destinatarioId = new URLSearchParams(window.location.search).get('conversa_com');
+  if (destinatarioId) {
+    // Recarregar a página a cada 10 segundos para buscar novas mensagens
+    // Em produção, seria melhor usar WebSockets
+    setTimeout(() => {
+      location.reload();
+    }, 10000);
+  }
+}
+
+atualizarMensagens();
 </script>
-{% endblock %}
+</body>
+</html>

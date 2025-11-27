@@ -101,7 +101,6 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    /* Removido color/cursor daqui para serem definidos no .btn-favorito */
 }
 
 /* Garante que o FORM dentro da coluna não tenha fundo, se aplicável */
@@ -194,43 +193,44 @@
 }
 
 /* ==================================== */
-/* Ajustes do Botão de Favoritar (CORRIGIDO) */
+/* Ajustes do Botão de Favoritar (NOVO A/CORAÇÃO) */
 /* ==================================== */
 
-/* 1. Remove o estilo padrão de botão, deixando-o limpo e sem fundo branco */
-.btn-favorito {
-    background-color: transparent !important; /* FORÇA o fundo transparente */
-    border: none !important; /* Remove a borda padrão */
+/* 1. Estilo do link <a> */
+.btn-favorito-link {
+    background-color: transparent !important;
+    border: none !important;
     padding: 0; 
-    margin: 0; /* Remove margens que podem afetar o espaçamento */
+    margin: 0; 
     cursor: pointer; 
     display: flex; 
     align-items: center;
     justify-content: center;
     line-height: 1;
-    color: var(--text-gray, #99a8bd); /* Cor padrão do ícone (cinza) */
+    text-decoration: none; /* Remove sublinhado */
+    color: var(--text-gray, #99a8bd); /* Cor padrão (cinza) */
     transition: color 0.2s;
 }
 
-/* 2. Estilo do SVG */
-.btn-favorito svg {
+/* 2. Estilo do SVG (coração) */
+.btn-favorito-link .heart-icon {
     fill: none;
     stroke: currentColor;
     display: block;
 }
 
 /* 3. Cor ao passar o mouse */
-.btn-favorito:hover {
+.btn-favorito-link:hover {
     color: var(--primary-blue, #3b82f6);
 }
 
 /* 4. Estilo para quando JÁ ESTÁ FAVORITADO (o botão AZULZINHO) */
-.btn-favorito.favorito {
-    color: #3b82f6 !important; /* FORÇA a cor azul (usando o primary-blue) */
+.btn-favorito-link.favorito {
+    color: #3b82f6 !important; /* FORÇA a cor azul */
 }
 
 /* 5. Preencher o ícone quando favoritado (para ficar sólido) */
-.btn-favorito.favorito svg {
+.btn-favorito-link.favorito .heart-icon {
     fill: currentColor !important; /* FORÇA o preenchimento com a cor azul */
     stroke: none !important; /* Remove o contorno */
 }

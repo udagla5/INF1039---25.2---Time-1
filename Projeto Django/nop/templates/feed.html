@@ -80,20 +80,27 @@
 
         <div class="oportunidade-col bookmark-col">
             {% if oportunidade.id %}
-            <form method="post" action="{% url 'favoritar_oportunidade' oportunidade.id %}">
+            
+            <form method="post" action="{% url 'favoritar_oportunidade' oportunidade.id %}" id="fav-form-{{ oportunidade.id }}" class="fav-form-feed" style="display:inline;">
                 {% csrf_token %}
-                <button type="submit" class="btn-favorito {% if oportunidade in favoritos %}favorito{% endif %}" aria-label="Salvar {{ oportunidade.titulo }}">
-                    <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                </button>
+                <button type="submit" style="display:none;"></button>
             </form>
-            {% else %}
-            <button class="btn-favorito" disabled aria-label="Salvar indisponível">
-                <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+            
+            <a href="#" 
+               class="btn-favorito-link {% if oportunidade.id in favoritos_ids %}favorito{% endif %}" 
+               data-form-id="fav-form-{{ oportunidade.id }}" 
+               aria-label="Salvar {{ oportunidade.titulo }}">
+                <svg class="heart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
-            </button>
+            </a>
+            
+            {% else %}
+            <a href="#" class="btn-favorito-link" disabled aria-label="Salvar indisponível">
+                <svg class="heart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            </a>
             {% endif %}
         </div>
 
@@ -147,7 +154,7 @@
         }
     }
 
-    // Event listeners
+    // Event listeners para o Modal
     if (filtrosToggle) filtrosToggle.addEventListener('click', openFilterModal);
     if (closeFilter) closeFilter.addEventListener('click', closeFilterModal);
     if (overlay) overlay.addEventListener('click', closeFilterModal);
@@ -159,18 +166,21 @@
         }
     });
 
-    // Favoritar Oportunidades
-    {% if oportunidade.id %}
-    <form method="post" action="{% url 'favoritar_oportunidade' oportunidade.id %}">
-        {% csrf_token %}
-        <button type="submit" class="btn-favorito" aria-label="Salvar {{ oportunidade.titulo }}">
-            <i class="fa fa-bookmark"></i>
-        </button>
-    </form>
-    {% else %}
-    <button class="btn-favorito" disabled aria-label="Salvar indisponível">
-        <i class="fa fa-bookmark"></i>
-    </button>
-    {% endif %}
+    // 🚀 NOVO SCRIPT PARA SALVAR VIA LINK (FEED)
+    document.addEventListener('DOMContentLoaded', function() {
+        const salvarLinks = document.querySelectorAll('.btn-favorito-link');
+        
+        salvarLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Impede o link de navegar
+                const formId = this.getAttribute('data-form-id');
+                const form = document.getElementById(formId);
+                
+                if (form) {
+                    form.submit(); // Envia o formulário correspondente
+                }
+            });
+        });
+    });
 </script>
 {% endblock %}

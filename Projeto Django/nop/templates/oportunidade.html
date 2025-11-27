@@ -72,13 +72,41 @@
         <div class="op-actions">
             <button class="btn-candidatar">Candidatar-se</button>
             
-            <button class="btn-favoritar-feed" title="Salvar Oportunidade">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                </svg>
-            </button>
+            {% with id_oportunidade=oportunidade.id %}
+                {% if id_oportunidade %}
+                    <form method="post" action="{% url 'favoritar_oportunidade' id_oportunidade %}" id="fav-form-detalhe" style="display:none;">
+                        {% csrf_token %}
+                        <button type="submit"></button> 
+                    </form>
+                    
+                    <a href="#" id="btn-favoritar-detalhe" 
+                       class="btn-salvar-link btn-salvar-detalhe {% if oportunidade.id in favoritos_ids %}favorito{% endif %}" 
+                       title="Salvar Oportunidade">
+                        <svg class="heart-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </a>
+                {% endif %}
+            {% endwith %}
         </div>
 
     </main>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 🚀 NOVO SCRIPT PARA SALVAR VIA LINK (DETALHE)
+    document.addEventListener('DOMContentLoaded', function() {
+        const salvarLink = document.getElementById('btn-favoritar-detalhe');
+        const favoritoForm = document.getElementById('fav-form-detalhe');
+        
+        if (salvarLink && favoritoForm) {
+            salvarLink.addEventListener('click', function(e) {
+                e.preventDefault(); // Impede o link de navegar (ir para #)
+                favoritoForm.submit(); // Envia o formulário
+            });
+        }
+    });
+</script>
 {% endblock %}

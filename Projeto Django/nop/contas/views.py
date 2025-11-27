@@ -11,8 +11,7 @@ from django.urls import reverse_lazy
 from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm
 from .models import Oportunidade, Usuario, Mensagem
 from django.shortcuts import render, get_object_or_404
-from .models import Oportunidade
-from .models import Favorito
+from .models import Oportunidade, Favorito
 
 
 def detalhe_oportunidade(request, id):
@@ -277,14 +276,23 @@ def upload_avatar(request):
     # Se alguém acessar diretamente via GET, redireciona ou retorna erro
     return redirect('perfil_aluno')
 
+#Exibe as oportunidades em oportunidades_salvas.html
 @login_required
 def oportunidades_salvas(request):
     oportunidades = Favorito.objects.filter(usuario=request.user)
     return render(request, 'oportunidades_salvas.html', {
-        'oportunidades': [f.vaga for f in oportunidades]
+        'oportunidades': [f.oportunidade for f in oportunidades]
     })
 
+# Remove a oportunidade salva
 @login_required
 def remover_salva(request, id):
     Favorito.objects.filter(usuario=request.user, vaga_id=id).delete()
     return redirect('oportunidades_salvas')
+
+# Salva a oportunidade como favorita
+@login_required
+def favoritar_oportunidade(request, id):
+    oportunidade = get_object_or_404(Oportunidade, pk=id)
+    Favorito.objects.get_or_create(usuario=request.user, oportunidade=oportunidade)
+    return redirect('feed')

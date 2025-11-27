@@ -30,6 +30,8 @@ urlpatterns = [
     path('oportunidade/<int:id>/', views.detalhe_oportunidade, name='detalhe_oportunidade'),
     path('oportunidades/salvas/', views.oportunidades_salvas, name='oportunidades_salvas'),
     path('oportunidades/remover/<int:id>/', views.remover_salva, name='remover_salva'),
+    path('oportunidade/favoritar/<int:id>/', views.favoritar_oportunidade, name='favoritar_oportunidade'),
+
 
     
     # 🔑 ADICIONE ESTA LINHA: O nome 'lista_oportunidades' é o que o redirect procura.

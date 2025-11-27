@@ -228,3 +228,29 @@
     .bookmark-col { display: none; }
     .acao-col { border: none; }
 }
+/* Remove o estilo padrão de botão */
+.btn-favorito {
+    background-color: transparent; /* Remove o fundo branco */
+    border: none;                  /* Remove a borda */
+    padding: 0;                    /* Remove espaçamento interno */
+    cursor: pointer;               /* Mantém o ponteiro de clique */
+    display: flex;                 /* Centraliza o ícone */
+    align-items: center;
+    justify-content: center;
+    color: #64748b;                /* Cor padrão do ícone (cinza azulado, ajuste se quiser) */
+    transition: color 0.2s;
+}
+
+.btn-favorito:hover {
+    color: #334155;                /* Cor ao passar o mouse */
+}
+
+/* Estilo para quando já está favoritado (você já tem essa lógica no HTML) */
+.btn-favorito.favorito {
+    color: #eab308; /* Amarelo/Dourado */
+}
+
+/* Opcional: Se quiser preencher o ícone quando favoritado */
+.btn-favorito.favorito svg {
+    fill: currentColor;
+}

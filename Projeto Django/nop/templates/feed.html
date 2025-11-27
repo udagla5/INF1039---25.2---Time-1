@@ -77,11 +77,24 @@
 <main class="feed" id="conteudo" role="main">
     {% for oportunidade in oportunidades %}
     <section class="oportunidade-item">
-        
+
         <div class="oportunidade-col bookmark-col">
-            <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-            </svg>
+            {% if oportunidade.id %}
+            <form method="post" action="{% url 'favoritar_oportunidade' oportunidade.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-favorito {% if oportunidade in favoritos %}favorito{% endif %}" aria-label="Salvar {{ oportunidade.titulo }}">
+                    <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+            </form>
+            {% else %}
+            <button class="btn-favorito" disabled aria-label="Salvar indisponível">
+                <svg class="bookmark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </button>
+            {% endif %}
         </div>
 
         <div class="oportunidade-col info-col">
@@ -145,5 +158,19 @@
             closeFilterModal();
         }
     });
+
+    // Favoritar Oportunidades
+    {% if oportunidade.id %}
+    <form method="post" action="{% url 'favoritar_oportunidade' oportunidade.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-favorito" aria-label="Salvar {{ oportunidade.titulo }}">
+            <i class="fa fa-bookmark"></i>
+        </button>
+    </form>
+    {% else %}
+    <button class="btn-favorito" disabled aria-label="Salvar indisponível">
+        <i class="fa fa-bookmark"></i>
+    </button>
+    {% endif %}
 </script>
 {% endblock %}

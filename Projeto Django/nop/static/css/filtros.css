@@ -1,127 +1,236 @@
-/* filtros.css - CORRIGIDO */
+/* static/css/filtros.css - COMPLETO */
+
+/* ========================================= */
+/* 1. OVERLAY E MODAL BASE */
+/* ========================================= */
+
+/* Fundo escuro atrás do modal */
 .overlay {
     position: fixed;
-    top: 0;
+    top: 0; 
     left: 0;
-    width: 100vw;
+    width: 100vw; 
     height: 100vh;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(3px);
+    background: rgba(0,0,0,0.5); /* Escurecimento suave */
     display: none;
     z-index: 1000;
+    backdrop-filter: blur(2px); /* Desfoque leve no fundo */
 }
 
+/* A caixa do modal em si */
 .filter-modal {
     position: fixed;
-    top: 50%;
+    top: 50%; 
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 70%;
-    max-width: 1100px;
-    background: #e5e5e5;
+    width: 95%;
+    max-width: 1200px; /* Largura para caber 5 colunas */
+    background: #f2f2f2; /* Cinza claro igual à imagem de referência */
     border-radius: 12px;
-    padding: 35px;
+    padding: 40px;
     display: none;
     z-index: 1010;
-    max-height: 80vh;
-    overflow-y: auto;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    font-family: 'Inter', sans-serif;
 }
 
+/* Cabeçalho "Filtros" e Botão Fechar */
 .filter-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 35px;
 }
 
 .filter-modal-header h2 {
     font-size: 32px;
-    color: #333;
+    font-weight: 700;
+    color: #1a1a1a;
     margin: 0;
 }
 
 .close-filter {
-    font-size: 26px;
     cursor: pointer;
-    padding: 5px 10px;
-    color: #333;
-    transition: color 0.2s;
+    transition: transform 0.2s;
+    color: #031020;
 }
 
 .close-filter:hover {
-    color: #000;
+    transform: scale(1.1);
 }
+
+/* ========================================= */
+/* 2. LAYOUT DAS COLUNAS */
+/* ========================================= */
 
 .filter-content {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
+    gap: 25px;
+    align-items: flex-start;
 }
 
 .filter-column {
+    flex: 1; /* Distribui espaço igualmente */
+    min-width: 160px;
+}
+
+/* Títulos das Colunas (Sublinhado Preto Grosso) */
+.filter-column h3 {
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    border-bottom: 2px solid #1a1a1a; /* Linha preta grossa */
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+/* ========================================= */
+/* 3. CHECKBOXES ESTILIZADOS */
+/* ========================================= */
+
+.checkbox-group {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    flex: 1;
-    min-width: 150px;
 }
 
-.filter-column h3 {
-    font-size: 18px;
-    margin-bottom: 8px;
-    border-bottom: 2px solid #555;
-    padding-bottom: 5px;
-    color: #333;
-}
-
-.filter-column label {
-    font-size: 15px;
-    color: #222;
+.checkbox-group label {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    font-size: 14px;
+    color: #333;
     cursor: pointer;
+    font-weight: 500;
+    line-height: 1.2;
 }
 
-.filter-column input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-}
-
-.filter-column input[type="range"] {
-    appearance: none;
-    width: 100%;
-    height: 6px;
-    background: #072046;
-    border-radius: 5px;
-    outline: none;
-    margin: 10px 0;
-}
-
-.filter-column input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
+.checkbox-group input[type="checkbox"] {
     width: 18px;
     height: 18px;
-    background: #072046;
-    border-radius: 50%;
+    border: 2px solid #333;
     cursor: pointer;
+    accent-color: #031020; /* Cor do check quando selecionado */
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-    .filter-modal {
-        width: 90%;
-        padding: 20px;
-    }
-    
+/* ========================================= */
+/* 4. DUAL RANGE SLIDER (BARRA DUPLA) */
+/* ========================================= */
+
+.slider-column {
+    padding-top: 5px;
+}
+
+.dual-slider-container {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin-top: 15px;
+}
+
+/* A. O Trilho Cinza (Fundo inativo) */
+.slider-track {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 4px;
+    background: #d1d5db; /* Cinza claro */
+    border-radius: 2px;
+    z-index: 1;
+}
+
+/* B. A Faixa Preta (Intervalo ativo entre as bolinhas) */
+.slider-range {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 4px;
+    background: #031020; /* Preto Escuro */
+    z-index: 2;
+}
+
+/* C. Container dos Inputs Invisíveis */
+.range-input {
+    position: relative;
+}
+
+/* D. Configuração dos Inputs (Mágica da Sobreposição) */
+.range-input input {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); /* Centraliza verticalmente */
+    width: 100%;
+    height: 5px;
+    background: none; /* Fundo transparente */
+    pointer-events: none; /* CRÍTICO: Permite clicar através do input para pegar o de baixo */
+    -webkit-appearance: none;
+    z-index: 3;
+    margin: 0;
+}
+
+/* E. Estilo da Bolinha (Thumb) - Chrome/Safari/Edge */
+.range-input input::-webkit-slider-thumb {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: #ffffff; /* Fundo branco */
+    border: 3px solid #031020; /* Borda preta grossa */
+    pointer-events: auto; /* CRÍTICO: Reativa o clique apenas na bolinha */
+    cursor: pointer;
+    -webkit-appearance: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    margin-top: -7px; /* Centraliza na linha no Chrome */
+}
+
+/* F. Estilo da Bolinha (Thumb) - Firefox */
+.range-input input::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #031020;
+    pointer-events: auto;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* G. Textos de Valor (Abaixo do slider) */
+.slider-values {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 35px; /* Empurra para baixo para não bater nas bolinhas */
+    font-size: 11px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+/* ========================================= */
+/* 5. RESPONSIVIDADE */
+/* ========================================= */
+
+@media (max-width: 1024px) {
     .filter-content {
-        flex-direction: column;
-        gap: 15px;
+        flex-wrap: wrap; /* Quebra linhas se a tela for menor */
     }
-    
     .filter-column {
-        min-width: 100%;
+        flex: 1 1 45%; /* Ocupa metade da linha */
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .filter-column {
+        flex: 1 1 100%; /* Ocupa linha inteira no celular */
+    }
+    .filter-modal {
+        padding: 20px;
+        width: 100%;
+        height: 100%; /* Modal tela cheia no mobile */
+        border-radius: 0;
+        overflow-y: auto; /* Permite scroll se for muito alto */
     }
 }

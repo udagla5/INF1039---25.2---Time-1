@@ -6,12 +6,13 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.db.models import Q, Max
 from django.http import JsonResponse
-<<<<<<< HEAD
 from django.urls import reverse_lazy
 from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm, ProfessorCadastroFormParte2
 from .models import Oportunidade, Usuario, Mensagem
 from django.shortcuts import render, get_object_or_404
 from .models import Oportunidade, Favorito
+from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm
+from .models import Oportunidade, Usuario, Mensagem, Favorito
 
 def detalhe_oportunidade(request, id):
     # Busca a oportunidade pelo ID ou retorna erro 404 se não existir
@@ -19,15 +20,11 @@ def detalhe_oportunidade(request, id):
     return render(request, 'oportunidade.html', {'oportunidade': oportunidade})
 
 # ========== PÁGINAS PRINCIPAIS ==========
-=======
-from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm
-from .models import Oportunidade, Usuario, Mensagem, Favorito
 
 # ===============================
 # FUNÇÕES DE AUTENTICAÇÃO E CADASTRO
 # ===============================
 
->>>>>>> 07d723c06d616609555f3c9a206978170dce3739
 def home(request):
     return render(request, 'home.html')
 

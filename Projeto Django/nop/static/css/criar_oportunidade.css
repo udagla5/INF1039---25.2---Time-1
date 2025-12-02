@@ -26,6 +26,10 @@
     height: 32px;
     cursor: pointer;
     color: var(--primary-blue);
+    display: flex; /* Para centralizar o SVG */
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
 }
 
 .opportunity-header-title {
@@ -41,6 +45,11 @@
     color: var(--text-gray);
 }
 
+.opportunity-form {
+    /* Garante que o formulário ocupe toda a largura */
+    display: block;
+}
+
 .opportunity-container {
     background: var(--primary-dark-light);
     width: 78%;
@@ -52,6 +61,10 @@
     box-shadow: var(--shadow-lg);
 }
 
+.form-group {
+    margin-bottom: 32px;
+}
+
 .opportunity-label {
     display: block;
     font-size: 15px;
@@ -60,7 +73,17 @@
     color: var(--text-light);
 }
 
-.opportunity-input {
+.required {
+    color: var(--error-color);
+}
+
+/* -------------------- ESTILOS DE INPUT (PADRÃO ESCURO) -------------------- */
+
+.opportunity-input, 
+.opportunity-form select, 
+.opportunity-form input[type="date"],
+.opportunity-form input[type="number"],
+.opportunity-form input[type="file"] {
     width: 100%;
     padding: 16px;
     font-size: 15px;
@@ -68,12 +91,18 @@
     border: 1px solid var(--border-color);
     background: var(--background-dark);
     color: var(--text-light);
-    margin-bottom: 32px;
     font-family: 'Inter', sans-serif;
     transition: all 0.2s;
+    /* Ajuste para inputs não text/area */
+    box-sizing: border-box; 
+    line-height: normal;
 }
 
-.opportunity-input:focus {
+.opportunity-input:focus,
+.opportunity-form select:focus,
+.opportunity-form input[type="date"]:focus,
+.opportunity-form input[type="number"]:focus,
+.opportunity-form input[type="file"]:focus {
     outline: none;
     border-color: var(--primary-blue);
     background: var(--primary-dark);
@@ -89,10 +118,17 @@ textarea.opportunity-input {
     min-height: 120px;
 }
 
+/* Estilo para o campo de upload de arquivo */
+.opportunity-form input[type="file"] {
+    padding: 12px; /* Padding ajustado para o input file */
+}
+
+/* -------------------- BOTÕES DE TIPO DE ATIVIDADE -------------------- */
+
 .opportunity-activity-group {
     display: flex;
     gap: 16px;
-    margin-bottom: 32px;
+    margin-top: 8px;
     flex-wrap: wrap;
 }
 
@@ -121,15 +157,34 @@ textarea.opportunity-input {
     color: var(--primary-blue);
 }
 
-.opportunity-flex-date {
-    display: flex;
-    gap: 16px;
+/* -------------------- MENSAGENS E CONTADORES -------------------- */
+
+.error-message {
+    color: var(--error-color); 
+    font-size: 13px;
+    display: block;
+    margin-top: 4px;
 }
 
-.opportunity-date-input {
-    width: 120px;
-    text-align: center;
+.opportunity-help-text {
+    color: var(--text-gray); 
+    font-size: 13px;
+    display: block;
+    margin-top: 8px;
 }
+
+.char-counter {
+    color: var(--text-gray);
+    font-size: 13px;
+    float: right;
+    margin-top: -30px; /* Alinha o contador com o input acima */
+    margin-right: 16px;
+    position: relative;
+    z-index: 10;
+}
+
+
+/* -------------------- BOTÃO CONFIRMAR -------------------- */
 
 .opportunity-confirm {
     width: 260px;
@@ -152,7 +207,8 @@ textarea.opportunity-input {
     transform: translateY(-1px);
 }
 
-/* Responsividade */
+
+/* -------------------- RESPONSIVIDADE -------------------- */
 @media (max-width: 768px) {
     .opportunity-container {
         width: 95%;
@@ -170,14 +226,6 @@ textarea.opportunity-input {
     
     .opportunity-activity-group {
         flex-direction: column;
-    }
-    
-    .opportunity-flex-date {
-        flex-direction: column;
-    }
-    
-    .opportunity-date-input {
-        width: 100%;
     }
     
     .opportunity-confirm {

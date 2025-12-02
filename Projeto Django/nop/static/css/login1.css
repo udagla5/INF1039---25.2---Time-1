@@ -1,444 +1,241 @@
-/* VARIÁVEIS DE CORES */
-:root {
-    --color-puc-blue: #3A83D9;
-    --color-dark-blue: #0C1A2C;
-    --color-text-dark: #333333;
-    --color-text-light: #FFFFFF;
-    --color-gray-bg: #F5F5F5;
+/* login1.css - ESTILOS ESPECÍFICOS DA TELA de LOGIN (PADRONIZADO COM CADASTRO) */
+
+/* -------------------- VARIÁVEIS HERDADAS E GERAIS -------------------- */
+
+/* -------------------- LAYOUT GERAL E CENTRALIZAÇÃO -------------------- */
+
+/* O body agora apenas define o fundo e a cor do texto, permitindo que o 
+   base.css (flex-direction: column) e o login.html (main-content) 
+   controlem a centralização abaixo do header. */
+body { 
+    display: flex; /* Mantém o flex para a coluna */
+    margin: 0; 
+    padding: 0; /* O padding deve ser 0 aqui para o layout ocupar toda a tela */
+    background-color: var(--primary-dark); 
+    color: var(--text-light); 
 }
 
-/* -------------------- GERAL E LAYOUT -------------------- */
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--color-gray-bg);
-    min-height: 100vh;
-    overflow-x: hidden; 
-}
-
-/* Container principal - APENAS para o conteúdo centralizado */
-.main-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-    padding-bottom: 50px; 
-}
-
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-}
-
-
-/* -------------------- 2. BANNER HERO (LARGURA TOTAL) -------------------- */
-
-.hero-banner {
-    background-color: var(--color-puc-blue);
-    color: var(--color-text-dark);
-    text-align: center;
-    padding: 80px 20px;
-    margin-bottom: 30px;
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-}
-
-.hero-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.main-message {
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 15px;
-    line-height: 1.2;
-}
-
-.secondary-message {
-    font-size: 18px;
-    font-weight: 400;
-    opacity: 0.9;
-}
-
-/* -------------------- 3. CARROSSEL DE OPORTUNIDADES -------------------- */
-
-.carousel-wrapper {
-    margin-bottom: 50px;
+.page { 
+    width: 100%; 
+    max-width: 480px; 
     display: flex; 
-    justify-content: center;
-    width: 100%;
+    flex-direction: column; 
+    align-items: center; 
+    gap: 20px;
 }
 
-#opportunityCarousel {
-    width: 1000px; 
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    position: relative;
-    min-height: 400px; 
+.logo { 
+    max-width: 150px; 
+    margin-bottom: 20px; 
 }
 
-/* REGRAS ESSENCIAIS DO BOOTSTRAP PARA O SLIDE FUNCIONAR */
-.carousel-inner {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-}
+/* -------------------- CARTÃO DE LOGIN (CARD) -------------------- */
 
-.carousel-item {
-    position: relative;
-    display: none; 
-    float: left;
-    width: 100%;
-    margin-right: -100%;
-    backface-visibility: hidden;
-    transition: transform 0.6s ease-in-out;
-}
-
-.carousel-item.active {
-    display: block; 
-}
-
-.carousel-item img {
-    height: 400px;
+.card { 
+    background-color: var(--background-light); 
+    color: var(--text-dark); 
+    padding: 30px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    border-top: 5px solid var(--primary-blue); 
     width: 100%; 
-    object-fit: cover;
-    filter: brightness(0.6);
 }
 
-/* Texto de Legenda */
-.carousel-caption {
-    position: absolute;
-    bottom: 30px; 
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%; 
-    max-width: 80%; 
-    padding: 20px 0; 
-    text-align: center; 
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0));
-    color: var(--color-text-light);
-}
-
-.carousel-caption h5 {
-    font-size: 24px;
+.card .title {
+    font-size: 1.8rem;
     font-weight: 700;
-    margin-bottom: 5px;
-    color: var(--color-text-light);
-}
-
-.carousel-caption p {
-    font-size: 16px;
     margin-bottom: 5px; 
-    color: var(--color-text-light);
+    display: flex; 
+    align-items: center; 
+    gap: 10px;
 }
 
-/* Controles de Navegação */
-.carousel-control-prev,
-.carousel-control-next {
-    width: 40px; 
-    height: 40px; 
-    position: absolute; 
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.9); 
-    border-radius: 50%;
-    opacity: 1;
-    z-index: 2; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    transition: background-color 0.3s;
+.card .title img {
+    height: 24px;
 }
 
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-    background-color: var(--color-text-light); 
+.card .subtitle {
+    color: var(--text-gray); 
+    margin-bottom: 25px;
+    font-size: 0.95rem;
 }
 
-#opportunityCarousel .carousel-control-prev {
-    left: 20px; 
+/* -------------------- ELEMENTOS DO FORMULÁRIO -------------------- */
+
+label {
+    font-weight: 600; 
+    font-size: 0.95rem;
+    color: var(--text-dark);
 }
 
-#opportunityCarousel .carousel-control-next {
-    right: 20px; 
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%; 
+.form-control { 
     width: 100%; 
-    transform: none; 
-    opacity: 1;
+    padding: 12px;
+    margin-bottom: 15px; 
+    border: 1px solid #ccc; 
+    border-radius: var(--border-radius); 
+    box-sizing: border-box; 
+    font-size: 1rem;
+    color: var(--text-dark);
+    background-color: #f9f9f9;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
 }
 
-.carousel-control-prev-icon i,
-.carousel-control-next-icon i {
-    color: var(--color-text-dark); 
-    font-size: 20px; 
-    line-height: 1; 
-    position: static; 
-    left: auto; 
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(99, 149, 255, 0.2);
 }
 
-/* Indicadores (Pontinhos) */
-.carousel-indicators {
-    bottom: 10px; 
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-    padding: 0;
+/* Botão Entrar (PADRÃO AZUL - enter-btn) */
+.enter-btn { 
+    width: 100%; 
+    padding: 14px; 
+    background: var(--primary-blue); 
+    color: white; 
+    border: none; 
+    border-radius: var(--border-radius); 
+    cursor: pointer; 
+    font-size: 1.1rem; 
+    font-weight: 700;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+.enter-btn:hover { 
+    background: #4a80f0; 
+}
+
+/* -------------------- SENHA E LINKS (AJUSTADO PARA O OLHO DISCRETO) -------------------- */
+
+.pwd-wrap { 
+    position: relative; 
+    width: 100%; 
+}
+
+.pwd-wrap .form-control {
+    /* Garante que o input não tenha margem para alinhamento perfeito */
+    margin-bottom: 0; 
+    /* Adiciona padding extra à direita para que o texto não fique debaixo do botão olho */
+    padding-right: 40px; /* Espaço para o ícone */
+}
+
+.eye-btn { 
+    position: absolute; 
+    right: 15px; /* Distância da borda direita do input */
+    top: 50%; 
+    transform: translateY(-50%); /* Centraliza o ícone verticalmente */
+    
+    /* Configuração para ser discreto (apenas texto/ícone, sem fundo ou borda) */
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    font-size: 1.2rem;
+    color: var(--text-gray); /* Cor sutil */
+    padding: 0; /* Remove padding */
+    line-height: 1; /* Alinhamento fino do ícone */
+    
+    /* Z-index para garantir que esteja acima do input */
     z-index: 2;
 }
 
-.carousel-indicators button {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin: 0 4px;
-    background-color: var(--color-text-light);
-    border: none;
-    opacity: 0.5;
+/* Link Esqueceu a senha */
+.card a[href="#"]:not(.close-toast) {
+    font-size: 0.85rem; 
+    color: var(--primary-blue); 
+    text-decoration: none;
+    font-weight: 500;
+}
+.card a[href="#"]:hover {
+    text-decoration: underline;
 }
 
-.carousel-indicators .active {
-    opacity: 1;
-    background-color: var(--color-text-light);
+/* Linha Divisória */
+.card > div[style="height: 1px; background: #eee; margin: 20px 0;"] {
+    background: #e0e0e0 !important;
 }
 
-/* -------------------- 4. SEÇÃO DE FILTRO POR CURSO (LARGURA TOTAL) -------------------- */
-
-.course-filter-section {
-    background-color: var(--color-dark-blue);
-    color: var(--color-text-light);
-    padding: 90px 20px;
-    text-align: center;
-    margin-top: 50px; 
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+/* Link Criar conta */
+.card p a {
+    color: var(--primary-blue) !important; 
+    font-weight: bold;
 }
 
-.filter-box {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px; 
+/* Botão Voltar */
+.card button[type="button"] {
+    width: 100%; 
+    padding: 12px; 
+    background: transparent; 
+    border: 1px solid #ccc; 
+    color: var(--text-dark); 
+    border-radius: var(--border-radius); 
+    cursor: pointer; 
+    margin-top: 15px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.card button[type="button"]:hover {
+    background-color: #f0f0f0;
 }
 
-.filter-title {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
-.filter-description {
-    font-size: 16px;
-    margin-bottom: 30px;
-    opacity: 0.8;
-    line-height: 1.5; 
-}
-
-.filter-form {
+/* -------------------- CSS DO TOAST MESSAGE (Mantido) -------------------- */
+.messages-container {
+    position: fixed; 
+    bottom: 30px;    
+    left: 50%;       
+    transform: translateX(-50%); 
+    z-index: 9999;   
+    
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    width: max-content;
+    max-width: 90%;
+    pointer-events: none; 
+}
+
+.toast-message {
+    background-color: #333;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    font-size: 14px;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 15px;
-    flex-wrap: nowrap; 
+    pointer-events: auto; 
+    opacity: 0;
+    animation: slideUp 0.4s ease-out forwards;
 }
 
-.select-wrapper {
-    position: relative;
-    width: 300px; 
-    border: 1px solid var(--color-text-light);
-    border-radius: 6px;
-    text-align: left;
-    overflow: hidden;
-    height: 44px; 
-}
+.toast-message.error { background-color: #DC2626; } 
+.toast-message.success { background-color: #031020; } 
+.toast-message.warning { background-color: #F59E0B; color: #000; } 
 
-.select-wrapper select {
-    width: 100%;
-    padding: 12px 15px;
-    background-color: var(--color-dark-blue);
-    color: var(--color-text-light);
+.close-toast {
+    background: none;
     border: none;
-    outline: none;
-    font-size: 16px;
-    -webkit-appearance: none; 
-    -moz-appearance: none;
-    appearance: none;
+    color: inherit;
+    font-weight: bold;
     cursor: pointer;
-    line-height: 20px; 
-}
-
-.select-wrapper::after {
-    content: "▼"; 
-    font-family: Arial, sans-serif;
-    color: var(--color-text-light);
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    font-size: 12px;
-}
-
-.ir-btn {
-    background-color: var(--color-puc-blue);
-    color: var(--color-text-light);
-    border: none;
-    padding: 12px 30px; 
-    border-radius: 6px;
     font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    height: 44px; 
+    margin-left: 10px;
 }
 
-.ir-btn:hover {
-    background-color: #316eb5;
-}
-
-/* -------------------- FOOTER (LARGURA TOTAL) -------------------- */
-
-.main-footer {
-    background-color: var(--color-dark-blue);
-    height: 60px;
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+@keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 /* -------------------- RESPONSIVIDADE -------------------- */
 
-@media (max-width: 1024px) {
-    #opportunityCarousel {
-        width: 90%;
+@media (max-width: 500px) {
+    .card {
+        padding: 20px;
     }
-}
 
-@media (max-width: 768px) {
-    .hero-banner {
-        padding: 60px 15px;
-    }
-    
-    .main-message {
-        font-size: 26px;
-    }
-    
-    .secondary-message {
-        font-size: 16px;
-    }
-    
-    #opportunityCarousel {
-        width: 100%;
-        min-height: 300px;
-    }
-    
-    .carousel-item img {
-        height: 300px;
-    }
-    
-    .carousel-caption h5 {
-        font-size: 20px;
-    }
-    
-    .carousel-caption p {
-        font-size: 14px;
-    }
-    
-    .filter-form {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .select-wrapper {
-        width: 100%;
-    }
-    
-    .ir-btn {
-        width: 100%;
-    }
-    
-    .filter-title {
-        font-size: 24px;
-    }
-    
-    .course-filter-section {
-        padding: 60px 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .main-content {
-        padding: 0 15px;
-    }
-    
-    .hero-banner {
-        padding: 40px 10px;
-    }
-    
-    .main-message {
-        font-size: 22px;
-    }
-    
-    .secondary-message {
-        font-size: 14px;
-    }
-    
-    #opportunityCarousel {
-        min-height: 250px;
-    }
-    
-    .carousel-item img {
-        height: 250px;
-    }
-    
-    .carousel-control-prev,
-    .carousel-control-next {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .carousel-control-prev-icon i,
-    .carousel-control-next-icon i {
-        font-size: 16px;
-    }
-    
-    .filter-title {
-        font-size: 22px;
-    }
-    
-    .course-filter-section {
-        padding: 40px 10px;
+    .card .title {
+        font-size: 1.6rem;
     }
 }

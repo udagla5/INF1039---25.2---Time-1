@@ -1,121 +1,57 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | NOP</title>
-    
-    <link rel="stylesheet" href="{% static 'css/login1.css' %}">
-    
-    <link rel="stylesheet" href="{% static 'css/messages.css' %}">
-    
-    <style>
-        /* CSS GERAL DA PÁGINA (Mantido do seu código) */
-        body { font-family: sans-serif; background: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .page { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
-        .card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; }
-        .logo { max-width: 150px; margin-bottom: 20px; }
-        .form-control { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        .enter-btn { width: 100%; padding: 12px; background: #031020; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;}
-        .enter-btn:hover { background: #051b33; }
-        .pwd-wrap { position: relative; width: 100%; }
-        .eye-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-70%); background: none; border: none; cursor: pointer; font-size: 1.2rem; }
 
-        /* ============================================================
-           CSS DOS POPUPS (CORREÇÃO DE POSICIONAMENTO)
-           ============================================================ */
-        .messages-container {
-            position: fixed; /* ISSO É O IMPORTANTE: Tira do fluxo e faz flutuar */
-            bottom: 30px;    /* Fixa no fundo da tela */
-            left: 50%;       /* Centraliza horizontalmente */
-            transform: translateX(-50%); /* Ajuste fino do centro */
-            z-index: 9999;   /* Garante que fique por cima de tudo */
-            
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: max-content;
-            max-width: 90%;
-            pointer-events: none; /* Permite clicar no site "através" da área vazia */
-        }
+{% block title %}Login | NOP{% endblock %}
 
-        .toast-message {
-            background-color: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px; /* Bordas redondas estilo app */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            pointer-events: auto; /* O botão X precisa ser clicável */
-            opacity: 0;
-            animation: slideUp 0.4s ease-out forwards;
-        }
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login1.css' %}">
+<link rel="stylesheet" href="{% static 'css/messages.css' %}">
 
-        /* Cores específicas */
-        .toast-message.error { background-color: #DC2626; } /* Vermelho */
-        .toast-message.success { background-color: #031020; } /* Azul NOP */
-        .toast-message.warning { background-color: #F59E0B; color: #000; } /* Amarelo */
+<style>
+/* * Este CSS injetado garante que o conteúdo do 'block content' (main-content) 
+ * centralize o card sem ocultar o header. 
+ */
+.main-content {
+    /* O main-content é definido no base.html como flex: 1; display: flex; flex-direction: column; */
+    /* Vamos usá-lo para centralizar o CARD: */
+    align-items: center; /* Centraliza horizontalmente o div.page */
+    justify-content: center; /* Centraliza verticalmente o conteúdo (se houver espaço) */
+    flex-grow: 1; /* Garante que ocupe todo o espaço vertical disponível */
+    padding-top: 50px; /* Adiciona um respiro entre o header e o card */
+    padding-bottom: 50px;
+    background-color: var(--primary-dark); /* Garante que o fundo sob o header seja escuro */
+}
 
-        .close-toast {
-            background: none;
-            border: none;
-            color: inherit;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 16px;
-            margin-left: 10px;
-        }
+/* O body tem height: 100% e flex-direction: column em base.css */
+/* O body agora vai ocupar 100% da altura da viewport */
+body {
+    min-height: 100vh;
+}
+</style>
+{% endblock %}
 
-        @keyframes slideUp {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-    </style>
-</head>
-<body>
-
-  <div class="messages-container">
-    {% if messages %}
-        {% for message in messages %}
-            <div class="toast-message {{ message.tags }}">
-                <span>{{ message }}</span>
-                <button class="close-toast" onclick="this.parentElement.remove()">✕</button>
-            </div>
-        {% endfor %}
-    {% endif %}
-    
-    {% if form.errors %}
-        <div class="toast-message error">
-            <span>Usuário ou senha incorretos.</span>
-            <button class="close-toast" onclick="this.parentElement.remove()">✕</button>
-        </div>
-    {% endif %}
-  </div>
-
+{% block content %}
+  {# O messages-floating é tratado globalmente no base.html, não é necessário aqui. #}
+  
   <div class="page">
     <img class="logo" src="{% static 'img/logo-grande.png' %}" alt="NOP Logo" onerror="this.style.display='none'">
 
     <main class="card">
-      <h1 class="title" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 10px;">
+      <h1 class="title">
           Entrar na sua conta 
           <img src="{% static 'img/logo-pequena.png' %}" alt="Logo" height="20" onerror="this.style.display='none'">
       </h1>
-      <p class="subtitle" style="color: #666; margin-bottom: 1.5rem;">Todas as oportunidades da PUC-Rio reunidas aqui</p>
+      <p class="subtitle">Todas as oportunidades da PUC-Rio reunidas aqui</p>
 
       <form method="post">
         {% csrf_token %}
 
-        <label for="{{ form.username.id_for_label }}" style="font-weight: 600; font-size: 0.9rem;">Usuário</label>
+        <label for="{{ form.username.id_for_label }}">Usuário</label>
         {{ form.username }}
         
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-          <label for="{{ form.password.id_for_label }}" style="font-weight: 600; font-size: 0.9rem;">Senha</label>
-          <a href="#" style="font-size: 0.8rem; color: #031020; text-decoration: none;">Esqueceu a senha?</a>
+          <label for="{{ form.password.id_for_label }}">Senha</label>
+          <a href="#">Esqueceu a senha?</a>
         </div>
         
         <div class="pwd-wrap">
@@ -131,27 +67,25 @@
       <div style="height: 1px; background: #eee; margin: 20px 0;"></div>
 
       <p style="text-align: center; color: #666; font-size: 0.9rem;">
-          Não tem uma conta? <a href="{% url 'cadastro1' %}" style="color: #031020; font-weight: bold;">Criar conta</a>
+          Não tem uma conta? <a href="{% url 'cadastro1' %}">Criar conta</a>
       </p>
       
-      <button type="button" onclick="window.location.href='{% url 'home' %}'" style="width: 100%; padding: 10px; background: transparent; border: 1px solid #ddd; color: #666; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+      <button type="button" onclick="window.location.href='{% url 'home' %}'">
           Voltar para a página inicial
       </button>
     </main>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-          // Seleciona o botão do olho
           const eyeBtn = document.querySelector(".eye-btn");
-          
-          // Seleciona o input de senha de forma genérica
-          const passwordInput = document.querySelector('input[type="password"]');
+          // Usa o atributo 'type' para ser mais robusto, já que id/class são controlados pelo Django Forms
+          const passwordInput = document.querySelector('input[type="password"]'); 
 
           if (eyeBtn && passwordInput) {
               eyeBtn.addEventListener("click", function () {
                   if (passwordInput.type === "password") {
                       passwordInput.type = "text";
-                      eyeBtn.textContent = "🙈"; // Ícone de olho fechado/aberto
+                      eyeBtn.textContent = "🙈"; 
                   } else {
                       passwordInput.type = "password";
                       eyeBtn.textContent = "👁️";
@@ -163,5 +97,5 @@
       });
     </script>
   </div>
-</body>
-</html>
+
+{% endblock %}

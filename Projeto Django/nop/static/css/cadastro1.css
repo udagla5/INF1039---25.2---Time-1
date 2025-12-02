@@ -1,200 +1,273 @@
-/* cadastro1.css - DESKTOP LARGO */
+/* cadastro1.css - ESTILOS ESPECÍFICOS DA TELA DE CADASTRO */
+
+/* -------------------- VARIÁVEIS DE CORES HERDADAS -------------------- */
+/*
+Variáveis importantes do base.css:
+--primary-blue: #6395ff;
+--primary-dark: #031020;
+--primary-dark-light: #1e2a3b;
+--text-light: #e0e0e0;
+--text-gray: #99a8bd;
+--text-dark: #333333;
+--background-light: #ffffff;
+--error-color: #e65252;
+--border-radius: 8px;
+--border-radius-lg: 12px;
+--shadow-lg: 0 10px 30px rgba(0,0,0,0.2);
+*/
+
+/* -------------------- 1. LAYOUT GERAL -------------------- */
+
 .cadastro-page {
-    min-height: 100vh;
-    background: #f8f9fa;
+    flex: 1; 
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 0;
-    margin: 0;
+    padding: 40px 20px;
+    background-color: var(--primary-dark);
+    min-height: 100vh;
 }
 
 .cadastro-container {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 480px; 
 }
 
-.cadastro-logo {
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.cadastro-main-logo {
-    height: 80px;
-    width: auto;
-    margin-bottom: 15px;
-}
+/* -------------------- 2. CARTÃO DE CADASTRO (CADASTRO CARD) -------------------- */
 
 .cadastro-card {
-    background: #ffffff;
-    padding: 60px 50px;
-    border-radius: 20px;
-    border: 1px solid #e1e5e9;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
-    color: #333333;
-    width: 100%;
+    background-color: var(--background-light);
+    color: var(--text-dark); 
+    padding: 30px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    border-top: 5px solid var(--primary-blue);
 }
 
 .cadastro-card h1 {
-    font-size: 32px;
-    font-weight: 600;
-    color: #1a1a1a;
-    text-align: center;
-    margin-bottom: 40px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 25px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-family: 'Inter', sans-serif;
+    gap: 10px;
 }
 
 .cadastro-inline-logo {
-    height: 32px;
-    width: auto;
+    height: 24px;
 }
 
+/* -------------------- 3. MESSAGES (Alertas do Django) -------------------- */
+
+.cadastro-messages {
+    margin-bottom: 20px;
+}
+
+.cadastro-alert {
+    padding: 12px 15px;
+    border-radius: var(--border-radius);
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: 1px solid transparent;
+}
+
+.cadastro-alert-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.cadastro-alert-error,
+.cadastro-alert-danger {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.cadastro-alert-info,
+.cadastro-alert-warning {
+    background-color: #ffc107;
+    color: var(--text-dark);
+}
+
+/* -------------------- 4. SELEÇÃO DE TIPO DE CONTA (ESTILOS ATUALIZADOS) -------------------- */
+
+.cadastro-type-select {
+    margin-bottom: 25px;
+}
+
+.cadastro-type-select label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.cadastro-type-options {
+    display: flex;
+    gap: 10px;
+}
+
+.cadastro-type-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    
+    /* ESTADO INATIVO: BRANCO */
+    background-color: var(--background-light); /* Fundo Branco */
+    color: var(--text-dark); /* Texto Escuro */
+    border: 1px solid #ccc; /* Borda cinza clara */
+    
+    border-radius: var(--border-radius);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cadastro-type-btn svg {
+    /* ÍCONE INATIVO: AZUL */
+    stroke: var(--primary-blue); 
+    width: 20px;
+    height: 20px;
+    transition: stroke 0.3s ease;
+}
+
+/* --- ESTILO DO BOTÃO ATIVO (AZUL) --- */
+.cadastro-type-btn.is-active {
+    background-color: var(--primary-blue);
+    color: var(--text-light); /* Texto Branco */
+    border-color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.cadastro-type-btn.is-active svg {
+    /* ÍCONE ATIVO: BRANCO */
+    stroke: var(--text-light); 
+}
+
+/* O botão .professor-btn agora segue as regras padrão de INATIVO (branco) ou ATIVO (azul).
+    A remoção do estilo escuro anterior (.cadastro-type-btn.professor-btn)
+    faz com que ele herde os estilos de .cadastro-type-btn e .cadastro-type-btn.is-active.
+*/
+.cadastro-type-btn.professor-btn.is-active {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    box-shadow: none;
+}
+
+
+/* -------------------- 5. FORMULÁRIO -------------------- */
+
 .cadastro-form-group {
-    margin-bottom: 28px;
+    margin-bottom: 20px;
 }
 
 .cadastro-form-group label {
     display: block;
-    font-size: 15px;
-    color: #4a5568;
-    margin-bottom: 10px;
-    font-weight: 500;
-    font-family: 'Inter', sans-serif;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-dark);
 }
 
 .cadastro-required {
-    color: #e53e3e;
-    margin-left: 4px;
+    color: var(--error-color);
+    font-weight: 700;
 }
 
 .cadastro-form input[type="text"],
 .cadastro-form input[type="email"],
-.cadastro-form input[type="tel"],
 .cadastro-form input[type="password"],
+.cadastro-form input[type="date"],
 .cadastro-form select,
 .cadastro-form textarea {
     width: 100%;
-    padding: 16px 20px;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    background: #ffffff;
-    color: #2d3748;
-    font-size: 16px;
-    font-family: 'Inter', sans-serif;
-    transition: all 0.3s ease;
-}
-
-.cadastro-form input::placeholder {
-    color: #a0aec0;
-    font-style: normal;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    color: var(--text-dark);
+    background-color: #f9f9f9;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
 }
 
 .cadastro-form input:focus,
 .cadastro-form select:focus,
 .cadastro-form textarea:focus {
-    outline: none;
-    border-color: #4299e1;
-    box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.15);
-    background: #ffffff;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(99, 149, 255, 0.2);
 }
+
+/* Estilo para erros */
+.cadastro-error {
+    color: var(--error-color);
+    font-size: 0.85rem;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+/* Estilo para help text */
+.cadastro-help {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: var(--text-gray);
+}
+
+/* -------------------- 6. BOTÃO DE SUBMISSÃO -------------------- */
 
 .cadastro-btn {
-    padding: 16px 32px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cadastro-btn-submit {
     width: 100%;
-    background: #4299e1;
-    color: white;
-    font-size: 18px;
-    padding: 18px;
-    margin-top: 20px;
-    height: 58px;
+    padding: 14px;
+    background-color: var(--primary-blue);
+    color: var(--text-light);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    margin-top: 10px;
 }
 
-.cadastro-btn-submit:hover {
-    background: #3182ce;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+.cadastro-btn:hover {
+    background-color: #4a80f0;
 }
 
-.cadastro-messages {
-    margin-bottom: 28px;
+.cadastro-btn:active {
+    transform: scale(0.99);
 }
 
-.cadastro-alert {
-    padding: 16px 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    font-size: 15px;
-    text-align: center;
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
+/* -------------------- 7. RESPONSIVIDADE -------------------- */
+
+@media (max-width: 600px) {
+    .cadastro-card {
+        padding: 25px;
+        margin: 0 10px;
+    }
+
+    .cadastro-card h1 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    .cadastro-type-options {
+        gap: 10px;
+    }
 }
 
-.cadastro-alert-success {
-    background: #f0fff4;
-    color: #276749;
-    border: 1px solid #9ae6b4;
-}
+@media (max-width: 400px) {
+    .cadastro-card h1 {
+        font-size: 1.4rem;
+    }
 
-.cadastro-alert-error {
-    background: #fed7d7;
-    color: #c53030;
-    border: 1px solid #fc8181;
-}
-
-.cadastro-alert-warning {
-    background: #fffaf0;
-    color: #dd6b20;
-    border: 1px solid #fbd38d;
-}
-
-.cadastro-alert-info {
-    background: #ebf8ff;
-    color: #3182ce;
-    border: 1px solid #90cdf4;
-}
-
-.cadastro-error {
-    color: #e53e3e;
-    font-size: 14px;
-    margin-top: 8px;
-    font-weight: 500;
-    display: block;
-}
-
-.cadastro-help {
-    color: #718096;
-    font-size: 13px;
-    margin-top: 8px;
-    display: block;
-    font-style: italic;
-}
-
-/* Garantir que os inputs do Django form tenham o mesmo estilo */
-.cadastro-form input:-webkit-autofill,
-.cadastro-form input:-webkit-autofill:hover,
-.cadastro-form input:-webkit-autofill:focus {
-    -webkit-text-fill-color: #2d3748;
-    -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
-    border: 2px solid #e2e8f0;
-    transition: background-color 5000s ease-in-out 0s;
+    .cadastro-btn {
+        font-size: 1rem;
+        padding: 12px;
+    }
 }

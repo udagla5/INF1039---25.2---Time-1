@@ -24,24 +24,72 @@
                 </div>
             {% endif %}
                 
-            <form method="POST" class="cadastro-form">
+            <form method="POST" class="cadastro-form" id="cadastro-form">
                 {% csrf_token %}
                 
-                {% for field in form %}
-                    <div class="cadastro-form-group">
-                        <label for="{{ field.id_for_label }}">
-                            {{ field.label }}
-                            {% if field.field.required %}<span class="cadastro-required">*</span>{% endif %}
-                        </label>
-                        {{ field }}
-                        {% if field.errors %}
-                            <div class="cadastro-error">{{ field.errors }}</div>
-                        {% endif %}
-                        {% if field.help_text %}
-                            <small class="cadastro-help">{{ field.help_text }}</small>
-                        {% endif %}
+                {# ------------------ 1. SELEÇÃO DE TIPO DE CONTA (Botões Customizados) ------------------ #}
+                <div class="cadastro-type-select">
+                    <label>Selecione o tipo de conta</label>
+                    <div class="cadastro-type-options">
+                        <button type="button" class="cadastro-type-btn is-active" data-value="ALUNO">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap"><path d="M22 10v6M22 16l-10-5L2 16m20 0l-10 5L2 16m20 0V4M2 16v-6m0 6l10-5M2 16l10 5L22 16m-10 5V4m0 0L2 10l10 5 10-5L12 4Z"/></svg>
+                            Aluno
+                        </button>
+                        <button type="button" class="cadastro-type-btn professor-btn" data-value="PROFESSOR">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-tie"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M17.5 17.5 19 19m-4.5 0 1.5-1.5M21 17h-2m-2 0h-2M15 14h-2"/></svg>
+                            Professor
+                        </button>
                     </div>
+                </div>
+                
+                {# Campo escondido para submeter o valor do tipo de conta #}
+                <input type="hidden" name="tipo" id="id_tipo" value="ALUNO"> 
+                
+                {# ------------------ 2. CAMPOS DO FORMULÁRIO (Exceto Senha, que é customizada) ------------------ #}
+                {% for field in form %}
+                    {# Excluir o campo 'tipo' do loop, pois ele já está sendo tratado acima #}
+                    {# Excluir os campos 'password1' e 'password2' do loop, pois são renderizados abaixo #}
+                    {% if field.name != 'tipo' and field.name != 'password1' and field.name != 'password2' %}
+                        <div class="cadastro-form-group">
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                                {% if field.field.required %}<span class="cadastro-required">*</span>{% endif %}
+                            </label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="cadastro-error">{{ field.errors }}</div>
+                            {% endif %}
+                            {% if field.help_text %}
+                                <small class="cadastro-help">{{ field.help_text }}</small>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 {% endfor %}
+
+                {# ------------------ 3. CAMPOS DE SENHA (password1 e password2) ------------------ #}
+                {# Renderizar password1 #}
+                <div class="cadastro-form-group">
+                    <label for="{{ form.password1.id_for_label }}">
+                        {{ form.password1.label }}
+                        {% if form.password1.field.required %}<span class="cadastro-required">*</span>{% endif %}
+                    </label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        <div class="cadastro-error">{{ form.password1.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                {# Renderizar password2 #}
+                <div class="cadastro-form-group">
+                    <label for="{{ form.password2.id_for_label }}">
+                        {{ form.password2.label }}
+                        {% if form.password2.field.required %}<span class="cadastro-required">*</span>{% endif %}
+                    </label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <div class="cadastro-error">{{ form.password2.errors }}</div>
+                    {% endif %}
+                </div>
 
                 <button type="submit" class="cadastro-btn cadastro-btn-submit">
                     Próxima etapa
@@ -50,4 +98,55 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const typeButtons = document.querySelectorAll('.cadastro-type-btn');
+        // Alterado para id_tipo, que é o nome do campo model
+        const hiddenInput = document.getElementById('id_tipo'); 
+
+        // Função para garantir a cor correta do ícone SVG
+        const updateSvgStroke = (button) => {
+            const svg = button.querySelector('svg');
+            if (svg) {
+                // A cor do ícone é definida primariamente pelo CSS agora
+                if (button.classList.contains('is-active')) {
+                    svg.setAttribute('stroke', 'white');
+                } else {
+                    // Ícone não ativo (Branco/Professor) -> cor azul
+                    svg.setAttribute('stroke', '#6395ff'); // Cor --primary-blue do base.css
+                }
+            }
+        };
+
+        // Inicializa o campo escondido e a cor do ícone no carregamento
+        // É necessário garantir que o valor inicial do input hidden seja 'ALUNO'
+        if (hiddenInput.value === 'ALUNO') {
+             typeButtons.forEach(btn => {
+                btn.classList.remove('is-active');
+                if (btn.getAttribute('data-value') === 'ALUNO') {
+                    btn.classList.add('is-active');
+                }
+                updateSvgStroke(btn);
+            });
+        }
+        
+        typeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // 1. Remove 'is-active' de todos os botões e atualiza a cor dos ícones
+                typeButtons.forEach(btn => {
+                    btn.classList.remove('is-active');
+                    updateSvgStroke(btn);
+                });
+                
+                // 2. Adiciona 'is-active' ao botão clicado e atualiza a cor do ícone
+                this.classList.add('is-active');
+                updateSvgStroke(this);
+                
+                // 3. Atualiza o valor do campo escondido para submissão do Django
+                hiddenInput.value = this.getAttribute('data-value');
+            });
+        });
+    });
+</script>
 {% endblock %}

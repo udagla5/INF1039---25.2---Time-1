@@ -17,7 +17,10 @@ from .models import Oportunidade, Usuario, Mensagem, Favorito
 # ===============================
 
 def home(request):
-    return render(request, 'home.html')
+    # Busca 3 oportunidades aleatórias do banco de dados
+    destaques = Oportunidade.objects.all().order_by('?')[:3]
+    
+    return render(request, 'home.html', {'destaques': destaques})
 
 def cadastro1(request):
     if request.method == 'POST':
@@ -82,7 +85,15 @@ def custom_login(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, f'Bem-vindo, {username}!')
-                return redirect('feed')
+                
+                # --- ALTERAÇÃO AQUI ---
+                # Verifica se existe um parâmetro 'next' na URL (ex: veio do carrossel)
+                next_url = request.GET.get('next')
+                if next_url:
+                    return redirect(next_url) # Redireciona para a oportunidade
+                # ----------------------
+                
+                return redirect('feed') # Comportamento padrão (vai pro feed)
     else:
         form = CustomLoginForm()
     return render(request, 'login.html', {'form': form})
@@ -130,6 +141,7 @@ def upload_avatar(request):
 # OPORTUNIDADES (CRUD e Detalhes)
 # ===============================
 
+@login_required(login_url='login') # <--- Adicione esta linha
 def detalhe_oportunidade(request, id):
     oportunidade = get_object_or_404(Oportunidade, pk=id)
     return render(request, 'oportunidade.html', {'oportunidade': oportunidade})

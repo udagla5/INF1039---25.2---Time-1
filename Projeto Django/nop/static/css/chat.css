@@ -1,3 +1,21 @@
+/* chat.css */
+.main-content {
+  height: 100%;
+  overflow: hidden !important; 
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajuste no container do chat para preencher o espaço (flex) em vez de altura fixa */
+.chat-container {
+  display: flex;
+  flex: 1;        /* Mude de height: 100% para flex: 1 */
+  height: auto;   /* Reseta a altura para ser automático */
+  width: 100%;
+  background: #031020;
+  margin: 0;
+  overflow: hidden; /* Garante que o chat não empurre a tela */
+}
 * {
   box-sizing: border-box;
   font-family: "Work Sans", sans-serif;
@@ -9,7 +27,7 @@ html, body {
   background: #031020;
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  overflow: hidden; /* Importante para não ter scroll na página inteira */
 }
 
 /* ----------- Sidebar ----------- */
@@ -22,7 +40,6 @@ html, body {
   height: 100%;
   border-right: 1px solid #2D3845;
 }
-
 
 .search-box {
   display: flex;
@@ -125,7 +142,7 @@ html, body {
   background: #031020;
   color: #fff;
   padding: 15px 20px;
-  display: flex; /* CORRIGIDO: era inline-flex */
+  display: flex;
   align-items: center;
   gap: 10px;
 }
@@ -157,7 +174,7 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: calc(100vh - 160px); /* Para deixar espaço para header e footer */
+  /* Removemos o max-height calculado manualmente pois o flexbox cuidará disso */
 }
 
 .msg {
@@ -171,7 +188,7 @@ html, body {
 .msg.received {
   background: #E9E9EB;
   align-self: flex-start;
-  color: #000000; /* TEXTO PRETO ADICIONADO */
+  color: #000000;
 }
 
 .msg.sent {
@@ -189,7 +206,7 @@ html, body {
 }
 
 .msg.received small {
-  color: #666; /* Cor mais escura para o horário */
+  color: #666;
 }
 
 /* ----------- Footer ----------- */
@@ -240,9 +257,10 @@ html, body {
   color: #4f8de0;
 }
 
+/* AQUI ESTÁ A CORREÇÃO PRINCIPAL */
 .chat-container {
   display: flex;
-  height: 100vh;
+  height: 100%; /* Mudado de 100vh para 100% para respeitar o header do base.html */
   width: 100%;
   background: #031020;
   margin: 0;

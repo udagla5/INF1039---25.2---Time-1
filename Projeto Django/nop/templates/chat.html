@@ -1,15 +1,15 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat | NOP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
-</head>
-<body>
+
+{% block title %}Chat | NOP{% endblock %}
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% endblock %}
+
+{% block content %}
+
 <div class="chat-container">
   <div class="sidebar">
     <div class="search-box">
@@ -94,7 +94,9 @@
       <form id="mensagemForm" method="post" action="{% url 'enviar_mensagem' %}" style="display: flex; align-items: center; flex: 1;">
         {% csrf_token %}
         <input type="hidden" name="destinatario_id" value="{{ destinatario.id }}">
-        {{ form_mensagem.conteudo }}
+        
+        <textarea name="conteudo" placeholder="Digite uma mensagem..." rows="1" required></textarea>
+        
         <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
       </form>
       {% else %}
@@ -104,7 +106,8 @@
     </div>
   </div>
 </div>
-
+{% endblock %}
+{% block extra_js %}
 <script>
 const chat = document.getElementById("chat");
 const form = document.getElementById("mensagemForm");
@@ -180,7 +183,6 @@ function atualizarMensagens() {
   const destinatarioId = new URLSearchParams(window.location.search).get('conversa_com');
   if (destinatarioId) {
     // Recarregar a página a cada 10 segundos para buscar novas mensagens
-    // Em produção, seria melhor usar WebSockets
     setTimeout(() => {
       location.reload();
     }, 10000);
@@ -189,5 +191,5 @@ function atualizarMensagens() {
 
 atualizarMensagens();
 </script>
-</body>
-</html>
+
+{% endblock %}

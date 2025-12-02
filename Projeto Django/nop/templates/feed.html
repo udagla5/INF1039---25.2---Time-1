@@ -135,7 +135,13 @@
         </div>
 
         <div class="oportunidade-col info-col">
-            <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/333/666?text={{ oportunidade.titulo|slice:":1" }}');"></div>
+            <div class="info-imagem" style="
+                background-image: url('{% if oportunidade.foto %}{{ oportunidade.foto.url }}{% else %}https://via.placeholder.com/60x60/333/666?text={{ oportunidade.titulo|slice:":1" }}{% endif %}'); 
+                background-size: cover; 
+                background-position: center;
+                background-repeat: no-repeat;">
+            </div>
+            
             <div class="info-texto">
                 <h3>{{ oportunidade.titulo }}</h3>
                 <p>{{ oportunidade.area }}</p>
@@ -175,7 +181,7 @@
 
 {% block extra_js %}
 <script>
-    // CONTROLES E SLIDERS (Mantidos iguais ao anterior)
+    // CONTROLES E SLIDERS
     const filtrosToggle = document.getElementById("filtrosToggle");
     const overlay = document.getElementById("overlay");
     const filterModal = document.getElementById("filterModal");

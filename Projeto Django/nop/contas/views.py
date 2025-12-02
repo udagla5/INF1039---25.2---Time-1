@@ -6,28 +6,16 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.db.models import Q, Max
 from django.http import JsonResponse
-<<<<<<< HEAD
 from django.urls import reverse_lazy
+
+# Ajuste suas importações de forms conforme o nome real do seu arquivo forms.py
 from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm, ProfessorCadastroFormParte2
-from .models import Oportunidade, Usuario, Mensagem
-from django.shortcuts import render, get_object_or_404
-from .models import Oportunidade, Favorito
-
-def detalhe_oportunidade(request, id):
-    # Busca a oportunidade pelo ID ou retorna erro 404 se não existir
-    oportunidade = get_object_or_404(Oportunidade, pk=id)
-    return render(request, 'oportunidade.html', {'oportunidade': oportunidade})
-
-# ========== PÁGINAS PRINCIPAIS ==========
-=======
-from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm
 from .models import Oportunidade, Usuario, Mensagem, Favorito
 
 # ===============================
-# FUNÇÕES DE AUTENTICAÇÃO E CADASTRO
+# PÁGINAS PRINCIPAIS E AUTENTICAÇÃO
 # ===============================
 
->>>>>>> 07d723c06d616609555f3c9a206978170dce3739
 def home(request):
     return render(request, 'home.html')
 
@@ -37,54 +25,35 @@ def cadastro1(request):
         if form.is_valid():
             usuario = form.save()
             tipo = form.cleaned_data.get('tipo')
-            
             messages.success(request, 'Primeira etapa concluída! Continue o cadastro.')
             
             if tipo == 'PROFESSOR':
-                # REDIRECIONAMENTO PARA A PARTE 2/CADASTRO3
                 return redirect('cadastro_professor_parte2', user_id=usuario.id)
-                
             elif tipo in ['ALUNO', 'ALUNO_EXTERNO']:
-                # REDIRECIONAMENTO TEMPORÁRIO PARA ALUNOS
                 messages.warning(request, 'O cadastro completo para Alunos está em desenvolvimento. Faça login com sua nova conta.')
                 return redirect('custom_login') 
-                
             else:
                 return redirect('home')
-
     else:
         form = UsuarioForm()
     return render(request, 'cadastro1.html', {'form': form})
 
 def cadastro_professor_parte2(request, user_id):
-    # Garante que o usuário existe e é do tipo PROFESSOR
     usuario = get_object_or_404(Usuario, id=user_id)
-    
     if usuario.tipo != 'PROFESSOR':
         messages.error(request, "Acesso não autorizado para o seu tipo de conta.")
         return redirect('home')
         
     if request.method == 'POST':
-        # Instancia o formulário com os dados POST e a instância de usuário para atualização
         form = ProfessorCadastroFormParte2(request.POST, instance=usuario)
-        
         if form.is_valid():
-            form.save() # Salva os campos 'cursos_atuacao' e 'cargos' no usuário
-            
+            form.save()
             messages.success(request, 'Cadastro de Professor concluído! Por favor, faça login.')
-            
             return redirect('login') 
-            
     else:
-        # Se for GET, instancia o formulário para exibição
         form = ProfessorCadastroFormParte2(instance=usuario)
 
-    context = {
-        'form': form,
-        'usuario': usuario,
-    }
-    # Renderiza o template da Parte 2 (cadastro3.html)
-    return render(request, 'cadastro3.html', context)
+    return render(request, 'cadastro3.html', {'form': form, 'usuario': usuario})
 
 @login_required
 def cadastro2(request):
@@ -149,17 +118,12 @@ def upload_avatar(request):
         if 'avatar' in request.FILES:
             novo_avatar = request.FILES['avatar']
             try:
-                # Adapte se seu modelo de perfil for diferente
-                profile = request.user.profile
+                profile = request.user.profile # Verifique se seu modelo usa profile ou user direto
                 profile.avatar = novo_avatar
                 profile.save()
                 messages.success(request, 'Foto de perfil atualizada com sucesso!')
-            except AttributeError:
-                # Caso o campo esteja direto em User ou outra estrutura
-                pass 
             except Exception as e:
                 messages.error(request, f'Erro ao salvar a imagem: {e}')
-        return redirect('perfil_aluno')
     return redirect('perfil_aluno')
 
 # ===============================
@@ -172,15 +136,25 @@ def detalhe_oportunidade(request, id):
 
 @login_required
 def criar_oportunidade(request):
+    # SEGURANÇA: Só professor pode criar
+    if request.user.tipo != 'PROFESSOR':
+        messages.error(request, 'Apenas professores podem criar oportunidades.')
+        return redirect('feed')
+
     if request.method == 'POST':
-        form = OportunidadeForm(request.POST)
+        # ALTERAÇÃO AQUI: Adicionado request.FILES para processar a imagem
+        form = OportunidadeForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            oportunidade = form.save(commit=False)
+            oportunidade.criador = request.user
+            oportunidade.save()
+            messages.success(request, 'Oportunidade criada com sucesso!')
             return redirect('feed') 
     else:
         form = OportunidadeForm()
     return render(request, 'criar_oportunidade.html', {'form': form})
 
+# View baseada em classe (mantida caso use em outro lugar, mas a url aponta para a função acima)
 class CriarOportunidadeView(LoginRequiredMixin, FormView):
     template_name = 'criar_oportunidade.html'
     form_class = OportunidadeForm
@@ -215,9 +189,10 @@ def favoritar_oportunidade(request, id):
     return redirect('oportunidades_salvas')
 
 # ===============================
-# FEED PRINCIPAL (COM FILTROS FUNCIONAIS)
+# FEED PRINCIPAL
 # ===============================
 
+@login_required
 def lista_oportunidades(request):
     # 1. Busca inicial ordenada por data de publicação
     oportunidades = Oportunidade.objects.all().order_by('-data_publicacao')
@@ -266,21 +241,21 @@ def lista_oportunidades(request):
         except ValueError:
             pass
 
-    # 6. Outros filtros (visual apenas por enquanto ou se houver campo exato)
+    # 6. Outros filtros
     cargas = request.GET.getlist('carga_horaria_check')
+    # Lógica de carga horária se houver...
+    
     interesses = request.GET.get('interesses')
+    # Lógica de interesses se houver...
 
-    # 7. Prepara o contexto devolvendo os valores para o HTML não resetar
+    # 7. Contexto
     context = {
         'oportunidades': oportunidades,
         'favoritos_ids': Favorito.objects.filter(usuario=request.user).values_list('oportunidade_id', flat=True) if request.user.is_authenticated else [],
-        
-        # Dicionário crítico para persistência dos filtros
         'filtros_selecionados': {
             'tipos': tipos,
             'cargas': cargas,
             'interesses': interesses,
-            # Se vier vazio, define padrões ('0' e '5000'/'200') para os sliders
             'min_remuneracao': min_rem if min_rem else '0',
             'max_remuneracao': max_rem if max_rem else '5000',
             'min_horas': min_horas if min_horas else '0',
@@ -293,13 +268,6 @@ def lista_oportunidades(request):
 # ===============================
 # SISTEMA DE CHAT
 # ===============================
-
-class FeedView(LoginRequiredMixin, ListView):
-    # Mantida para compatibilidade se ainda estiver sendo usada em urls antigas
-    model = Oportunidade
-    template_name = 'feed.html'
-    context_object_name = 'oportunidades'
-    paginate_by = 12
 
 class ChatView(LoginRequiredMixin, TemplateView):
     template_name = 'chat.html'
@@ -364,25 +332,6 @@ class EnviarMensagemView(LoginRequiredMixin, TemplateView):
                 return JsonResponse({'success': False, 'error': 'Destinatário não encontrado'})
         return JsonResponse({'success': False, 'errors': form.errors})
     
-@login_required
-def criar_oportunidade(request):
-    # SEGURANÇA: Só professor pode acessar
-    if request.user.tipo != 'PROFESSOR':
-        messages.error(request, 'Apenas professores podem criar oportunidades.')
-        return redirect('feed')
-
-    if request.method == 'POST':
-        form = OportunidadeForm(request.POST)
-        if form.is_valid():
-            oportunidade = form.save(commit=False)
-            oportunidade.criador = request.user
-            oportunidade.save()
-            messages.success(request, 'Oportunidade criada com sucesso!')
-            return redirect('feed') 
-    else:
-        form = OportunidadeForm()
-    return render(request, 'criar_oportunidade.html', {'form': form})
-
 class ListarUsuariosView(LoginRequiredMixin, ListView):
     model = Usuario
     template_name = 'usuarios_chat.html'

@@ -11,7 +11,7 @@ from . import views
 urlpatterns = [
     # ========== PÁGINAS PRINCIPAIS ==========
     path('', views.home, name='home'),
-    path('feed/', FeedView.as_view(), name='feed'),
+    path('feed/', views.lista_oportunidades, name='feed'),
     
     # ========== AUTENTICAÇÃO ==========
     path('login/', views.custom_login, name='login'),

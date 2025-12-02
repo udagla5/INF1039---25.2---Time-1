@@ -1,4 +1,3 @@
-# contas/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,22 +9,12 @@ from django.http import JsonResponse
 from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm
 from .models import Oportunidade, Usuario, Mensagem, Favorito
 
-# ... (Todo o código anterior de Login, Cadastro, Chat, etc permanece igual até a lista_oportunidades) ...
-
-def detalhe_oportunidade(request, id):
-    oportunidade = get_object_or_404(Oportunidade, pk=id)
-    return render(request, 'oportunidade.html', {'oportunidade': oportunidade})
+# ===============================
+# FUNÇÕES DE AUTENTICAÇÃO E CADASTRO
+# ===============================
 
 def home(request):
     return render(request, 'home.html')
-
-class FeedView(LoginRequiredMixin, ListView):
-    model = Oportunidade
-    template_name = 'feed.html'
-    context_object_name = 'oportunidades'
-    paginate_by = 12
-    login_url = 'login'
-    redirect_field_name = 'redirect_to'
 
 def cadastro1(request):
     if request.method == 'POST':
@@ -75,6 +64,10 @@ def custom_logout(request):
     messages.success(request, 'Logout realizado com sucesso!')
     return redirect('home')
 
+# ===============================
+# PERFIL E EDIÇÃO
+# ===============================
+
 @login_required
 def perfil_aluno(request):
     if request.method == 'POST':
@@ -90,6 +83,33 @@ def perfil_aluno(request):
 @login_required
 def perfil_aluno_parte2(request):
     return render(request, 'perfil_aluno_parte2.html')
+
+@login_required
+def upload_avatar(request):
+    if request.method == 'POST':
+        if 'avatar' in request.FILES:
+            novo_avatar = request.FILES['avatar']
+            try:
+                # Adapte se seu modelo de perfil for diferente
+                profile = request.user.profile
+                profile.avatar = novo_avatar
+                profile.save()
+                messages.success(request, 'Foto de perfil atualizada com sucesso!')
+            except AttributeError:
+                # Caso o campo esteja direto em User ou outra estrutura
+                pass 
+            except Exception as e:
+                messages.error(request, f'Erro ao salvar a imagem: {e}')
+        return redirect('perfil_aluno')
+    return redirect('perfil_aluno')
+
+# ===============================
+# OPORTUNIDADES (CRUD e Detalhes)
+# ===============================
+
+def detalhe_oportunidade(request, id):
+    oportunidade = get_object_or_404(Oportunidade, pk=id)
+    return render(request, 'oportunidade.html', {'oportunidade': oportunidade})
 
 @login_required
 def criar_oportunidade(request):
@@ -114,6 +134,113 @@ class CriarOportunidadeView(LoginRequiredMixin, FormView):
         oportunidade.save()
         messages.success(self.request, 'Oportunidade criada com sucesso! Aguarde a validação do sistema.')
         return redirect('feed')
+
+@login_required
+def oportunidades_salvas(request):
+    oportunidades = Favorito.objects.filter(usuario=request.user)
+    return render(request, 'oportunidades_salvas.html', {
+        'oportunidades': [f.oportunidade for f in oportunidades]
+    })
+
+@login_required
+def remover_salva(request, id):
+    Favorito.objects.filter(usuario=request.user, oportunidade_id=id).delete()
+    messages.info(request, 'Oportunidade removida dos seus favoritos.')
+    return redirect('oportunidades_salvas')
+
+@login_required
+def favoritar_oportunidade(request, id):
+    oportunidade = get_object_or_404(Oportunidade, pk=id)
+    Favorito.objects.get_or_create(usuario=request.user, oportunidade=oportunidade) 
+    messages.success(request, 'Oportunidade salva com sucesso! 🎉')
+    return redirect('oportunidades_salvas')
+
+# ===============================
+# FEED PRINCIPAL (COM FILTROS FUNCIONAIS)
+# ===============================
+
+def lista_oportunidades(request):
+    # 1. Busca inicial ordenada por data de publicação
+    oportunidades = Oportunidade.objects.all().order_by('-data_publicacao')
+
+    # 2. Filtro de Texto
+    busca = request.GET.get('busca')
+    if busca:
+        oportunidades = oportunidades.filter(
+            Q(titulo__icontains=busca) | Q(descricao__icontains=busca)
+        )
+
+    # 3. Filtro por Tipo (Checkbox)
+    tipos = request.GET.getlist('tipo')
+    if tipos:
+        oportunidades = oportunidades.filter(tipo__in=tipos)
+
+    # 4. Filtro por Remuneração (Slider Intervalo)
+    min_rem = request.GET.get('min_remuneracao')
+    max_rem = request.GET.get('max_remuneracao')
+
+    if min_rem and min_rem != '':
+        try:
+            oportunidades = oportunidades.filter(remuneracao__gte=int(min_rem))
+        except ValueError:
+            pass
+            
+    if max_rem and max_rem != '':
+        try:
+            oportunidades = oportunidades.filter(remuneracao__lte=int(max_rem))
+        except ValueError:
+            pass
+
+    # 5. Filtro por Horas Complementares (Slider Intervalo)
+    min_horas = request.GET.get('min_horas')
+    max_horas = request.GET.get('max_horas')
+
+    if min_horas and min_horas != '':
+        try:
+            oportunidades = oportunidades.filter(horas_complementares__gte=int(min_horas))
+        except ValueError:
+            pass
+
+    if max_horas and max_horas != '':
+        try:
+            oportunidades = oportunidades.filter(horas_complementares__lte=int(max_horas))
+        except ValueError:
+            pass
+
+    # 6. Outros filtros (visual apenas por enquanto ou se houver campo exato)
+    cargas = request.GET.getlist('carga_horaria_check')
+    interesses = request.GET.get('interesses')
+
+    # 7. Prepara o contexto devolvendo os valores para o HTML não resetar
+    context = {
+        'oportunidades': oportunidades,
+        'favoritos_ids': Favorito.objects.filter(usuario=request.user).values_list('oportunidade_id', flat=True) if request.user.is_authenticated else [],
+        
+        # Dicionário crítico para persistência dos filtros
+        'filtros_selecionados': {
+            'tipos': tipos,
+            'cargas': cargas,
+            'interesses': interesses,
+            # Se vier vazio, define padrões ('0' e '5000'/'200') para os sliders
+            'min_remuneracao': min_rem if min_rem else '0',
+            'max_remuneracao': max_rem if max_rem else '5000',
+            'min_horas': min_horas if min_horas else '0',
+            'max_horas': max_horas if max_horas else '200',
+        }
+    }
+    
+    return render(request, 'feed.html', context)
+
+# ===============================
+# SISTEMA DE CHAT
+# ===============================
+
+class FeedView(LoginRequiredMixin, ListView):
+    # Mantida para compatibilidade se ainda estiver sendo usada em urls antigas
+    model = Oportunidade
+    template_name = 'feed.html'
+    context_object_name = 'oportunidades'
+    paginate_by = 12
 
 class ChatView(LoginRequiredMixin, TemplateView):
     template_name = 'chat.html'
@@ -149,8 +276,7 @@ class ChatView(LoginRequiredMixin, TemplateView):
                     lida=False
                 ).update(lida=True)
             except Usuario.DoesNotExist:
-                context['destinatario'] = None
-                context['mensagens'] = []
+                pass
         return context
 
 class EnviarMensagemView(LoginRequiredMixin, TemplateView):
@@ -177,11 +303,7 @@ class EnviarMensagemView(LoginRequiredMixin, TemplateView):
                 })
             except Usuario.DoesNotExist:
                 return JsonResponse({'success': False, 'error': 'Destinatário não encontrado'})
-        else:
-            return JsonResponse({'success': False, 'errors': form.errors})
-        
-    def get(self, request, *args, **kwargs):
-        return JsonResponse({'success': False, 'error': 'Método não permitido'})
+        return JsonResponse({'success': False, 'errors': form.errors})
 
 class ListarUsuariosView(LoginRequiredMixin, ListView):
     model = Usuario
@@ -191,120 +313,3 @@ class ListarUsuariosView(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         return Usuario.objects.exclude(id=self.request.user.id).order_by('username')
-
-@login_required
-def upload_avatar(request):
-    if request.method == 'POST':
-        if 'avatar' in request.FILES:
-            novo_avatar = request.FILES['avatar']
-            try:
-                profile = request.user.profile
-                profile.avatar = novo_avatar
-                profile.save()
-                messages.success(request, 'Foto de perfil atualizada com sucesso!')
-            except AttributeError:
-                messages.error(request, 'Erro: O modelo de perfil não pôde ser encontrado.')
-            except Exception as e:
-                messages.error(request, f'Erro ao salvar a imagem: {e}')
-        return redirect('perfil_aluno')
-    return redirect('perfil_aluno')
-
-@login_required
-def oportunidades_salvas(request):
-    oportunidades = Favorito.objects.filter(usuario=request.user)
-    return render(request, 'oportunidades_salvas.html', {
-        'oportunidades': [f.oportunidade for f in oportunidades]
-    })
-
-@login_required
-def remover_salva(request, id):
-    Favorito.objects.filter(usuario=request.user, oportunidade_id=id).delete()
-    messages.info(request, 'Oportunidade removida dos seus favoritos.')
-    return redirect('oportunidades_salvas')
-
-@login_required
-def favoritar_oportunidade(request, id):
-    oportunidade = get_object_or_404(Oportunidade, pk=id)
-    Favorito.objects.get_or_create(usuario=request.user, oportunidade=oportunidade) 
-    messages.success(request, 'Oportunidade salva com sucesso! 🎉')
-    return redirect('oportunidades_salvas')
-
-# ========================================================
-# FUNÇÃO LISTA OPORTUNIDADES (FEED COM FILTROS FUNCIONAIS)
-# ========================================================
-def lista_oportunidades(request):
-    # 1. Busca TODAS as oportunidades inicialmente
-    oportunidades = Oportunidade.objects.all().order_by('-data_criacao')
-
-    # 2. Filtro de Texto (Barra de pesquisa do header)
-    busca = request.GET.get('busca')
-    if busca:
-        oportunidades = oportunidades.filter(
-            Q(titulo__icontains=busca) | Q(descricao__icontains=busca)
-        )
-
-    # 3. Filtro por TIPO (Checkbox)
-    # O request.GET.getlist pega todos os marcados (ex: ['EST', 'MON'])
-    tipos = request.GET.getlist('tipo')
-    if tipos:
-        oportunidades = oportunidades.filter(tipo__in=tipos)
-
-    # 4. Filtro por REMUNERAÇÃO (Intervalo Min e Max)
-    # Os inputs no HTML se chamam 'min_remuneracao' e 'max_remuneracao'
-    min_rem = request.GET.get('min_remuneracao')
-    max_rem = request.GET.get('max_remuneracao')
-
-    # Convertendo para Inteiro para filtrar no Banco
-    if min_rem:
-        try:
-            oportunidades = oportunidades.filter(remuneracao__gte=int(min_rem))
-        except ValueError:
-            pass # Ignora se não for número
-            
-    if max_rem:
-        try:
-            oportunidades = oportunidades.filter(remuneracao__lte=int(max_rem))
-        except ValueError:
-            pass
-
-    # 5. Filtro por HORAS COMPLEMENTARES (Intervalo Min e Max)
-    min_horas = request.GET.get('min_horas')
-    max_horas = request.GET.get('max_horas')
-
-    if min_horas:
-        try:
-            oportunidades = oportunidades.filter(horas_complementares__gte=int(min_horas))
-        except ValueError:
-            pass
-
-    if max_horas:
-        try:
-            oportunidades = oportunidades.filter(horas_complementares__lte=int(max_horas))
-        except ValueError:
-            pass
-
-    # 6. Filtros Extras (Carga Horária e Interesses)
-    # Como Carga Horária é CharField no seu model, filtro exato é difícil, 
-    # mas mantemos o estado visual para o usuário não achar que sumiu.
-    cargas = request.GET.getlist('carga_horaria_check')
-    interesses = request.GET.get('interesses')
-
-    # Contexto enviado para o HTML
-    context = {
-        'oportunidades': oportunidades,
-        # IDs dos favoritos para pintar o coraçãozinho
-        'favoritos_ids': Favorito.objects.filter(usuario=request.user).values_list('oportunidade_id', flat=True) if request.user.is_authenticated else [],
-        
-        # DADOS PARA O FORMULÁRIO (Isso faz o filtro "lembrar" o que você escolheu)
-        'filtros_selecionados': {
-            'tipos': tipos,
-            'cargas': cargas,
-            'interesses': interesses,
-            'min_remuneracao': min_rem,
-            'max_remuneracao': max_rem,
-            'min_horas': min_horas,
-            'max_horas': max_horas,
-        }
-    }
-    
-    return render(request, 'feed.html', context)

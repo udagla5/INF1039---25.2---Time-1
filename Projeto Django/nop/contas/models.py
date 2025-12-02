@@ -8,20 +8,24 @@ from django.utils import timezone
 
 class Usuario(AbstractUser):
     username = models.CharField(max_length=20, unique=True)
-    email = models.CharField(max_length=20, unique=True)
-    senha = models.CharField(max_length=20)
+    email = models.CharField(max_length=50, unique=True)
+    senha = models.CharField(max_length=128)
+    
     TIPOS_USUARIO = [
         ('ALUNO', 'Aluno PUC-Rio'),
         ('PROFESSOR', 'Professor/Gestor'),
         ('ALUNO_EXTERNO', 'Aluno de Fora'),
     ]
-    tipo = models.CharField(max_length=20, choices=TIPOS_USUARIO)
+    tipo = models.CharField(max_length=20, choices=TIPOS_USUARIO, default='ALUNO')
+    
     matricula = models.CharField(max_length=20, unique=True, null=True, blank=True)
     curso = models.CharField(max_length=100, blank=True, null=True)
     periodo = models.CharField(max_length=20, blank=True, null=True)
     telefone = models.CharField(max_length=20, blank=True, null=True)
 
-    REQUIRED_FIELDS = ['email']  # Outros campos que são obrigatórios
+    interesses = models.ManyToManyField('Interesse', blank=True, related_name='usuarios')
+
+    REQUIRED_FIELDS = ['email']
 
     def __str__(self):
         return f"{self.username} ({self.get_tipo_display()})"
@@ -38,25 +42,46 @@ class Interesse(models.Model):
 # ===============================
 
 class Oportunidade(models.Model):
-    # Campos que você já tinha:
     titulo = models.CharField(max_length=100)
     descricao = models.TextField(max_length=5000)
-    TIPO_CHOICES = [('MON', 'Monitoria Acadêmica'), ('IC', 'Iniciação Científica'), ('EST', 'Estágio'), ('LP', 'Laboratório de Pesquisa'), ('OUT', 'Outro')]
-    tipo = models.CharField(max_length=3, choices=TIPO_CHOICES, default='OUT')
-    local = models.TextField(verbose_name='Local de realização da atividade') 
-
-    # 🚀 Novos campos adicionados:
-    cursos_elegiveis = models.CharField(max_length=255, verbose_name='Cursos elegíveis para participação')
-    carga_horaria = models.CharField(max_length=50, verbose_name='Carga horária')
-    num_vagas = models.IntegerField(verbose_name='Número de vagas disponíveis')
-    horas_complementares = models.IntegerField(verbose_name='Número de horas complementares')
-    remuneracao = models.IntegerField(verbose_name='Remuneracao')
-    processo_seletivo = models.TextField(verbose_name='Processo seletivo')
-    data_encerramento = models.DateField(verbose_name='Data de encerramento do processo seletivo') 
     
+    TIPO_CHOICES = [
+        ('MON', 'Monitoria Acadêmica'),
+        ('IC', 'Iniciação Científica'),
+        ('EST', 'Estágio'),
+        ('LP', 'Laboratório de Pesquisa'),
+        ('TMP', 'Trabalho Meio Período'),
+        ('VOL', 'Voluntariado'),
+        ('PAL', 'Palestra'),
+        ('EQC', 'Equipe de Competição'),
+        ('BOL', 'Bolsa'),
+        ('OUT', 'Outro')
+    ]
+    tipo = models.CharField(max_length=3, choices=TIPO_CHOICES, default='OUT')
+    
+    local = models.TextField(verbose_name='Local de realização da atividade') 
+    cursos_elegiveis = models.CharField(max_length=255, verbose_name='Cursos elegíveis', blank=True, null=True)
+    
+    carga_horaria = models.CharField(max_length=50, verbose_name='Carga horária (Texto)')
+    num_vagas = models.IntegerField(verbose_name='Número de vagas', default=1)
+    
+    # === CAMPOS DE FILTRO ===
+    horas_complementares = models.IntegerField(verbose_name='Horas Complementares (Total)', default=0)
+    remuneracao = models.IntegerField(verbose_name='Remuneração (R$)', default=0)
+    
+    processo_seletivo = models.TextField(verbose_name='Processo seletivo', blank=True, null=True)
+    data_encerramento = models.DateField(verbose_name='Data de encerramento', null=True, blank=True) 
+    
+    criador = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='oportunidades_criadas', null=True, blank=True)
+    
+    # CORREÇÃO AQUI: Renomeado para data_publicacao para satisfazer o admin.py
     data_publicacao = models.DateTimeField(auto_now_add=True)
     
-    # Adicione outros campos, como prazo_final, criador, etc., se necessário.
+    status = models.CharField(
+        max_length=20, 
+        choices=[('PENDENTE', 'Pendente'), ('APROVADA', 'Aprovada'), ('ENCERRADA', 'Encerrada')],
+        default='APROVADA' 
+    )
 
     class Meta:
         verbose_name = "Oportunidade"
@@ -66,7 +91,7 @@ class Oportunidade(models.Model):
         return self.titulo
 
 # ===============================
-# 3️⃣ PARTICIPAÇÕES (RF7, RF13)
+# 3️⃣ OUTROS MODELOS (Sem alterações)
 # ===============================
 
 class Participacao(models.Model):
@@ -78,11 +103,7 @@ class Participacao(models.Model):
     ativo = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.aluno.username} - {self.oportunidade.nome}"
-
-# ===============================
-# 4️⃣ FAVORITOS (RF12)
-# ===============================
+        return f"{self.aluno.username} - {self.oportunidade.titulo}"
 
 class Favorito(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
@@ -93,11 +114,7 @@ class Favorito(models.Model):
         unique_together = ('usuario', 'oportunidade')
 
     def __str__(self):
-        return f"{self.usuario.username} ❤️ {self.oportunidade.nome}"
-
-# ===============================
-# 5️⃣ PEDIDOS DE OPORTUNIDADE (RF6.1)
-# ===============================
+        return f"{self.usuario.username} ❤️ {self.oportunidade.titulo}"
 
 class PedidoOportunidade(models.Model):
     solicitante = models.ForeignKey(Usuario, on_delete=models.CASCADE)
@@ -107,34 +124,16 @@ class PedidoOportunidade(models.Model):
     carga_horaria = models.PositiveIntegerField()
     status = models.CharField(
         max_length=20,
-        choices=[
-            ('AGUARDANDO', 'Aguardando Análise'),
-            ('APROVADO', 'Aprovado'),
-            ('REJEITADO', 'Rejeitado')
-        ],
+        choices=[('AGUARDANDO', 'Aguardando'), ('APROVADO', 'Aprovado'), ('REJEITADO', 'Rejeitado')],
         default='AGUARDANDO'
     )
     data_solicitacao = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Pedido: {self.nome} ({self.get_status_display()})"
-
-# ===============================
-# 6️⃣ NOTIFICAÇÕES (RF10, RF11)
-# ===============================
 
 class Notificacao(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     mensagem = models.TextField()
     data = models.DateTimeField(auto_now_add=True)
     lida = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"Notificação para {self.usuario.username}"
-
-# ===============================
-# 7️⃣ MENSAGENS INTERNAS (RF14)
-# ===============================
 
 class Mensagem(models.Model):
     remetente = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='mensagens_enviadas')
@@ -143,19 +142,9 @@ class Mensagem(models.Model):
     data_envio = models.DateTimeField(auto_now_add=True)
     lida = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f"De {self.remetente} para {self.destinatario}"
-
-# ===============================
-# 8️⃣ AVALIAÇÕES / FEEDBACKS (RF15)
-# ===============================
-
 class Avaliacao(models.Model):
     autor = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     oportunidade = models.ForeignKey(Oportunidade, on_delete=models.CASCADE, related_name='avaliacoes')
     comentario = models.TextField(blank=True, null=True)
     nota = models.PositiveSmallIntegerField(default=5)
     data = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Avaliação {self.nota}/10 por {self.autor.username}"

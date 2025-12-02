@@ -25,29 +25,47 @@
     </header>
 
     <main class="op-container">
-        <div class="op-grid-info">
-            <div class="info-card">
-                <span class="label">Carga Horária</span>
-                <span class="value">{{ oportunidade.carga_horaria }}</span>
+        
+        <div class="header-oportunidade-grid" style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 30px;">
+            
+            <div style="background: #031020; padding: 15px; border-radius: 8px; flex: 1; min-width: 140px; text-align: center; color: white;">
+                <div style="font-size: 11px; font-weight: 600; color: #a0a0a0; margin-bottom: 5px; text-transform: uppercase;">CARGA HORÁRIA</div>
+                <div style="font-size: 16px; font-weight: 700;">{{ oportunidade.carga_horaria }}</div>
             </div>
-            <div class="info-card">
-                <span class="label">Remuneração</span>
-                <span class="value">R$ {{ oportunidade.remuneracao }}</span>
-            </div>
-            <div class="info-card">
-                <span class="label">Vagas</span>
-                <span class="value">{{ oportunidade.num_vagas }}</span>
-            </div>
-            <div class="info-card">
-                <span class="label">Horas Comp.</span>
-                <span class="value">{{ oportunidade.horas_complementares }}h</span>
-            </div>
-            <div class="info-card">
-                <span class="label">Encerramento</span>
-                <span class="value">{{ oportunidade.data_encerramento|date:"d/m/Y" }}</span>
-            </div>
-        </div>
 
+            <div style="background: #031020; padding: 15px; border-radius: 8px; flex: 1; min-width: 140px; text-align: center; color: white;">
+                <div style="font-size: 11px; font-weight: 600; color: #a0a0a0; margin-bottom: 5px; text-transform: uppercase;">REMUNERAÇÃO</div>
+                <div style="font-size: 16px; font-weight: 700;">
+                    {% if oportunidade.remuneracao > 0 %}
+                        R$ {{ oportunidade.remuneracao }}
+                    {% else %}
+                        Voluntário
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="background: #031020; padding: 15px; border-radius: 8px; flex: 1; min-width: 100px; text-align: center; color: white;">
+                <div style="font-size: 11px; font-weight: 600; color: #a0a0a0; margin-bottom: 5px; text-transform: uppercase;">VAGAS</div>
+                <div style="font-size: 16px; font-weight: 700;">{{ oportunidade.num_vagas }}</div>
+            </div>
+
+            <div style="background: #031020; padding: 15px; border-radius: 8px; flex: 1; min-width: 140px; text-align: center; color: white;">
+                <div style="font-size: 11px; font-weight: 600; color: #a0a0a0; margin-bottom: 5px; text-transform: uppercase;">HORAS COMP.</div>
+                <div style="font-size: 16px; font-weight: 700;">{{ oportunidade.horas_complementares }}h</div>
+            </div>
+
+            <div style="background: #031020; padding: 15px; border-radius: 8px; flex: 1; min-width: 140px; text-align: center; color: white;">
+                <div style="font-size: 11px; font-weight: 600; color: #a0a0a0; margin-bottom: 5px; text-transform: uppercase;">ENCERRAMENTO</div>
+                <div style="font-size: 16px; font-weight: 700;">
+                    {% if oportunidade.data_encerramento %}
+                        {{ oportunidade.data_encerramento|date:"d/m/Y" }}
+                    {% else %}
+                        Indefinido
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
         <hr class="op-divider">
 
         <section class="op-section">
@@ -57,17 +75,21 @@
             </div>
         </section>
 
+        {% if oportunidade.processo_seletivo %}
         <section class="op-section">
             <h2>Processo Seletivo</h2>
             <div class="op-text-content">
                 {{ oportunidade.processo_seletivo|linebreaks }}
             </div>
         </section>
+        {% endif %}
 
+        {% if oportunidade.cursos_elegiveis %}
         <section class="op-section">
             <h2>Cursos Elegíveis</h2>
             <p class="op-text-highlight">{{ oportunidade.cursos_elegiveis }}</p>
         </section>
+        {% endif %}
 
         <div class="op-actions">
             <button class="btn-candidatar">Candidatar-se</button>
@@ -96,7 +118,7 @@
 
 {% block extra_js %}
 <script>
-    // 🚀 NOVO SCRIPT PARA SALVAR VIA LINK (DETALHE)
+    // SCRIPT PARA SALVAR VIA LINK (DETALHE)
     document.addEventListener('DOMContentLoaded', function() {
         const salvarLink = document.getElementById('btn-favoritar-detalhe');
         const favoritoForm = document.getElementById('fav-form-detalhe');

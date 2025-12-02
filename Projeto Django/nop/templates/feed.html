@@ -36,9 +36,7 @@
             <h2>Filtros</h2>
             <div class="close-filter" id="closeFilter">
                 <svg width="30" height="30" viewBox="0 0 24 24" fill="#031020" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                    <circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>
                 </svg>
             </div>
         </div>
@@ -80,16 +78,16 @@
                     <div class="range-input">
                         <input type="range" id="min-rem" name="min_remuneracao" 
                                min="0" max="5000" step="50" 
-                               value="{{ filtros_selecionados.min_remuneracao|default:'0' }}">
+                               value="{{ filtros_selecionados.min_remuneracao }}">
                                
                         <input type="range" id="max-rem" name="max_remuneracao" 
                                min="0" max="5000" step="50" 
-                               value="{{ filtros_selecionados.max_remuneracao|default:'5000' }}">
+                               value="{{ filtros_selecionados.max_remuneracao }}">
                     </div>
 
                     <div class="slider-values">
-                        <span id="display-min-rem">R$ 0</span>
-                        <span id="display-max-rem">R$ 5000+</span>
+                        <span id="display-min-rem">R$ {{ filtros_selecionados.min_remuneracao }}</span>
+                        <span id="display-max-rem">R$ {{ filtros_selecionados.max_remuneracao }}</span>
                     </div>
                 </div>
             </div>
@@ -103,16 +101,16 @@
                     <div class="range-input">
                         <input type="range" id="min-horas" name="min_horas" 
                                min="0" max="200" step="5" 
-                               value="{{ filtros_selecionados.min_horas|default:'0' }}">
+                               value="{{ filtros_selecionados.min_horas }}">
                                
                         <input type="range" id="max-horas" name="max_horas" 
                                min="0" max="200" step="5" 
-                               value="{{ filtros_selecionados.max_horas|default:'200' }}">
+                               value="{{ filtros_selecionados.max_horas }}">
                     </div>
 
                     <div class="slider-values">
-                        <span id="display-min-horas">0h</span>
-                        <span id="display-max-horas">200h</span>
+                        <span id="display-min-horas">{{ filtros_selecionados.min_horas }}h</span>
+                        <span id="display-max-horas">{{ filtros_selecionados.max_horas }}h</span>
                     </div>
                 </div>
             </div>
@@ -164,7 +162,13 @@
 
         <div class="oportunidade-col">{{ oportunidade.get_tipo_display }}</div>
         <div class="oportunidade-col">{{ oportunidade.carga_horaria }}</div>
-        <div class="oportunidade-col">R$ {{ oportunidade.remuneracao }}</div>
+        <div class="oportunidade-col">
+            {% if oportunidade.remuneracao > 0 %}
+                R$ {{ oportunidade.remuneracao }}
+            {% else %}
+                Voluntário
+            {% endif %}
+        </div>
         <div class="oportunidade-col">{{ oportunidade.horas_complementares }}h</div>
 
         <div class="oportunidade-col acao-col">
@@ -206,7 +210,7 @@
     if(closeFilter) closeFilter.addEventListener('click', closeFilterModal);
     if(overlay) overlay.addEventListener('click', closeFilterModal);
 
-    // --- Script de Favoritar ---
+    // --- Script Favoritar ---
     document.addEventListener('DOMContentLoaded', function() {
         const salvarLinks = document.querySelectorAll('.btn-favorito-link');
         salvarLinks.forEach(link => {
@@ -228,13 +232,12 @@
         const rangeBar = document.getElementById(rangeBarId);
         const dMin = document.getElementById(displayMinId);
         const dMax = document.getElementById(displayMaxId);
-        const gap = 0; // Diferença mínima entre os dois cursores
+        const gap = 0; 
 
         function updateSlider() {
             let minVal = parseInt(minInput.value);
             let maxVal = parseInt(maxInput.value);
 
-            // Impede que a bolinha MIN ultrapasse a MAX
             if (maxVal - minVal < gap) {
                 if (this === minInput) {
                     minInput.value = maxVal - gap;
@@ -243,11 +246,9 @@
                 }
             }
             
-            // Atualiza os textos visuais
             dMin.textContent = prefix + minInput.value + suffix;
             dMax.textContent = prefix + maxInput.value + suffix;
 
-            // Calcula a posição e largura da barra colorida
             const max = parseInt(maxInput.max);
             const percentMin = (minInput.value / max) * 100;
             const percentMax = (maxInput.value / max) * 100;
@@ -256,20 +257,15 @@
             rangeBar.style.width = (percentMax - percentMin) + "%";
         }
 
-        // Ouve mudanças enquanto arrasta
         minInput.addEventListener("input", updateSlider);
         maxInput.addEventListener("input", updateSlider);
         
-        // Executa uma vez ao carregar para posicionar corretamente (usando os valores do Django)
+        // Inicializa já com os valores carregados do Django
         updateSlider();
     }
 
-    // Inicializa quando a página carregar
     document.addEventListener("DOMContentLoaded", function() {
-        // Slider de Remuneração
         initDualSlider("min-rem", "max-rem", "rem-range-bar", "display-min-rem", "display-max-rem", "R$ ", "");
-        
-        // Slider de Horas Complementares
         initDualSlider("min-horas", "max-horas", "horas-range-bar", "display-min-horas", "display-max-horas", "", "h");
     });
 </script>

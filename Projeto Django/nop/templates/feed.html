@@ -31,7 +31,6 @@
 
 <div class="filter-modal" id="filterModal">
     <form method="GET" action="{% url 'feed' %}">
-        
         <div class="filter-modal-header">
             <h2>Filtros</h2>
             <div class="close-filter" id="closeFilter">
@@ -42,7 +41,6 @@
         </div>
 
         <div class="filter-content">
-            
             <div class="filter-column">
                 <h3>TIPO</h3>
                 <div class="checkbox-group">
@@ -74,17 +72,10 @@
                 <div class="dual-slider-container">
                     <div class="slider-track"></div>
                     <div class="slider-range" id="rem-range-bar"></div>
-                    
                     <div class="range-input">
-                        <input type="range" id="min-rem" name="min_remuneracao" 
-                               min="0" max="5000" step="50" 
-                               value="{{ filtros_selecionados.min_remuneracao }}">
-                               
-                        <input type="range" id="max-rem" name="max_remuneracao" 
-                               min="0" max="5000" step="50" 
-                               value="{{ filtros_selecionados.max_remuneracao }}">
+                        <input type="range" id="min-rem" name="min_remuneracao" min="0" max="5000" step="50" value="{{ filtros_selecionados.min_remuneracao }}">
+                        <input type="range" id="max-rem" name="max_remuneracao" min="0" max="5000" step="50" value="{{ filtros_selecionados.max_remuneracao }}">
                     </div>
-
                     <div class="slider-values">
                         <span id="display-min-rem">R$ {{ filtros_selecionados.min_remuneracao }}</span>
                         <span id="display-max-rem">R$ {{ filtros_selecionados.max_remuneracao }}</span>
@@ -97,17 +88,10 @@
                 <div class="dual-slider-container">
                     <div class="slider-track"></div>
                     <div class="slider-range" id="horas-range-bar"></div>
-                    
                     <div class="range-input">
-                        <input type="range" id="min-horas" name="min_horas" 
-                               min="0" max="200" step="5" 
-                               value="{{ filtros_selecionados.min_horas }}">
-                               
-                        <input type="range" id="max-horas" name="max_horas" 
-                               min="0" max="200" step="5" 
-                               value="{{ filtros_selecionados.max_horas }}">
+                        <input type="range" id="min-horas" name="min_horas" min="0" max="200" step="5" value="{{ filtros_selecionados.min_horas }}">
+                        <input type="range" id="max-horas" name="max_horas" min="0" max="200" step="5" value="{{ filtros_selecionados.max_horas }}">
                     </div>
-
                     <div class="slider-values">
                         <span id="display-min-horas">{{ filtros_selecionados.min_horas }}h</span>
                         <span id="display-max-horas">{{ filtros_selecionados.max_horas }}h</span>
@@ -122,7 +106,6 @@
                     <label><input type="checkbox" name="interesses" value="tudo" {% if not filtros_selecionados.interesses or 'tudo' == filtros_selecionados.interesses %}checked{% endif %}> Tudo</label>
                 </div>
             </div>
-
         </div>
 
         <div style="margin-top: 40px; text-align: right;">
@@ -137,7 +120,6 @@
 <main class="feed" id="conteudo" role="main">
     {% for oportunidade in oportunidades %}
     <section class="oportunidade-item">
-
         <div class="oportunidade-col bookmark-col">
             {% if oportunidade.id %}
             <form method="post" action="{% url 'favoritar_oportunidade' oportunidade.id %}" id="fav-form-{{ oportunidade.id }}" class="fav-form-feed" style="display:inline;">
@@ -174,17 +156,26 @@
         <div class="oportunidade-col acao-col">
             <a href="{% url 'detalhe_oportunidade' oportunidade.id %}" class="btn-ver-mais">Ver mais</a>
         </div>
-
     </section>
     {% empty %}
         <p style="text-align: center; padding: 40px; color: #99a8bd;">Nenhuma oportunidade encontrada com esses filtros.</p>
     {% endfor %}
 </main>
+
+{% if user.is_authenticated and user.tipo == 'PROFESSOR' %}
+    <a href="{% url 'criar_oportunidade' %}" class="btn-floating-add" title="Criar Nova Oportunidade">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+    </a>
+{% endif %}
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // --- Controle do Modal ---
+    // CONTROLES E SLIDERS (Mantidos iguais ao anterior)
     const filtrosToggle = document.getElementById("filtrosToggle");
     const overlay = document.getElementById("overlay");
     const filterModal = document.getElementById("filterModal");
@@ -197,7 +188,6 @@
             document.body.style.overflow = "hidden";
         }
     }
-
     function closeFilterModal() {
         if(overlay && filterModal) {
             overlay.style.display = "none";
@@ -210,7 +200,6 @@
     if(closeFilter) closeFilter.addEventListener('click', closeFilterModal);
     if(overlay) overlay.addEventListener('click', closeFilterModal);
 
-    // --- Script Favoritar ---
     document.addEventListener('DOMContentLoaded', function() {
         const salvarLinks = document.querySelectorAll('.btn-favorito-link');
         salvarLinks.forEach(link => {
@@ -223,9 +212,6 @@
         });
     });
 
-    // ===============================================
-    // LÓGICA DO DUAL SLIDER (2 PONTAS)
-    // ===============================================
     function initDualSlider(minInputId, maxInputId, rangeBarId, displayMinId, displayMaxId, prefix, suffix) {
         const minInput = document.getElementById(minInputId);
         const maxInput = document.getElementById(maxInputId);
@@ -237,30 +223,20 @@
         function updateSlider() {
             let minVal = parseInt(minInput.value);
             let maxVal = parseInt(maxInput.value);
-
             if (maxVal - minVal < gap) {
-                if (this === minInput) {
-                    minInput.value = maxVal - gap;
-                } else {
-                    maxInput.value = minVal + gap;
-                }
+                if (this === minInput) minInput.value = maxVal - gap;
+                else maxInput.value = minVal + gap;
             }
-            
             dMin.textContent = prefix + minInput.value + suffix;
             dMax.textContent = prefix + maxInput.value + suffix;
-
             const max = parseInt(maxInput.max);
             const percentMin = (minInput.value / max) * 100;
             const percentMax = (maxInput.value / max) * 100;
-
             rangeBar.style.left = percentMin + "%";
             rangeBar.style.width = (percentMax - percentMin) + "%";
         }
-
         minInput.addEventListener("input", updateSlider);
         maxInput.addEventListener("input", updateSlider);
-        
-        // Inicializa já com os valores carregados do Django
         updateSlider();
     }
 

@@ -304,6 +304,25 @@ class EnviarMensagemView(LoginRequiredMixin, TemplateView):
             except Usuario.DoesNotExist:
                 return JsonResponse({'success': False, 'error': 'Destinatário não encontrado'})
         return JsonResponse({'success': False, 'errors': form.errors})
+    
+@login_required
+def criar_oportunidade(request):
+    # SEGURANÇA: Só professor pode acessar
+    if request.user.tipo != 'PROFESSOR':
+        messages.error(request, 'Apenas professores podem criar oportunidades.')
+        return redirect('feed')
+
+    if request.method == 'POST':
+        form = OportunidadeForm(request.POST)
+        if form.is_valid():
+            oportunidade = form.save(commit=False)
+            oportunidade.criador = request.user
+            oportunidade.save()
+            messages.success(request, 'Oportunidade criada com sucesso!')
+            return redirect('feed') 
+    else:
+        form = OportunidadeForm()
+    return render(request, 'criar_oportunidade.html', {'form': form})
 
 class ListarUsuariosView(LoginRequiredMixin, ListView):
     model = Usuario

@@ -2,16 +2,15 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
-from .views import FeedView
-from django.urls import path
-from . import views
-
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # ========== PÁGINAS PRINCIPAIS ==========
     path('', views.home, name='home'),
-    path('feed/', FeedView.as_view(), name='feed'),
+    
+    # CORREÇÃO AQUI: Agora a URL 'feed' aponta para a função com os filtros
+    path('feed/', views.lista_oportunidades, name='feed'),
 
     # ========== AUTENTICAÇÃO ==========
     path('login/', views.custom_login, name='login'),
@@ -27,21 +26,20 @@ urlpatterns = [
     path('perfil/upload_avatar/', views.upload_avatar, name='upload_avatar'),
 
     # ========== OPORTUNIDADES ==========
-    # URL de criação (que já deve estar funcionando)
     path('criar-oportunidade/', views.criar_oportunidade, name='criar_oportunidade'), 
     path('oportunidade/<int:id>/', views.detalhe_oportunidade, name='detalhe_oportunidade'),
     path('oportunidades/salvas/', views.oportunidades_salvas, name='oportunidades_salvas'),
     path('oportunidades/remover/<int:id>/', views.remover_salva, name='remover_salva'),
     path('oportunidade/favoritar/<int:id>/', views.favoritar_oportunidade, name='favoritar_oportunidade'),
 
-
+    # Removi a linha duplicada que apontava para lista_oportunidades na raiz ('') 
+    # pois poderia conflitar com a home.
     
-    # 🔑 ADICIONE ESTA LINHA: O nome 'lista_oportunidades' é o que o redirect procura.
-    path('', views.lista_oportunidades, name='lista_oportunidades'),
-    
-    
-    # ========== SISTEMA DE CHAT (RF14) ==========
+    # ========== SISTEMA DE CHAT ==========
     path('chat/', views.ChatView.as_view(), name='chat'),
     path('chat/enviar/', views.EnviarMensagemView.as_view(), name='enviar_mensagem'),
     path('chat/usuarios/', views.ListarUsuariosView.as_view(), name='usuarios_chat'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

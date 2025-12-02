@@ -201,27 +201,28 @@ class BuscaOportunidadeForm(forms.Form):
 class OportunidadeForm(forms.ModelForm):
     class Meta:
         model = Oportunidade
-        # 🔑 Todos os campos do modelo devem estar aqui:
-        fields = ['titulo', 'descricao', 'tipo', 'local', 'cursos_elegiveis', 'carga_horaria', 'num_vagas', 'processo_seletivo', 'data_encerramento', 'horas_complementares', 'remuneracao']
+        # 🔑 ADICIONEI 'foto' NA LISTA DE CAMPOS
+        fields = ['titulo', 'descricao', 'foto', 'tipo', 'local', 'cursos_elegiveis', 'carga_horaria', 'num_vagas', 'processo_seletivo', 'data_encerramento', 'horas_complementares', 'remuneracao']
         
         widgets = {
             'titulo': forms.TextInput(attrs={'placeholder': 'Título da oportunidade', 'maxlength': 100}),
-            'descricao': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Forneça uma descrição concisa do propósito e funcionamento da atividade', 'maxlength': 5000}),
-            'local': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Indique o local da atividade'}),
-            'cursos_elegiveis': forms.TextInput(attrs={'placeholder': 'Indique quais cursos podem participar'}),
-            'carga_horaria': forms.TextInput(attrs={'placeholder': 'Informe a carga horária'}),
-            'num_vagas': forms.NumberInput(attrs={'placeholder': 'Informe a quantidade de vagas'}),
-            'processo_seletivo': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Explique como funciona o processo seletivo'}),
+            'descricao': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Descrição...', 'maxlength': 5000}),
+            'foto': forms.FileInput(attrs={'class': 'form-control'}), # Widget simples para upload
+            'local': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Indique o local'}),
+            'cursos_elegiveis': forms.TextInput(attrs={'placeholder': 'Cursos elegíveis'}),
+            'carga_horaria': forms.TextInput(attrs={'placeholder': 'Carga horária'}),
+            'num_vagas': forms.NumberInput(attrs={'placeholder': 'Vagas'}),
+            'processo_seletivo': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Processo seletivo'}),
             'horas_complementares': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Horas complementares'}),
             'remuneracao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Remuneracao'}),
-            'data_encerramento': forms.DateInput(attrs={'type': 'date'}), # Usamos type="date" para simplificar o campo de data
+            'data_encerramento': forms.DateInput(attrs={'type': 'date'}),
         }
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # 🔑 Aplicando a classe CSS 'opportunity-input' a todos os campos
+        # 🔑 Aplicando a classe CSS aos campos (exceto checkbox ou datas específicas)
         for field_name, field in self.fields.items():
-            if field_name not in ['tipo', 'data_encerramento']: # 'tipo' e 'data_encerramento' são tratados separadamente ou já têm widget específico
+            if field_name not in ['tipo', 'data_encerramento', 'foto']: 
                 field.widget.attrs.update({'class': 'opportunity-input'})
 
 # ===============================

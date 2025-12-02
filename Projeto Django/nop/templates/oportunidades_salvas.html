@@ -22,7 +22,8 @@
         <div class="coluna-header">CARGA HORÁRIA</div>
         <div class="coluna-header">REMUNERAÇÃO</div>
         <div class="coluna-header">HORAS COMP.</div>
-        <div></div> </nav>
+        <div></div> 
+    </nav>
     
     <main class="feed" id="conteudo" role="main">
     {% if oportunidades %}
@@ -46,7 +47,13 @@
             </div>
 
             <div class="oportunidade-col info-col">
-                <div class="info-imagem" style="background-image: url('https://via.placeholder.com/60x60/333/666?text={{ vaga.titulo|slice:":1" }}');"></div>
+                <div class="info-imagem" style="
+                    background-image: url('{% if vaga.foto %}{{ vaga.foto.url }}{% else %}https://via.placeholder.com/60x60/333/666?text={{ vaga.titulo|slice:":1" }}{% endif %}');
+                    background-size: cover;
+                    background-position: center;
+                    background-repeat: no-repeat;">
+                </div>
+                
                 <div class="info-texto">
                     <h3>{{ vaga.titulo }}</h3>
                     <p>{{ vaga.local }}</p>

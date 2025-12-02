@@ -48,6 +48,9 @@ class Oportunidade(models.Model):
     titulo = models.CharField(max_length=100)
     descricao = models.TextField(max_length=5000)
     
+    # === NOVO CAMPO DE FOTO ===
+    foto = models.ImageField(upload_to='oportunidades/', blank=True, null=True, verbose_name='Imagem de Capa')
+
     TIPO_CHOICES = [
         ('MON', 'Monitoria Acadêmica'),
         ('IC', 'Iniciação Científica'),
@@ -77,7 +80,6 @@ class Oportunidade(models.Model):
     
     criador = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='oportunidades_criadas', null=True, blank=True)
     
-    # CORREÇÃO AQUI: Renomeado para data_publicacao para satisfazer o admin.py
     data_publicacao = models.DateTimeField(auto_now_add=True)
     
     status = models.CharField(
@@ -93,10 +95,7 @@ class Oportunidade(models.Model):
     def __str__(self):
         return self.titulo
 
-# ===============================
-# 3️⃣ OUTROS MODELOS (Sem alterações)
-# ===============================
-
+# ... (o restante dos modelos Participacao, Favorito, etc. permanece igual) ...
 class Participacao(models.Model):
     aluno = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     oportunidade = models.ForeignKey(Oportunidade, on_delete=models.CASCADE)

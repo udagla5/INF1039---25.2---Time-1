@@ -20,7 +20,7 @@
         <div class="opportunity-header-subtitle">Conecte alunos com oportunidades acadêmicas criadas por você</div>
     </header>
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %} 
 
         <div class="form-group">
@@ -37,6 +37,13 @@
             {{ form.descricao }}
             {% for error in form.descricao.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
             <span class="char-counter">0/5000</span>
+        </div>
+        
+        <div class="form-group">
+            <label class="opportunity-label" for="{{ form.foto.id_for_label }}">Imagem de Capa (Opcional)</label>
+            {{ form.foto }}
+            {% for error in form.foto.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
+            <small style="color:#666; font-size:12px;">Se nenhuma imagem for enviada, um placeholder será exibido.</small>
         </div>
 
         <div class="form-group">
@@ -108,10 +115,6 @@
 {% block extra_js %}
 <script>
     // 💡 OBS: O JavaScript aqui só lida com a seleção visual dos botões.
-    // Ele NÃO envia o valor para o campo 'tipo' do Django automaticamente.
-    // Para funcionar com o Django, o JS precisaria: 
-    // 1. Pegar o valor do botão clicado.
-    // 2. Definir este valor no campo SELECT oculto/visível ({{ form.tipo }}).
     
     const activityGroup = document.querySelector('.opportunity-activity-group');
     const buttons = activityGroup ? activityGroup.querySelectorAll('.opportunity-activity-btn') : [];
@@ -172,8 +175,8 @@ select {
     background-color: #FFFFFF;
 }
 
-/* Estilo para os inputs e textareas do forms.py que recebem a classe opportunity-input via __init__ */
-.opportunity-input, .opportunity-input[type="number"] {
+/* Estilo para os inputs e textareas do forms.py */
+.opportunity-input, .opportunity-input[type="number"], input[type="file"] {
     width: 100%;
     padding: 12px;
     border: 1px solid #D1D5DB;
@@ -181,6 +184,11 @@ select {
     font-size: 16px;
     font-family: inherit;
     background-color: #FFFFFF;
+}
+
+/* Ajuste específico para o input de arquivo para ficar bonito */
+input[type="file"] {
+    padding: 9px; /* Ajuste leve no padding */
 }
 </style>
 {% endblock %}

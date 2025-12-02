@@ -24,79 +24,109 @@
     <div class="coluna-header">CARGA HORÁRIA</div>
     <div class="coluna-header">REMUNERAÇÃO</div>
     <div class="coluna-header">HORAS COMP.</div>
-    <div></div> </nav>
+    <div></div> 
+</nav>
 
 <div class="overlay" id="overlay"></div>
 
 <div class="filter-modal" id="filterModal">
-    <div class="filter-modal-header">
-        <h2>Filtros</h2>
-        <div class="close-filter" id="closeFilter">✖</div>
-    </div>
-
-    <div class="filter-content">
-        <div class="filter-column">
-            <h3>TIPO</h3>
-            <label><input type="checkbox"> Monitoria</label>
-            <label><input type="checkbox"> Estágio</label>
-            <label><input type="checkbox"> Iniciação Científica</label>
-            <label><input type="checkbox"> Trabalho Meio Período</label>
-            <label><input type="checkbox"> Voluntariado</label>
-            <label><input type="checkbox"> Palestra</label>
-            <label><input type="checkbox"> Equipe de Competição</label>
-            <label><input type="checkbox"> Bolsa</label>
+    <form method="GET" action="{% url 'feed' %}">
+        <div class="filter-modal-header">
+            <h2>Filtros</h2>
+            <div class="close-filter" id="closeFilter">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="#031020" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+            </div>
         </div>
 
-        <div class="filter-column">
-            <h3>CARGA HORÁRIA</h3>
-            <label><input type="checkbox"> &lt; 2 horas /dia</label>
-            <label><input type="checkbox"> &gt; 2 horas /dia</label>
-            <label><input type="checkbox"> &gt; 4 horas /dia</label>
-            <label><input type="checkbox"> &gt; 6 horas /dia</label>
-            <label><input type="checkbox"> &gt; 8 horas /dia</label>
+        <div class="filter-content">
+            <div class="filter-column">
+                <h3>TIPO</h3>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="tipo" value="MON" {% if 'MON' in filtros_selecionados.tipos %}checked{% endif %}> Monitoria</label>
+                    <label><input type="checkbox" name="tipo" value="EST" {% if 'EST' in filtros_selecionados.tipos %}checked{% endif %}> Estágio</label>
+                    <label><input type="checkbox" name="tipo" value="IC" {% if 'IC' in filtros_selecionados.tipos %}checked{% endif %}> Iniciação Científica</label>
+                    <label><input type="checkbox" name="tipo" value="TMP" {% if 'TMP' in filtros_selecionados.tipos %}checked{% endif %}> Trabalho Meio Período</label>
+                    <label><input type="checkbox" name="tipo" value="VOL" {% if 'VOL' in filtros_selecionados.tipos %}checked{% endif %}> Voluntariado</label>
+                    <label><input type="checkbox" name="tipo" value="PAL" {% if 'PAL' in filtros_selecionados.tipos %}checked{% endif %}> Palestra</label>
+                    <label><input type="checkbox" name="tipo" value="EQC" {% if 'EQC' in filtros_selecionados.tipos %}checked{% endif %}> Equipe de Competição</label>
+                    <label><input type="checkbox" name="tipo" value="BOL" {% if 'BOL' in filtros_selecionados.tipos %}checked{% endif %}> Bolsa</label>
+                </div>
+            </div>
+
+            <div class="filter-column">
+                <h3>CARGA HORÁRIA</h3>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="carga_horaria_check" value="compativel" {% if 'compativel' in filtros_selecionados.cargas %}checked{% endif %}> <strong>Compatível</strong></label>
+                    <label><input type="checkbox" name="carga_horaria_check" value="<2" {% if '<2' in filtros_selecionados.cargas %}checked{% endif %}> &lt; 2 horas /dia</label>
+                    <label><input type="checkbox" name="carga_horaria_check" value=">2" {% if '>2' in filtros_selecionados.cargas %}checked{% endif %}> &gt; 2 horas /dia</label>
+                    <label><input type="checkbox" name="carga_horaria_check" value=">4" {% if '>4' in filtros_selecionados.cargas %}checked{% endif %}> &gt; 4 horas /dia</label>
+                    <label><input type="checkbox" name="carga_horaria_check" value=">6" {% if '>6' in filtros_selecionados.cargas %}checked{% endif %}> &gt; 6 horas /dia</label>
+                    <label><input type="checkbox" name="carga_horaria_check" value=">8" {% if '>8' in filtros_selecionados.cargas %}checked{% endif %}> &gt; 8 horas /dia</label>
+                </div>
+            </div>
+
+            <div class="filter-column slider-column">
+                <h3>REMUNERAÇÃO</h3>
+                <div class="dual-slider-container">
+                    <div class="slider-track"></div>
+                    <div class="slider-range" id="rem-range-bar"></div>
+                    <div class="range-input">
+                        <input type="range" id="min-rem" name="min_remuneracao" min="0" max="5000" step="50" value="{{ filtros_selecionados.min_remuneracao }}">
+                        <input type="range" id="max-rem" name="max_remuneracao" min="0" max="5000" step="50" value="{{ filtros_selecionados.max_remuneracao }}">
+                    </div>
+                    <div class="slider-values">
+                        <span id="display-min-rem">R$ {{ filtros_selecionados.min_remuneracao }}</span>
+                        <span id="display-max-rem">R$ {{ filtros_selecionados.max_remuneracao }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-column slider-column">
+                <h3>HORAS COMP.</h3>
+                <div class="dual-slider-container">
+                    <div class="slider-track"></div>
+                    <div class="slider-range" id="horas-range-bar"></div>
+                    <div class="range-input">
+                        <input type="range" id="min-horas" name="min_horas" min="0" max="200" step="5" value="{{ filtros_selecionados.min_horas }}">
+                        <input type="range" id="max-horas" name="max_horas" min="0" max="200" step="5" value="{{ filtros_selecionados.max_horas }}">
+                    </div>
+                    <div class="slider-values">
+                        <span id="display-min-horas">{{ filtros_selecionados.min_horas }}h</span>
+                        <span id="display-max-horas">{{ filtros_selecionados.max_horas }}h</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-column">
+                <h3>INTERESSES</h3>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="interesses" value="meus" {% if 'meus' == filtros_selecionados.interesses %}checked{% endif %}> Meus interesses</label>
+                    <label><input type="checkbox" name="interesses" value="tudo" {% if not filtros_selecionados.interesses or 'tudo' == filtros_selecionados.interesses %}checked{% endif %}> Tudo</label>
+                </div>
+            </div>
         </div>
 
-        <div class="filter-column">
-            <h3>REMUNERAÇÃO</h3>
-            <input type="range">
+        <div style="margin-top: 40px; text-align: right;">
+            <a href="{% url 'feed' %}" style="margin-right: 20px; color: #666; text-decoration: none; font-size: 14px;">Limpar Filtros</a>
+            <button type="submit" style="background: #031020; color: white; padding: 10px 30px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer;">
+                APLICAR FILTROS
+            </button>
         </div>
-
-        <div class="filter-column">
-            <h3>HORAS COMP.</h3>
-            <input type="range">
-        </div>
-
-        <div class="filter-column">
-            <h3>INTERESSES</h3>
-            <label><input type="checkbox"> Meus interesses</label>
-            <label><input type="checkbox"> Tudo</label>
-        </div>
-    </div>
+    </form>
 </div>
 
 <main class="feed" id="conteudo" role="main">
     {% for oportunidade in oportunidades %}
     <section class="oportunidade-item">
-
         <div class="oportunidade-col bookmark-col">
             {% if oportunidade.id %}
-            
             <form method="post" action="{% url 'favoritar_oportunidade' oportunidade.id %}" id="fav-form-{{ oportunidade.id }}" class="fav-form-feed" style="display:inline;">
                 {% csrf_token %}
                 <button type="submit" style="display:none;"></button>
             </form>
-            
-            <a href="#" 
-               class="btn-favorito-link {% if oportunidade.id in favoritos_ids %}favorito{% endif %}" 
-               data-form-id="fav-form-{{ oportunidade.id }}" 
-               aria-label="Salvar {{ oportunidade.titulo }}">
-                <svg class="heart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg>
-            </a>
-            
-            {% else %}
-            <a href="#" class="btn-favorito-link" disabled aria-label="Salvar indisponível">
+            <a href="#" class="btn-favorito-link {% if oportunidade.id in favoritos_ids %}favorito{% endif %}" data-form-id="fav-form-{{ oportunidade.id }}">
                 <svg class="heart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
@@ -114,25 +144,38 @@
 
         <div class="oportunidade-col">{{ oportunidade.get_tipo_display }}</div>
         <div class="oportunidade-col">{{ oportunidade.carga_horaria }}</div>
-        <div class="oportunidade-col">R$ {{ oportunidade.remuneracao }}</div>
+        <div class="oportunidade-col">
+            {% if oportunidade.remuneracao > 0 %}
+                R$ {{ oportunidade.remuneracao }}
+            {% else %}
+                Voluntário
+            {% endif %}
+        </div>
         <div class="oportunidade-col">{{ oportunidade.horas_complementares }}h</div>
 
         <div class="oportunidade-col acao-col">
-            <a href="{% url 'detalhe_oportunidade' oportunidade.id %}" class="btn-ver-mais">
-                Ver mais
-            </a>
+            <a href="{% url 'detalhe_oportunidade' oportunidade.id %}" class="btn-ver-mais">Ver mais</a>
         </div>
-
     </section>
     {% empty %}
-        <p style="text-align: center; padding: 40px; color: #99a8bd;">Nenhuma oportunidade encontrada.</p>
+        <p style="text-align: center; padding: 40px; color: #99a8bd;">Nenhuma oportunidade encontrada com esses filtros.</p>
     {% endfor %}
 </main>
+
+{% if user.is_authenticated and user.tipo == 'PROFESSOR' %}
+    <a href="{% url 'criar_oportunidade' %}" class="btn-floating-add" title="Criar Nova Oportunidade">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+    </a>
+{% endif %}
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Seletores
+    // CONTROLES E SLIDERS (Mantidos iguais ao anterior)
     const filtrosToggle = document.getElementById("filtrosToggle");
     const overlay = document.getElementById("overlay");
     const filterModal = document.getElementById("filterModal");
@@ -145,7 +188,6 @@
             document.body.style.overflow = "hidden";
         }
     }
-
     function closeFilterModal() {
         if(overlay && filterModal) {
             overlay.style.display = "none";
@@ -154,33 +196,53 @@
         }
     }
 
-    // Event listeners para o Modal
-    if (filtrosToggle) filtrosToggle.addEventListener('click', openFilterModal);
-    if (closeFilter) closeFilter.addEventListener('click', closeFilterModal);
-    if (overlay) overlay.addEventListener('click', closeFilterModal);
+    if(filtrosToggle) filtrosToggle.addEventListener('click', openFilterModal);
+    if(closeFilter) closeFilter.addEventListener('click', closeFilterModal);
+    if(overlay) overlay.addEventListener('click', closeFilterModal);
 
-    // Fechar com ESC
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && overlay && overlay.style.display === 'block') {
-            closeFilterModal();
-        }
-    });
-
-    // 🚀 NOVO SCRIPT PARA SALVAR VIA LINK (FEED)
     document.addEventListener('DOMContentLoaded', function() {
         const salvarLinks = document.querySelectorAll('.btn-favorito-link');
-        
         salvarLinks.forEach(link => {
             link.addEventListener('click', function(e) {
-                e.preventDefault(); // Impede o link de navegar
+                e.preventDefault(); 
                 const formId = this.getAttribute('data-form-id');
                 const form = document.getElementById(formId);
-                
-                if (form) {
-                    form.submit(); // Envia o formulário correspondente
-                }
+                if (form) form.submit();
             });
         });
+    });
+
+    function initDualSlider(minInputId, maxInputId, rangeBarId, displayMinId, displayMaxId, prefix, suffix) {
+        const minInput = document.getElementById(minInputId);
+        const maxInput = document.getElementById(maxInputId);
+        const rangeBar = document.getElementById(rangeBarId);
+        const dMin = document.getElementById(displayMinId);
+        const dMax = document.getElementById(displayMaxId);
+        const gap = 0; 
+
+        function updateSlider() {
+            let minVal = parseInt(minInput.value);
+            let maxVal = parseInt(maxInput.value);
+            if (maxVal - minVal < gap) {
+                if (this === minInput) minInput.value = maxVal - gap;
+                else maxInput.value = minVal + gap;
+            }
+            dMin.textContent = prefix + minInput.value + suffix;
+            dMax.textContent = prefix + maxInput.value + suffix;
+            const max = parseInt(maxInput.max);
+            const percentMin = (minInput.value / max) * 100;
+            const percentMax = (maxInput.value / max) * 100;
+            rangeBar.style.left = percentMin + "%";
+            rangeBar.style.width = (percentMax - percentMin) + "%";
+        }
+        minInput.addEventListener("input", updateSlider);
+        maxInput.addEventListener("input", updateSlider);
+        updateSlider();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        initDualSlider("min-rem", "max-rem", "rem-range-bar", "display-min-rem", "display-max-rem", "R$ ", "");
+        initDualSlider("min-horas", "max-horas", "horas-range-bar", "display-min-horas", "display-max-horas", "", "h");
     });
 </script>
 {% endblock %}

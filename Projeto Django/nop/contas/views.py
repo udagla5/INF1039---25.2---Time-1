@@ -1,12 +1,12 @@
-# contas/views.py
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView, ListView, TemplateView
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.db.models import Q, Max
 from django.http import JsonResponse
+<<<<<<< HEAD
 from django.urls import reverse_lazy
 from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm, ProfessorCadastroFormParte2
 from .models import Oportunidade, Usuario, Mensagem
@@ -19,17 +19,17 @@ def detalhe_oportunidade(request, id):
     return render(request, 'oportunidade.html', {'oportunidade': oportunidade})
 
 # ========== PÁGINAS PRINCIPAIS ==========
+=======
+from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm
+from .models import Oportunidade, Usuario, Mensagem, Favorito
+
+# ===============================
+# FUNÇÕES DE AUTENTICAÇÃO E CADASTRO
+# ===============================
+
+>>>>>>> 07d723c06d616609555f3c9a206978170dce3739
 def home(request):
     return render(request, 'home.html')
-
-class FeedView(LoginRequiredMixin, ListView):
-    model = Oportunidade
-    template_name = 'feed.html'
-    context_object_name = 'oportunidades'
-    paginate_by = 12
-    login_url = 'login' # aqui define para onde redireciona
-    redirect_field_name = 'redirect_to'
-
 
 def cadastro1(request):
     if request.method == 'POST':
@@ -54,7 +54,6 @@ def cadastro1(request):
 
     else:
         form = UsuarioForm()
-
     return render(request, 'cadastro1.html', {'form': form})
 
 def cadastro_professor_parte2(request, user_id):
@@ -92,10 +91,8 @@ def cadastro2(request):
     if request.method == 'POST':
         form = InteressesForm(request.POST)
         if form.is_valid():
-            # Processar interesses selecionados
             interesses = form.cleaned_data.get('interesses', [])
             if interesses:
-                # Salvar os interesses no perfil do usuário
                 request.user.interesses.set(interesses)
             messages.success(request, 'Interesses salvos com sucesso!')
             return redirect('feed')
@@ -104,7 +101,7 @@ def cadastro2(request):
     return render(request, 'cadastro2.html', {'form': form})
 
 def criar_conta(request):
-    return redirect('cadastro1') # Redireciona para cadastro1
+    return redirect('cadastro1')
 
 def custom_login(request):
     if request.method == 'POST':
@@ -126,7 +123,10 @@ def custom_logout(request):
     messages.success(request, 'Logout realizado com sucesso!')
     return redirect('home')
 
-# ========== PERFIL ==========
+# ===============================
+# PERFIL E EDIÇÃO
+# ===============================
+
 @login_required
 def perfil_aluno(request):
     if request.method == 'POST':
@@ -143,28 +143,45 @@ def perfil_aluno(request):
 def perfil_aluno_parte2(request):
     return render(request, 'perfil_aluno_parte2.html')
 
-# ========== OPORTUNIDADES ==========
+@login_required
+def upload_avatar(request):
+    if request.method == 'POST':
+        if 'avatar' in request.FILES:
+            novo_avatar = request.FILES['avatar']
+            try:
+                # Adapte se seu modelo de perfil for diferente
+                profile = request.user.profile
+                profile.avatar = novo_avatar
+                profile.save()
+                messages.success(request, 'Foto de perfil atualizada com sucesso!')
+            except AttributeError:
+                # Caso o campo esteja direto em User ou outra estrutura
+                pass 
+            except Exception as e:
+                messages.error(request, f'Erro ao salvar a imagem: {e}')
+        return redirect('perfil_aluno')
+    return redirect('perfil_aluno')
+
+# ===============================
+# OPORTUNIDADES (CRUD e Detalhes)
+# ===============================
+
+def detalhe_oportunidade(request, id):
+    oportunidade = get_object_or_404(Oportunidade, pk=id)
+    return render(request, 'oportunidade.html', {'oportunidade': oportunidade})
+
 @login_required
 def criar_oportunidade(request):
     if request.method == 'POST':
         form = OportunidadeForm(request.POST)
-        
         if form.is_valid():
-            # Salva o novo objeto Oportunidade no banco de dados
             form.save()
-            
-            # ⚠️ Substitua 'lista_oportunidades' pelo nome da URL de destino no seu urls.py
-            return redirect('lista_oportunidades') 
-        
+            return redirect('feed') 
     else:
         form = OportunidadeForm()
-    
-    # Passa o objeto 'form' para o template
     return render(request, 'criar_oportunidade.html', {'form': form})
 
-# Versão com Class-Based View (alternativa)
 class CriarOportunidadeView(LoginRequiredMixin, FormView):
-    """RF6 - Criar oportunidade em um único passo (criar_oportunidade.html)"""
     template_name = 'criar_oportunidade.html'
     form_class = OportunidadeForm
     login_url = 'login'
@@ -177,10 +194,114 @@ class CriarOportunidadeView(LoginRequiredMixin, FormView):
         messages.success(self.request, 'Oportunidade criada com sucesso! Aguarde a validação do sistema.')
         return redirect('feed')
 
-# ========== SISTEMA DE CHAT (RF14) ==========
+@login_required
+def oportunidades_salvas(request):
+    oportunidades = Favorito.objects.filter(usuario=request.user)
+    return render(request, 'oportunidades_salvas.html', {
+        'oportunidades': [f.oportunidade for f in oportunidades]
+    })
+
+@login_required
+def remover_salva(request, id):
+    Favorito.objects.filter(usuario=request.user, oportunidade_id=id).delete()
+    messages.info(request, 'Oportunidade removida dos seus favoritos.')
+    return redirect('oportunidades_salvas')
+
+@login_required
+def favoritar_oportunidade(request, id):
+    oportunidade = get_object_or_404(Oportunidade, pk=id)
+    Favorito.objects.get_or_create(usuario=request.user, oportunidade=oportunidade) 
+    messages.success(request, 'Oportunidade salva com sucesso! 🎉')
+    return redirect('oportunidades_salvas')
+
+# ===============================
+# FEED PRINCIPAL (COM FILTROS FUNCIONAIS)
+# ===============================
+
+def lista_oportunidades(request):
+    # 1. Busca inicial ordenada por data de publicação
+    oportunidades = Oportunidade.objects.all().order_by('-data_publicacao')
+
+    # 2. Filtro de Texto
+    busca = request.GET.get('busca')
+    if busca:
+        oportunidades = oportunidades.filter(
+            Q(titulo__icontains=busca) | Q(descricao__icontains=busca)
+        )
+
+    # 3. Filtro por Tipo (Checkbox)
+    tipos = request.GET.getlist('tipo')
+    if tipos:
+        oportunidades = oportunidades.filter(tipo__in=tipos)
+
+    # 4. Filtro por Remuneração (Slider Intervalo)
+    min_rem = request.GET.get('min_remuneracao')
+    max_rem = request.GET.get('max_remuneracao')
+
+    if min_rem and min_rem != '':
+        try:
+            oportunidades = oportunidades.filter(remuneracao__gte=int(min_rem))
+        except ValueError:
+            pass
+            
+    if max_rem and max_rem != '':
+        try:
+            oportunidades = oportunidades.filter(remuneracao__lte=int(max_rem))
+        except ValueError:
+            pass
+
+    # 5. Filtro por Horas Complementares (Slider Intervalo)
+    min_horas = request.GET.get('min_horas')
+    max_horas = request.GET.get('max_horas')
+
+    if min_horas and min_horas != '':
+        try:
+            oportunidades = oportunidades.filter(horas_complementares__gte=int(min_horas))
+        except ValueError:
+            pass
+
+    if max_horas and max_horas != '':
+        try:
+            oportunidades = oportunidades.filter(horas_complementares__lte=int(max_horas))
+        except ValueError:
+            pass
+
+    # 6. Outros filtros (visual apenas por enquanto ou se houver campo exato)
+    cargas = request.GET.getlist('carga_horaria_check')
+    interesses = request.GET.get('interesses')
+
+    # 7. Prepara o contexto devolvendo os valores para o HTML não resetar
+    context = {
+        'oportunidades': oportunidades,
+        'favoritos_ids': Favorito.objects.filter(usuario=request.user).values_list('oportunidade_id', flat=True) if request.user.is_authenticated else [],
+        
+        # Dicionário crítico para persistência dos filtros
+        'filtros_selecionados': {
+            'tipos': tipos,
+            'cargas': cargas,
+            'interesses': interesses,
+            # Se vier vazio, define padrões ('0' e '5000'/'200') para os sliders
+            'min_remuneracao': min_rem if min_rem else '0',
+            'max_remuneracao': max_rem if max_rem else '5000',
+            'min_horas': min_horas if min_horas else '0',
+            'max_horas': max_horas if max_horas else '200',
+        }
+    }
+    
+    return render(request, 'feed.html', context)
+
+# ===============================
+# SISTEMA DE CHAT
+# ===============================
+
+class FeedView(LoginRequiredMixin, ListView):
+    # Mantida para compatibilidade se ainda estiver sendo usada em urls antigas
+    model = Oportunidade
+    template_name = 'feed.html'
+    context_object_name = 'oportunidades'
+    paginate_by = 12
 
 class ChatView(LoginRequiredMixin, TemplateView):
-    """RF14 - Sistema de chat/mensagens integrado com banco de dados"""
     template_name = 'chat.html'
     login_url = 'login'
     
@@ -188,7 +309,6 @@ class ChatView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         
-        # Buscar todas as conversas do usuário (com últimas mensagens)
         conversas = Usuario.objects.filter(
             Q(mensagens_enviadas__destinatario=user) | 
             Q(mensagens_recebidas__remetente=user)
@@ -199,53 +319,38 @@ class ChatView(LoginRequiredMixin, TemplateView):
         context['conversas'] = conversas
         context['form_mensagem'] = MensagemForm()
         
-        # Se há um usuário selecionado na conversa
         conversa_com = self.request.GET.get('conversa_com')
         if conversa_com:
             try:
                 destinatario = Usuario.objects.get(id=conversa_com)
                 context['destinatario'] = destinatario
-                
-                # Buscar mensagens entre os dois usuários
                 mensagens = Mensagem.objects.filter(
                     Q(remetente=user, destinatario=destinatario) |
                     Q(remetente=destinatario, destinatario=user)
                 ).order_by('data_envio')
-                
                 context['mensagens'] = mensagens
-                
-                # Marcar mensagens como lidas
                 Mensagem.objects.filter(
                     remetente=destinatario, 
                     destinatario=user, 
                     lida=False
                 ).update(lida=True)
-                
             except Usuario.DoesNotExist:
-                context['destinatario'] = None
-                context['mensagens'] = []
-                
+                pass
         return context
 
 class EnviarMensagemView(LoginRequiredMixin, TemplateView):
-    """Class-based view para enviar mensagens via AJAX"""
     login_url = 'login'
     
     def post(self, request, *args, **kwargs):
         form = MensagemForm(request.POST)
         destinatario_id = request.POST.get('destinatario_id')
-        
         if form.is_valid() and destinatario_id:
             try:
                 destinatario = Usuario.objects.get(id=destinatario_id)
-                
-                # Criar a mensagem
                 mensagem = form.save(commit=False)
                 mensagem.remetente = request.user
                 mensagem.destinatario = destinatario
                 mensagem.save()
-                
-                # Retornar resposta JSON para AJAX
                 return JsonResponse({
                     'success': True,
                     'mensagem': {
@@ -255,91 +360,34 @@ class EnviarMensagemView(LoginRequiredMixin, TemplateView):
                         'data_envio': mensagem.data_envio.strftime('%H:%M')
                     }
                 })
-                
             except Usuario.DoesNotExist:
-                return JsonResponse({
-                    'success': False,
-                    'error': 'Destinatário não encontrado'
-                })
-        else:
-            return JsonResponse({
-                'success': False,
-                'errors': form.errors
-            })
-        
-    def get(self, request, *args, **kwargs):
-        return JsonResponse({'success': False, 'error': 'Método não permitido'})
+                return JsonResponse({'success': False, 'error': 'Destinatário não encontrado'})
+        return JsonResponse({'success': False, 'errors': form.errors})
+    
+@login_required
+def criar_oportunidade(request):
+    # SEGURANÇA: Só professor pode acessar
+    if request.user.tipo != 'PROFESSOR':
+        messages.error(request, 'Apenas professores podem criar oportunidades.')
+        return redirect('feed')
+
+    if request.method == 'POST':
+        form = OportunidadeForm(request.POST)
+        if form.is_valid():
+            oportunidade = form.save(commit=False)
+            oportunidade.criador = request.user
+            oportunidade.save()
+            messages.success(request, 'Oportunidade criada com sucesso!')
+            return redirect('feed') 
+    else:
+        form = OportunidadeForm()
+    return render(request, 'criar_oportunidade.html', {'form': form})
 
 class ListarUsuariosView(LoginRequiredMixin, ListView):
-    """View para listar usuários disponíveis para conversa"""
     model = Usuario
     template_name = 'usuarios_chat.html'
     context_object_name = 'usuarios'
     login_url = 'login'
     
     def get_queryset(self):
-        # Excluir o próprio usuário da lista
         return Usuario.objects.exclude(id=self.request.user.id).order_by('username')
-
-def lista_oportunidades(request):
-    # Obtém todas as oportunidades do banco de dados (ordenadas pela mais recente)
-    oportunidades = Oportunidade.objects.all().order_by('-data_criacao')
-    
-    # Renderiza o template feed.html que já existe
-    return render(request, 'feed.html', {'oportunidades': oportunidades})
-
-@login_required
-def upload_avatar(request):
-    if request.method == 'POST':
-        # 1. Tenta obter o arquivo enviado
-        if 'avatar' in request.FILES:
-            novo_avatar = request.FILES['avatar']
-            
-            # 2. Salva o avatar no modelo do usuário
-            # (A lógica exata depende do seu modelo de Usuário/Perfil)
-            try:
-                # Exemplo, assumindo que o campo 'avatar' está no Profile
-                profile = request.user.profile
-                profile.avatar = novo_avatar
-                profile.save()
-                
-                messages.success(request, 'Foto de perfil atualizada com sucesso!')
-            
-            except AttributeError:
-                messages.error(request, 'Erro: O modelo de perfil não pôde ser encontrado.')
-            
-            except Exception as e:
-                # Trata erros de validação ou outros erros de upload
-                messages.error(request, f'Erro ao salvar a imagem: {e}')
-        
-        # 3. Redireciona de volta para a página de edição de perfil
-        return redirect('perfil_aluno') 
-
-    # Se alguém acessar diretamente via GET, redireciona ou retorna erro
-    return redirect('perfil_aluno')
-
-# Exibe as oportunidades em oportunidades_salvas.html
-@login_required
-def oportunidades_salvas(request):
-    oportunidades = Favorito.objects.filter(usuario=request.user)
-    return render(request, 'oportunidades_salvas.html', {
-        'oportunidades': [f.oportunidade for f in oportunidades]
-    })
-
-# Remove a oportunidade salva
-@login_required
-def remover_salva(request, id):
-    Favorito.objects.filter(usuario=request.user, oportunidade_id=id).delete()
-    messages.info(request, 'Oportunidade removida dos seus favoritos.')
-    return redirect('oportunidades_salvas')
-
-# Salva a oportunidade como favorita
-@login_required
-def favoritar_oportunidade(request, id):
-    oportunidade = get_object_or_404(Oportunidade, pk=id)
-    # Garante que a oportunidade seja favoritada (se já não estiver)
-    Favorito.objects.get_or_create(usuario=request.user, oportunidade=oportunidade) 
-    
-    # AÇÃO CORRIGIDA: Redireciona para a lista de salvos
-    messages.success(request, 'Oportunidade salva com sucesso! 🎉')
-    return redirect('oportunidades_salvas') # << CORRIGIDO PARA A PÁGINA DE SALVOS

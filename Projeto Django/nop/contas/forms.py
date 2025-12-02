@@ -123,17 +123,17 @@ class CustomLoginForm(AuthenticationForm):
     
     username = forms.CharField(
         widget=forms.TextInput(attrs={
-            'id': 'username-input',
-            'class': 'form-control',
-            'placeholder': 'Nome de usuário'
+            'class': 'form-control',       # Importante para o CSS
+            'placeholder': 'Nome de usuário',
+            'id': 'username-input'         # Importante para o JS/CSS
         })
     )
     
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
-            'id': 'senha-input',
-            'class': 'form-control',
-            'placeholder': 'Senha'
+            'class': 'form-control',       # Importante para o CSS
+            'placeholder': 'Senha',
+            'id': 'senha-input'            # O JavaScript procura por ESTE id
         })
     )
 

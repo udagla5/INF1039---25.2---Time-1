@@ -1,4 +1,3 @@
-# contas/urls.py
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
@@ -9,10 +8,11 @@ urlpatterns = [
     # ========== PÁGINAS PRINCIPAIS ==========
     path('', views.home, name='home'),
     
-    # CORREÇÃO AQUI: Agora a URL 'feed' aponta para a função com os filtros
+    # URL do Feed principal
     path('feed/', views.lista_oportunidades, name='feed'),
 
     # ========== AUTENTICAÇÃO ==========
+    # Rota de login, o NOME da rota é 'login'
     path('login/', views.custom_login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('cadastro1/', views.cadastro1, name='cadastro1'),
@@ -31,9 +31,6 @@ urlpatterns = [
     path('oportunidades/salvas/', views.oportunidades_salvas, name='oportunidades_salvas'),
     path('oportunidades/remover/<int:id>/', views.remover_salva, name='remover_salva'),
     path('oportunidade/favoritar/<int:id>/', views.favoritar_oportunidade, name='favoritar_oportunidade'),
-
-    # Removi a linha duplicada que apontava para lista_oportunidades na raiz ('') 
-    # pois poderia conflitar com a home.
     
     # ========== SISTEMA DE CHAT ==========
     path('chat/', views.ChatView.as_view(), name='chat'),

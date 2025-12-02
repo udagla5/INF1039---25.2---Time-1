@@ -34,7 +34,8 @@ def cadastro1(request):
                 return redirect('cadastro_professor_parte2', user_id=usuario.id)
             elif tipo in ['ALUNO', 'ALUNO_EXTERNO']:
                 messages.warning(request, 'O cadastro completo para Alunos está em desenvolvimento. Faça login com sua nova conta.')
-                return redirect('custom_login') 
+                # CORREÇÃO: Usando 'login' para corresponder a urls.py
+                return redirect('login') 
             else:
                 return redirect('home')
     else:
@@ -52,6 +53,7 @@ def cadastro_professor_parte2(request, user_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Cadastro de Professor concluído! Por favor, faça login.')
+            # CORREÇÃO: Usando 'login' para corresponder a urls.py
             return redirect('login') 
     else:
         form = ProfessorCadastroFormParte2(instance=usuario)
@@ -141,7 +143,7 @@ def upload_avatar(request):
 # OPORTUNIDADES (CRUD e Detalhes)
 # ===============================
 
-@login_required(login_url='login') # <--- Adicione esta linha
+@login_required(login_url='login') # <--- CORREÇÃO: login_url é 'login'
 def detalhe_oportunidade(request, id):
     oportunidade = get_object_or_404(Oportunidade, pk=id)
     return render(request, 'oportunidade.html', {'oportunidade': oportunidade})
@@ -166,11 +168,11 @@ def criar_oportunidade(request):
         form = OportunidadeForm()
     return render(request, 'criar_oportunidade.html', {'form': form})
 
-# View baseada em classe (mantida caso use em outro lugar, mas a url aponta para a função acima)
+# View baseada em classe 
 class CriarOportunidadeView(LoginRequiredMixin, FormView):
     template_name = 'criar_oportunidade.html'
     form_class = OportunidadeForm
-    login_url = 'login'
+    login_url = 'login' # <--- CORREÇÃO: login_url é 'login'
     
     def form_valid(self, form):
         oportunidade = form.save(commit=False)
@@ -283,7 +285,7 @@ def lista_oportunidades(request):
 
 class ChatView(LoginRequiredMixin, TemplateView):
     template_name = 'chat.html'
-    login_url = 'login'
+    login_url = 'login' # <--- CORREÇÃO: login_url é 'login'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -319,7 +321,7 @@ class ChatView(LoginRequiredMixin, TemplateView):
         return context
 
 class EnviarMensagemView(LoginRequiredMixin, TemplateView):
-    login_url = 'login'
+    login_url = 'login' # <--- CORREÇÃO: login_url é 'login'
     
     def post(self, request, *args, **kwargs):
         form = MensagemForm(request.POST)
@@ -348,7 +350,7 @@ class ListarUsuariosView(LoginRequiredMixin, ListView):
     model = Usuario
     template_name = 'usuarios_chat.html'
     context_object_name = 'usuarios'
-    login_url = 'login'
+    login_url = 'login' # <--- CORREÇÃO: login_url é 'login'
     
     def get_queryset(self):
         return Usuario.objects.exclude(id=self.request.user.id).order_by('username')

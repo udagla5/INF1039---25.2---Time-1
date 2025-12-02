@@ -12,18 +12,20 @@ urlpatterns = [
     # ========== PÁGINAS PRINCIPAIS ==========
     path('', views.home, name='home'),
     path('feed/', FeedView.as_view(), name='feed'),
-    
+
     # ========== AUTENTICAÇÃO ==========
     path('login/', views.custom_login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('cadastro1/', views.cadastro1, name='cadastro1'),
     path('cadastro2/', views.cadastro2, name='cadastro2'),
     path('criar-conta/', views.criar_conta, name='criar_conta'),
-    
+    path('cadastro/professor/<int:user_id>/', views.cadastro_professor_parte2, name='cadastro_professor_parte2'),
+
     # ========== PERFIL ==========
     path('perfil-aluno/', views.perfil_aluno, name='perfil_aluno'),
     path('perfil-aluno-parte2/', views.perfil_aluno_parte2, name='perfil_aluno_parte2'),
     path('perfil/upload_avatar/', views.upload_avatar, name='upload_avatar'),
+
     # ========== OPORTUNIDADES ==========
     # URL de criação (que já deve estar funcionando)
     path('criar-oportunidade/', views.criar_oportunidade, name='criar_oportunidade'), 

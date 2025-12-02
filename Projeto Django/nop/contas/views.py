@@ -8,11 +8,10 @@ from django.contrib.auth import login, authenticate, logout
 from django.db.models import Q, Max
 from django.http import JsonResponse
 from django.urls import reverse_lazy
-from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm
+from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm, ProfessorCadastroFormParte2
 from .models import Oportunidade, Usuario, Mensagem
 from django.shortcuts import render, get_object_or_404
 from .models import Oportunidade, Favorito
-
 
 def detalhe_oportunidade(request, id):
     # Busca a oportunidade pelo ID ou retorna erro 404 se não existir
@@ -36,14 +35,57 @@ def cadastro1(request):
     if request.method == 'POST':
         form = UsuarioForm(request.POST)
         if form.is_valid():
-            # O método save() do form já cuida da criptografia da senha
             usuario = form.save()
-            messages.success(request, 'Usuário criado com sucesso!')
-            return redirect('cadastro2') # Ir para etapa 2 (interesses)
+            tipo = form.cleaned_data.get('tipo')
+            
+            messages.success(request, 'Primeira etapa concluída! Continue o cadastro.')
+            
+            if tipo == 'PROFESSOR':
+                # REDIRECIONAMENTO PARA A PARTE 2/CADASTRO3
+                return redirect('cadastro_professor_parte2', user_id=usuario.id)
+                
+            elif tipo in ['ALUNO', 'ALUNO_EXTERNO']:
+                # REDIRECIONAMENTO TEMPORÁRIO PARA ALUNOS
+                messages.warning(request, 'O cadastro completo para Alunos está em desenvolvimento. Faça login com sua nova conta.')
+                return redirect('custom_login') 
+                
+            else:
+                return redirect('home')
+
     else:
         form = UsuarioForm()
 
     return render(request, 'cadastro1.html', {'form': form})
+
+def cadastro_professor_parte2(request, user_id):
+    # Garante que o usuário existe e é do tipo PROFESSOR
+    usuario = get_object_or_404(Usuario, id=user_id)
+    
+    if usuario.tipo != 'PROFESSOR':
+        messages.error(request, "Acesso não autorizado para o seu tipo de conta.")
+        return redirect('home')
+        
+    if request.method == 'POST':
+        # Instancia o formulário com os dados POST e a instância de usuário para atualização
+        form = ProfessorCadastroFormParte2(request.POST, instance=usuario)
+        
+        if form.is_valid():
+            form.save() # Salva os campos 'cursos_atuacao' e 'cargos' no usuário
+            
+            messages.success(request, 'Cadastro de Professor concluído! Por favor, faça login.')
+            
+            return redirect('login') 
+            
+    else:
+        # Se for GET, instancia o formulário para exibição
+        form = ProfessorCadastroFormParte2(instance=usuario)
+
+    context = {
+        'form': form,
+        'usuario': usuario,
+    }
+    # Renderiza o template da Parte 2 (cadastro3.html)
+    return render(request, 'cadastro3.html', context)
 
 @login_required
 def cadastro2(request):

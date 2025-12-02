@@ -8,20 +8,18 @@ from .models import Usuario, Oportunidade, Interesse, Mensagem
 # ===============================
 
 # ===============================
-# cadastro1.html - RF1, RF2
+# cadastro1.html - PARTE 1 (Universal)
 # ===============================
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = ['username', 'email', 'tipo', 'matricula', 'curso', 'periodo', 'telefone']
+        # CAMPOS UNIVERSAIS: username, email, tipo, matricula
+        fields = ['username', 'email', 'tipo', 'matricula']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome de usuário'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'seu.email@example.com'}),
             'tipo': forms.Select(attrs={'class': 'form-control'}),
-            'matricula': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Matrícula'}),
-            'curso': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome do curso'}),
-            'periodo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Período'}),
-            'telefone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Telefone'}),
+            'matricula': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Matrícula'}), # INCLUÍDO
         }
 
     password1 = forms.CharField(
@@ -32,8 +30,8 @@ class UsuarioForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirmar senha'}),
         label="Confirmar Senha"
     )
-
-    # Validar se as senhas coincidem
+    
+    # ... (Métodos clean, clean_username e save permanecem iguais)
     def clean(self):
         cleaned_data = super().clean()
         password1 = cleaned_data.get('password1')
@@ -41,30 +39,33 @@ class UsuarioForm(forms.ModelForm):
 
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("As senhas não coincidem.")
-        
         return cleaned_data
-
-    # Validar se o nome de usuário (campo 'usuario') já está em uso
-    def clean_usuario(self):
-        usuario = self.cleaned_data.get('usuario')
-        if Usuario.objects.filter(usuario=usuario).exists():  # Verificar no campo 'usuario', não 'username'
+    
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if Usuario.objects.filter(username=username).exists():
             raise forms.ValidationError('Este nome de usuário já está em uso.')
-        return usuario
+        return username
+
+    def clean_matricula(self):
+        matricula = self.cleaned_data.get('matricula')
+        # Garante que a matrícula é única
+        if self.instance and self.instance.pk:
+            if Usuario.objects.filter(matricula=matricula).exclude(pk=self.instance.pk).exists():
+                raise forms.ValidationError('Esta matrícula já está em uso.')
+        elif Usuario.objects.filter(matricula=matricula).exists():
+            raise forms.ValidationError('Esta matrícula já está em uso.')
+        return matricula
 
     def save(self, commit=True):
-        # Sobrescrever o método save para garantir que a senha seja criptografada
         user = super().save(commit=False)
-        
-        # Definir a senha do usuário de forma segura
         user.set_password(self.cleaned_data['password1'])
-        
         if commit:
             user.save()
-        
         return user
 
 # ===============================
-# cadastro2.html - RF3
+# cadastro2.html - RF3 - REFAZER, TEM Q FAZER AÍ MAN
 # ===============================
 
 class InteressesForm(forms.Form):
@@ -86,6 +87,31 @@ class InteressesForm(forms.Form):
         required=False,
         label='Selecione seus interesses'
     )
+
+# ===============================
+# cadastro3.html - PARTE 2 (Professor/Gestor)
+# ===============================
+class ProfessorCadastroFormParte2(forms.ModelForm):
+    """
+    Formulário para a 2ª etapa do cadastro do Professor/Gestor (Cursos e Cargos).
+    """
+    class Meta:
+        model = Usuario
+        # CAMPOS ESPECÍFICOS DO PROFESSOR (conforme design)
+        fields = ['cursos_atuacao', 'cargos']
+        
+        widgets = {
+            'cursos_atuacao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Selecione o(s) seu(s) curso(s) de atuação'}),
+            'cargos': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Selecione o(s) seu(s) cargo(s)'}),
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cursos_atuacao'].label = 'Curso(s) de atuação'
+        self.fields['cargos'].label = 'Cargo(s)'
+        # Força a obrigatoriedade dos campos de atuação e cargo na Parte 2
+        self.fields['cursos_atuacao'].required = True
+        self.fields['cargos'].required = True
 
 
 # ===============================

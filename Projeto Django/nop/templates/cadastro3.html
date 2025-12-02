@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cadastro Professor | Passo 2{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cadastro1.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="cadastro-page">
+    <div class="cadastro-container">
+        <div class="cadastro-logo">
+            <img src="{% static 'img/logo-principal.png' %}" alt="NOP" class="cadastro-main-logo">
+        </div>
+
+        <div class="cadastro-card">
+            <h1 style="margin-bottom: 20px;">Criar sua conta NOP</h1>
+            
+            <form method="POST" class="cadastro-form">
+                {% csrf_token %}
+                
+                <div class="cadastro-form-group">
+                    <label for="{{ form.cursos_atuacao.id_for_label }}">
+                        {{ form.cursos_atuacao.label }} <span class="cadastro-required">*</span>
+                    </label>
+                    {{ form.cursos_atuacao }} 
+                    {% if form.cursos_atuacao.errors %}
+                        <div class="cadastro-error">{{ form.cursos_atuacao.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="cadastro-form-group">
+                    <label for="{{ form.cargos.id_for_label }}">
+                        {{ form.cargos.label }} <span class="cadastro-required">*</span>
+                    </label>
+                    {{ form.cargos }}
+                    {% if form.cargos.errors %}
+                        <div class="cadastro-error">{{ form.cargos.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="cadastro-btn cadastro-btn-submit">
+                    Criar conta
+                </button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 20px; font-family: 'Inter', sans-serif;">
+                <a href="{% url 'home' %}" style="color: #4a5568; text-decoration: none; font-weight: 500;">
+                    Voltar para a página inicial.
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

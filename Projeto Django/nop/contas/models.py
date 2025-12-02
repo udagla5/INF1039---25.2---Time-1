@@ -21,6 +21,9 @@ class Usuario(AbstractUser):
     periodo = models.CharField(max_length=20, blank=True, null=True)
     telefone = models.CharField(max_length=20, blank=True, null=True)
 
+    cursos_atuacao = models.CharField(max_length=255, verbose_name='Curso(s) de Atuação', blank=True, null=True)
+    cargos = models.CharField(max_length=255, verbose_name='Cargo(s)', blank=True, null=True)
+    
     REQUIRED_FIELDS = ['email']  # Outros campos que são obrigatórios
 
     def __str__(self):

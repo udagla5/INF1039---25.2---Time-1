@@ -285,12 +285,17 @@ def lista_oportunidades(request):
     # 1. Busca inicial ordenada por data de publicação
     oportunidades = Oportunidade.objects.all().order_by('-data_publicacao')
 
-    # 2. Filtro de Texto
+    # 2. Filtro de Texto (BUSCA) - AGORA MAIS COMPLETO
     busca = request.GET.get('busca')
     if busca:
         oportunidades = oportunidades.filter(
-            Q(titulo__icontains=busca) | Q(descricao__icontains=busca)
-        )
+            Q(titulo__icontains=busca) | 
+            Q(descricao__icontains=busca) |
+            Q(local__icontains=busca) |
+            Q(cursos_elegiveis__icontains=busca) |
+            Q(tipo__icontains=busca) |
+            Q(related_interests__nome__icontains=busca)  # Busca por interesses
+        ).distinct()
 
     # 3. Filtro por Tipo (Checkbox)
     tipos = request.GET.getlist('tipo')
@@ -329,7 +334,26 @@ def lista_oportunidades(request):
         except ValueError:
             pass
 
-    # 6. Filtro por Interesses (Checkbox/Lista)
+    # 6. Filtro por Carga Horária (Checkbox)
+    cargas = request.GET.getlist('carga_horaria_check')
+    if cargas:
+        # Aqui você precisa implementar a lógica para filtrar por carga horária
+        # Vou deixar um placeholder - você precisa adaptar para seu modelo
+        # Exemplo básico:
+        for carga in cargas:
+            if carga == '<2':
+                oportunidades = oportunidades.filter(carga_horaria__lt=2)
+            elif carga == '>2':
+                oportunidades = oportunidades.filter(carga_horaria__gt=2)
+            elif carga == '>4':
+                oportunidades = oportunidades.filter(carga_horaria__gt=4)
+            elif carga == '>6':
+                oportunidades = oportunidades.filter(carga_horaria__gt=6)
+            elif carga == '>8':
+                oportunidades = oportunidades.filter(carga_horaria__gt=8)
+            # 'compativel' pode ser uma lógica mais complexa que você precisa definir
+
+    # 7. Filtro por Interesses (Checkbox/Lista)
     interesses_ids = request.GET.getlist('interesses')
     
     # 🔑 CORREÇÃO CRÍTICA: Verificar se 'tudo' está na lista
@@ -350,7 +374,7 @@ def lista_oportunidades(request):
         except Exception:
             pass  # Em caso de erro, mantém todas as oportunidades
 
-    # 7. Contexto
+    # 8. Contexto
     context = {
         'oportunidades': oportunidades,
         'todos_interesses': Interesse.objects.all().order_by('nome'), # Envia para o template para montar os filtros
@@ -362,6 +386,8 @@ def lista_oportunidades(request):
             'max_remuneracao': max_rem if max_rem else '5000',
             'min_horas': min_horas if min_horas else '0',
             'max_horas': max_horas if max_horas else '200',
+            'cargas': cargas,
+            'busca': busca,  # ADICIONE ISSO PARA MANTER O TERMO NA BARRA
         }
     }
     

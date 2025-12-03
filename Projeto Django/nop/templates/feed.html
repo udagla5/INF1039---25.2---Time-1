@@ -31,6 +31,9 @@
 
 <div class="filter-modal" id="filterModal">
     <form method="GET" action="{% url 'feed' %}">
+        <!-- Campo hidden para manter a busca -->
+        <input type="hidden" name="busca" value="{{ filtros_selecionados.busca|default:'' }}">
+        
         <div class="filter-modal-header">
             <h2>Filtros</h2>
             <div class="close-filter" id="closeFilter">
@@ -121,6 +124,16 @@
 </div>
 
 <main class="feed" id="conteudo" role="main">
+    {% if filtros_selecionados.busca %}
+    <div class="busca-info" style="margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 4px;">
+        Resultados para: <strong>{{ filtros_selecionados.busca }}</strong>
+        {% if request.GET %}
+        <a href="{% url 'feed' %}{% if request.GET.tipo %}?{% for key, value in request.GET.items %}{% if key != 'busca' %}{{ key }}={{ value }}{% if not forloop.last %}&{% endif %}{% endif %}{% endfor %}{% endif %}" 
+           style="margin-left: 10px; color: #666; text-decoration: none;">✕ Limpar busca</a>
+        {% endif %}
+    </div>
+    {% endif %}
+    
     {% for oportunidade in oportunidades %}
     <section class="oportunidade-item">
         <div class="oportunidade-col bookmark-col">
@@ -167,7 +180,13 @@
         </div>
     </section>
     {% empty %}
-        <p style="text-align: center; padding: 40px; color: #99a8bd;">Nenhuma oportunidade encontrada com esses filtros.</p>
+        <p style="text-align: center; padding: 40px; color: #99a8bd;">
+            {% if filtros_selecionados.busca %}
+                Nenhuma oportunidade encontrada para "{{ filtros_selecionados.busca }}".
+            {% else %}
+                Nenhuma oportunidade encontrada com esses filtros.
+            {% endif %}
+        </p>
     {% endfor %}
 </main>
 
@@ -219,6 +238,24 @@
                 if (form) form.submit();
             });
         });
+
+        // Adiciona o campo de busca ao formulário de filtros se não existir
+        const filterForm = document.querySelector('.filter-modal form');
+        if (filterForm) {
+            // Verifica se já existe um campo busca
+            const buscaInput = filterForm.querySelector('input[name="busca"]');
+            if (!buscaInput) {
+                // Pega o valor da busca da URL atual ou do input existente
+                const urlParams = new URLSearchParams(window.location.search);
+                const buscaValue = urlParams.get('busca') || '';
+                
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'busca';
+                hiddenInput.value = buscaValue;
+                filterForm.appendChild(hiddenInput);
+            }
+        }
     });
 
     function initDualSlider(minInputId, maxInputId, rangeBarId, displayMinId, displayMaxId, prefix, suffix) {

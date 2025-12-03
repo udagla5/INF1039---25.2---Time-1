@@ -91,6 +91,7 @@ body {
     color: #6c757d;
 }
 
+/* CONTAINER DOS INTERESSES */
 .interests-container {
     border: 1px solid #ced4da;
     border-radius: 8px;
@@ -102,7 +103,8 @@ body {
     overflow-y: auto;
 }
 
-.interest-tag {
+/* ESTILIZAÇÃO DO ITEM INDIVIDUAL (O contêiner da tag) */
+.interest-tag-wrapper { 
     font-family: 'Inter', sans-serif;
     background-color: #ffffff;
     border: 1px solid #adb5bd;
@@ -113,18 +115,45 @@ body {
     color: #495057;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    line-height: 1;
 }
 
-.interest-tag:hover {
+.interest-tag-wrapper:hover {
     background-color: #f1f3f5;
     border-color: #868e96;
 }
 
-.interest-tag.selected {
+/* Oculta o input real, mantendo-o funcional e invisível */
+.interest-tag-wrapper input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+}
+
+/* Estiliza a label para se parecer com a tag (já que o input está oculto) */
+.interest-tag-wrapper label {
+    cursor: pointer;
+    /* Reset de estilos da label do form-group */
+    margin: 0; 
+    padding: 0;
+    color: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+}
+
+/* ESTADO SELECIONADO (Aplicado ao wrapper pelo JS quando o checkbox está checked) */
+.interest-tag-wrapper.selected { 
     background-color: #e7f5ff;
     border-color: #4dabf7;
     color: #1971c2;
 }
+
 
 .submit-btn {
     width: 100%;

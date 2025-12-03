@@ -8,18 +8,19 @@ from django.db.models import Q, Max
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 
+# Importações dos seus modelos e forms
+from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm, ProfessorCadastroFormParte2, BuscaOportunidadeForm
+from .models import Oportunidade, Usuario, Mensagem, Favorito, Interesse
 # Ajuste suas importações de forms conforme o nome real do seu arquivo forms.py
 from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm, ProfessorCadastroFormParte2
-from .models import Oportunidade, Usuario, Mensagem, Favorito
+from .models import Oportunidade, Usuario, Mensagem, Favorito, Notificacao
 
 # ===============================
 # PÁGINAS PRINCIPAIS E AUTENTICAÇÃO
 # ===============================
 
 def home(request):
-    # Busca 3 oportunidades aleatórias do banco de dados
     destaques = Oportunidade.objects.all().order_by('?')[:3]
-    
     return render(request, 'home.html', {'destaques': destaques})
 
 def cadastro1(request):
@@ -28,14 +29,21 @@ def cadastro1(request):
         if form.is_valid():
             usuario = form.save()
             tipo = form.cleaned_data.get('tipo')
+            
+            # 🔑 PASSO CRÍTICO: Logar o usuário recém-criado
+            password = form.cleaned_data.get('password1')
+            user_auth = authenticate(request, username=usuario.username, password=password)
+
+            if user_auth is not None:
+                login(request, user_auth)
+            
             messages.success(request, 'Primeira etapa concluída! Continue o cadastro.')
             
             if tipo == 'PROFESSOR':
                 return redirect('cadastro_professor_parte2', user_id=usuario.id)
             elif tipo in ['ALUNO', 'ALUNO_EXTERNO']:
-                messages.warning(request, 'O cadastro completo para Alunos está em desenvolvimento. Faça login com sua nova conta.')
-                # CORREÇÃO: Usando 'login' para corresponder a urls.py
-                return redirect('login') 
+                # Redirecionar para o cadastro2 agora que o usuário está logado
+                return redirect('cadastro2') 
             else:
                 return redirect('home')
     else:
@@ -53,53 +61,66 @@ def cadastro_professor_parte2(request, user_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Cadastro de Professor concluído! Por favor, faça login.')
-            # CORREÇÃO: Usando 'login' para corresponder a urls.py
             return redirect('login') 
     else:
         form = ProfessorCadastroFormParte2(instance=usuario)
 
     return render(request, 'cadastro3.html', {'form': form, 'usuario': usuario})
 
-@login_required
 def cadastro2(request):
+    # 🔑 CORREÇÃO CRÍTICA: Impedir AnonymousUser de prosseguir
+    if not request.user.is_authenticated:
+        messages.warning(request, "Você precisa estar logado para selecionar seus interesses.")
+        return redirect('login')
+        
+    # Agora é seguro acessar request.user.interesses
+    # Inicializa o formulário com os interesses atuais do usuário (para pré-seleção)
+    user_interesses_ids = list(request.user.interesses.values_list('id', flat=True))
+    
     if request.method == 'POST':
         form = InteressesForm(request.POST)
         if form.is_valid():
-            interesses = form.cleaned_data.get('interesses', [])
-            if interesses:
-                request.user.interesses.set(interesses)
+            interesses_selecionados = form.cleaned_data.get('interesses')
+            if interesses_selecionados:
+                request.user.interesses.set(interesses_selecionados) 
+            else:
+                request.user.interesses.clear()
+                
             messages.success(request, 'Interesses salvos com sucesso!')
             return redirect('feed')
     else:
-        form = InteressesForm()
+        # Inicializa o formulário com os interesses atuais do usuário
+        form = InteressesForm(initial={'interesses': user_interesses_ids})
+        
     return render(request, 'cadastro2.html', {'form': form})
 
 def criar_conta(request):
     return redirect('cadastro1')
 
 def custom_login(request):
+    if request.user.is_authenticated:
+        return redirect('feed') # Redireciona usuários já logados
+        
     if request.method == 'POST':
         form = CustomLoginForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.success(request, f'Bem-vindo, {username}!')
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, f'Bem-vindo(a) de volta, {user.username}!')
+            
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url) 
                 
-                # --- ALTERAÇÃO AQUI ---
-                # Verifica se existe um parâmetro 'next' na URL (ex: veio do carrossel)
-                next_url = request.GET.get('next')
-                if next_url:
-                    return redirect(next_url) # Redireciona para a oportunidade
-                # ----------------------
-                
-                return redirect('feed') # Comportamento padrão (vai pro feed)
+            return redirect('feed') 
+        else:
+            messages.error(request, 'Nome de usuário ou senha inválidos.')
     else:
         form = CustomLoginForm()
+        
     return render(request, 'login.html', {'form': form})
 
+@login_required
 def custom_logout(request):
     logout(request)
     messages.success(request, 'Logout realizado com sucesso!')
@@ -111,6 +132,7 @@ def custom_logout(request):
 
 @login_required
 def perfil_aluno(request):
+    # AQUI: Usa o formulário EditarPerfilForm que agora usa o modelo Usuario
     if request.method == 'POST':
         form = EditarPerfilForm(request.POST, instance=request.user)
         if form.is_valid():
@@ -138,6 +160,8 @@ def upload_avatar(request):
                 user.foto_perfil = nova_foto
                 user.save()
                 messages.success(request, 'Foto de perfil atualizada com sucesso!')
+            except AttributeError:
+                pass
             except Exception as e:
                 messages.error(request, 'Erro ao salvar a imagem.')
         else:
@@ -149,7 +173,7 @@ def upload_avatar(request):
 # OPORTUNIDADES (CRUD e Detalhes)
 # ===============================
 
-@login_required(login_url='login') # <--- CORREÇÃO: login_url é 'login'
+@login_required(login_url='login') 
 def detalhe_oportunidade(request, id):
     oportunidade = get_object_or_404(Oportunidade, pk=id)
     return render(request, 'oportunidade.html', {'oportunidade': oportunidade})
@@ -162,29 +186,37 @@ def criar_oportunidade(request):
         return redirect('feed')
 
     if request.method == 'POST':
-        # ALTERAÇÃO AQUI: Adicionado request.FILES para processar a imagem
         form = OportunidadeForm(request.POST, request.FILES)
         if form.is_valid():
-            oportunidade = form.save(commit=False)
+            # AQUI: O .save(commit=False) não salva relações Many-to-Many
+            oportunidade = form.save(commit=False) 
             oportunidade.criador = request.user
             oportunidade.save()
+            
+            # SALVANDO RELAÇÃO MANY-TO-MANY (Interesses)
+            form.save_m2m() # Salva as relações M2M (como related_interests)
+            
             messages.success(request, 'Oportunidade criada com sucesso!')
             return redirect('feed') 
     else:
         form = OportunidadeForm()
     return render(request, 'criar_oportunidade.html', {'form': form})
 
-# View baseada em classe 
+# View baseada em classe (manter apenas uma, se possível)
 class CriarOportunidadeView(LoginRequiredMixin, FormView):
     template_name = 'criar_oportunidade.html'
     form_class = OportunidadeForm
-    login_url = 'login' # <--- CORREÇÃO: login_url é 'login'
+    login_url = 'login' 
     
     def form_valid(self, form):
         oportunidade = form.save(commit=False)
         oportunidade.criador = self.request.user
         oportunidade.status = 'PENDENTE'
         oportunidade.save()
+        
+        # SALVANDO RELAÇÃO MANY-TO-MANY (Interesses)
+        form.save_m2m() # Salva as relações M2M (como related_interests)
+        
         messages.success(self.request, 'Oportunidade criada com sucesso! Aguarde a validação do sistema.')
         return redirect('feed')
 
@@ -261,21 +293,22 @@ def lista_oportunidades(request):
         except ValueError:
             pass
 
-    # 6. Outros filtros
-    cargas = request.GET.getlist('carga_horaria_check')
-    # Lógica de carga horária se houver...
+    # 6. Filtro por Interesses (Checkbox/Lista)
+    interesses_ids = request.GET.getlist('interesses')
     
-    interesses = request.GET.get('interesses')
-    # Lógica de interesses se houver...
+    # 🔑 FILTRAGEM POR INTERESSE USANDO A RELAÇÃO M-T-M
+    if interesses_ids:
+        # Filtra oportunidades que possuam QUALQUER UM dos interesses selecionados
+        oportunidades = oportunidades.filter(related_interests__id__in=interesses_ids).distinct()
 
     # 7. Contexto
     context = {
         'oportunidades': oportunidades,
+        'todos_interesses': Interesse.objects.all().order_by('nome'), # Envia para o template para montar os filtros
         'favoritos_ids': Favorito.objects.filter(usuario=request.user).values_list('oportunidade_id', flat=True) if request.user.is_authenticated else [],
         'filtros_selecionados': {
             'tipos': tipos,
-            'cargas': cargas,
-            'interesses': interesses,
+            'interesses': interesses_ids, # IDs selecionados para manter o estado do filtro
             'min_remuneracao': min_rem if min_rem else '0',
             'max_remuneracao': max_rem if max_rem else '5000',
             'min_horas': min_horas if min_horas else '0',
@@ -291,7 +324,7 @@ def lista_oportunidades(request):
 
 class ChatView(LoginRequiredMixin, TemplateView):
     template_name = 'chat.html'
-    login_url = 'login' # <--- CORREÇÃO: login_url é 'login'
+    login_url = 'login' 
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -327,7 +360,7 @@ class ChatView(LoginRequiredMixin, TemplateView):
         return context
 
 class EnviarMensagemView(LoginRequiredMixin, TemplateView):
-    login_url = 'login' # <--- CORREÇÃO: login_url é 'login'
+    login_url = 'login' 
     
     def post(self, request, *args, **kwargs):
         form = MensagemForm(request.POST)
@@ -356,7 +389,13 @@ class ListarUsuariosView(LoginRequiredMixin, ListView):
     model = Usuario
     template_name = 'usuarios_chat.html'
     context_object_name = 'usuarios'
-    login_url = 'login' # <--- CORREÇÃO: login_url é 'login'
+    login_url = 'login' 
     
     def get_queryset(self):
         return Usuario.objects.exclude(id=self.request.user.id).order_by('username')
+    
+# notificacoes
+
+def notificacoes(request):
+    notificacoes = Notificacao.objects.filter(usuario=request.user)
+    return render(request, 'notificacoes.html', {"notificacoes": notificacoes})

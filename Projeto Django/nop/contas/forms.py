@@ -1,11 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm  # <-- NOVO: Adicione PasswordResetForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm
 from django.contrib.auth.models import User
-from .models import Usuario, Oportunidade, Interesse, Mensagem
-
-# ===============================
-# FORMS PARA OS HTMLS EXISTENTES
-# ===============================
+from .models import Usuario, Oportunidade, Interesse, Mensagem # Importe Interesse
 
 # ===============================
 # cadastro1.html - PARTE 1 (Universal)
@@ -31,7 +27,6 @@ class UsuarioForm(forms.ModelForm):
         label="Confirmar Senha"
     )
     
-    # ... (Métodos clean, clean_username e save permanecem iguais)
     def clean(self):
         cleaned_data = super().clean()
         password1 = cleaned_data.get('password1')
@@ -65,25 +60,15 @@ class UsuarioForm(forms.ModelForm):
         return user
 
 # ===============================
-# cadastro2.html - RF3 - REFAZER, TEM Q FAZER AÍ MAN
+# cadastro2.html - INTERESSES
 # ===============================
 
 class InteressesForm(forms.Form):
     """Formulário de seleção de interesses (cadastro2.html)"""
     
-    # Se Interesse não existir, use ChoiceField como fallback
-    INTERESSES_CHOICES = [
-        ('TECNOLOGIA', 'Tecnologia'),
-        ('ENGENHARIA', 'Engenharia'),
-        ('SAUDE', 'Saúde'),
-        ('NEGOCIOS', 'Negócios'),
-        ('ARTES', 'Artes'),
-        ('CIENCIAS', 'Ciências'),
-    ]
-    
-    interesses = forms.MultipleChoiceField(
-        choices=INTERESSES_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
+    interesses = forms.ModelMultipleChoiceField(
+        queryset=Interesse.objects.all().order_by('nome'), # Busca todos os interesses
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'interesses-checkbox'}),
         required=False,
         label='Selecione seus interesses'
     )
@@ -195,14 +180,22 @@ class BuscaOportunidadeForm(forms.Form):
 
 
 # ===============================
-# criar_oportunidade.html - RF6 ÚNICO
+# criar_oportunidade.html - RF6 ÚNICO - ATUALIZADO
 # ===============================
 
 class OportunidadeForm(forms.ModelForm):
+    # Campo para selecionar os interesses da oportunidade (ModelMultipleChoiceField)
+    related_interests = forms.ModelMultipleChoiceField(
+        queryset=Interesse.objects.all().order_by('nome'),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label='Interesses Relacionados'
+    )
+    
     class Meta:
         model = Oportunidade
-        # 🔑 ADICIONEI 'foto' NA LISTA DE CAMPOS
-        fields = ['titulo', 'descricao', 'foto', 'tipo', 'local', 'cursos_elegiveis', 'carga_horaria', 'num_vagas', 'processo_seletivo', 'data_encerramento', 'horas_complementares', 'remuneracao']
+        # 🔑 ADICIONADO 'related_interests' NA LISTA DE CAMPOS
+        fields = ['titulo', 'descricao', 'foto', 'tipo', 'local', 'cursos_elegiveis', 'carga_horaria', 'num_vagas', 'processo_seletivo', 'data_encerramento', 'horas_complementares', 'remuneracao', 'related_interests']
         
         widgets = {
             'titulo': forms.TextInput(attrs={'placeholder': 'Título da oportunidade', 'maxlength': 100}),
@@ -222,7 +215,7 @@ class OportunidadeForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # 🔑 Aplicando a classe CSS aos campos (exceto checkbox ou datas específicas)
         for field_name, field in self.fields.items():
-            if field_name not in ['tipo', 'data_encerramento', 'foto']: 
+            if field_name not in ['tipo', 'data_encerramento', 'foto', 'related_interests']: 
                 field.widget.attrs.update({'class': 'opportunity-input'})
 
 # ===============================
@@ -233,8 +226,8 @@ class EditarPerfilForm(forms.ModelForm):
     """Formulário para editar perfil do aluno (perfil_aluno.html)"""
     
     class Meta:
-        model = User  # ← Usar User como fallback
-        fields = ['email', 'first_name', 'last_name']  # Campos básicos do User
+        model = Usuario  # ← Usar Usuario (CustomUser) para acessar todos os campos
+        fields = ['email', 'first_name', 'last_name', 'curso', 'periodo', 'telefone'] # Exemplo de campos relevantes
         widgets = {
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',
@@ -247,6 +240,18 @@ class EditarPerfilForm(forms.ModelForm):
             'last_name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Sobrenome'
+            }),
+            'curso': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Curso'
+            }),
+            'periodo': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Período'
+            }),
+            'telefone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Telefone'
             }),
         }
 
@@ -268,13 +273,12 @@ class MensagemForm(forms.ModelForm):
         }
 
 # ===============================
-# Esqueci Senha (password_reset_form.html) - NOVO CÓDIGO
+# Esqueci Senha (password_reset_form.html)
 # ===============================
 
 class CustomPasswordResetForm(PasswordResetForm):
     """
     Formulário customizado para a primeira etapa de redefinição de senha (email).
-    Usado para aplicar a classe 'input-reset' do esqueci_senha.css.
     """
     email = forms.EmailField(
         label=("Email"),

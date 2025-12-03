@@ -49,9 +49,9 @@ body {
         <label for="{{ form.username.id_for_label }}">Usuário</label>
         {{ form.username }}
         
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+        <div style="display: flex; justify-align: space-between; align-items: center; margin-top: 10px;">
           <label for="{{ form.password.id_for_label }}">Senha</label>
-          <a href="#">Esqueceu a senha?</a>
+          <a href="{% url 'password_reset' %}">Esqueceu a senha?</a>
         </div>
         
         <div class="pwd-wrap">

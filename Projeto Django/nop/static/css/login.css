@@ -1,12 +1,14 @@
-/* login1.css - ESTILOS ESPECÍFICOS DA TELA de LOGIN (PADRONIZADO COM CADASTRO) */
+/* login.css - ESTILOS ESPECÍFICOS DA TELA de LOGIN (PADRONIZADO COM CADASTRO) */
 
 /* -------------------- VARIÁVEIS HERDADAS E GERAIS -------------------- */
+/* (Variáveis definidas em outro lugar, como base.css) */
 
 /* -------------------- LAYOUT GERAL E CENTRALIZAÇÃO -------------------- */
 
 /* O body agora apenas define o fundo e a cor do texto, permitindo que o 
-   base.css (flex-direction: column) e o login.html (main-content) 
-   controlem a centralização abaixo do header. */
+ * base.css (flex-direction: column) e o login.html (main-content) 
+ * controlem a centralização abaixo do header. 
+ */
 body { 
     display: flex; /* Mantém o flex para a coluna */
     margin: 0; 
@@ -68,6 +70,7 @@ label {
     color: var(--text-dark);
 }
 
+/* Classe genérica (form-control) - assumindo que os inputs a recebem */
 .form-control { 
     width: 100%; 
     padding: 12px;
@@ -139,17 +142,24 @@ label {
 }
 
 /* Link Esqueceu a senha */
-.card a[href="#"]:not(.close-toast) {
+/* Se a URL for um placeholder, use o seletor mais específico: */
+.card a[href="{% url 'password_reset' %}"]:not(.close-toast),
+/* Ou se o seu placeholder é apenas "#": */
+.card a[href="#"]:not(.close-toast) { 
     font-size: 0.85rem; 
     color: var(--primary-blue); 
     text-decoration: none;
     font-weight: 500;
 }
+
+.card a[href="{% url 'password_reset' %}"]:hover,
 .card a[href="#"]:hover {
     text-decoration: underline;
 }
 
 /* Linha Divisória */
+/* Seletor mais robusto, caso o style mude, mas mantém o original para segurança: */
+.card > div[style*="height: 1px"], 
 .card > div[style="height: 1px; background: #eee; margin: 20px 0;"] {
     background: #e0e0e0 !important;
 }
@@ -178,12 +188,13 @@ label {
 }
 
 /* -------------------- CSS DO TOAST MESSAGE (Mantido) -------------------- */
+
 .messages-container {
     position: fixed; 
-    bottom: 30px;    
-    left: 50%;       
+    bottom: 30px; 
+    left: 50%; 
     transform: translateX(-50%); 
-    z-index: 9999;   
+    z-index: 9999; 
     
     display: flex;
     flex-direction: column;
@@ -198,7 +209,7 @@ label {
     color: white;
     padding: 12px 24px;
     border-radius: 50px; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     font-size: 14px;
     display: flex;
     align-items: center;

@@ -1,0 +1,133 @@
+/* esqueci_senha.css - ESTILOS ESPECÍFICOS DA TELA de ESQUECI SENHA */
+
+/* -------------------- LAYOUT GERAL E CENTRALIZAÇÃO -------------------- */
+
+/* Simula a classe .page de login.css para centralizar e limitar a largura */
+.container-reset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  /* Centralização horizontal herdada do main-content em login.html/base.html */
+  margin: 0 auto; 
+  
+  /* Largura e espaçamento */
+  width: 100%;
+  max-width: 480px; /* Mesma largura do .page em login.css */
+  gap: 20px;
+  
+  padding: 40px 0; /* Garante algum respiro no topo e rodapé do container */
+}
+
+.logo-reset {
+  /* Simula a .logo de login.css */
+  max-width: 150px;
+  object-fit: contain;
+  margin-bottom: 20px; 
+}
+
+/* -------------------- CARTÃO DE REDEFINIÇÃO (CARD) -------------------- */
+
+.card-reset {
+  /* Simula a .card de login.css */
+  background-color: var(--background-light); 
+  color: var(--text-dark); 
+  padding: 30px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  border-top: 5px solid var(--primary-blue); /* Barra superior azul */
+  width: 100%; 
+  text-align: center;
+}
+
+.title-reset {
+  /* Simula a .title de login.css */
+  font-family: 'Palanquin Dark', sans-serif; /* Mantido se você usa essa fonte */
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 5px; 
+}
+
+.subtitle-reset {
+  /* Simula a .subtitle de login.css */
+  color: var(--text-gray);
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+}
+
+/* -------------------- ELEMENTOS DO FORMULÁRIO -------------------- */
+
+.label-reset {
+    /* Simula o label de login.css */
+    display: block;
+    text-align: left;
+    font-weight: 600; 
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+}
+
+.input-reset {
+  /* Simula o .form-control de login.css (menos a margin-bottom) */
+  width: 100%; 
+  padding: 12px;
+  /* Margin-bottom ajustada para 25px conforme o seu design original de esqueci_senha */
+  margin-bottom: 25px; 
+  border: 1px solid #ccc; 
+  border-radius: var(--border-radius); 
+  box-sizing: border-box; 
+  font-size: 1rem;
+  color: var(--text-dark);
+  background-color: #f9f9f9;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.input-reset:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(99, 149, 255, 0.2);
+}
+
+.button-reset {
+  /* Simula o .enter-btn de login.css */
+  width: 100%; 
+  padding: 14px; 
+  background: var(--primary-blue); 
+  color: white; 
+  border: none; 
+  border-radius: var(--border-radius); 
+  cursor: pointer; 
+  font-size: 1.1rem; 
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 20px; /* Mantido do seu design original */
+  transition: background-color 0.2s;
+}
+
+.button-reset:hover {
+  background: #4a80f0; 
+}
+
+.back-link {
+    /* Simula os links de login.css */
+    font-size: 0.95rem; /* Ajustado para ser mais próximo do 0.85rem de login */
+    color: var(--primary-blue); 
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* -------------------- RESPONSIVIDADE -------------------- */
+
+@media (max-width: 500px) {
+    .card-reset {
+        padding: 20px;
+    }
+
+    .title-reset {
+        font-size: 1.6rem;
+    }
+}

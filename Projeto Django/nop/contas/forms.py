@@ -1,6 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm  # ← UserCreationForm importado
-from django.contrib.auth.models import User  # ← Importar User também
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm  # <-- NOVO: Adicione PasswordResetForm
+from django.contrib.auth.models import User
 from .models import Usuario, Oportunidade, Interesse, Mensagem
 
 # ===============================
@@ -266,3 +266,22 @@ class MensagemForm(forms.ModelForm):
                 'style': 'resize: none; min-height: 40px; width: 100%;' 
             }),
         }
+
+# ===============================
+# Esqueci Senha (password_reset_form.html) - NOVO CÓDIGO
+# ===============================
+
+class CustomPasswordResetForm(PasswordResetForm):
+    """
+    Formulário customizado para a primeira etapa de redefinição de senha (email).
+    Usado para aplicar a classe 'input-reset' do esqueci_senha.css.
+    """
+    email = forms.EmailField(
+        label=("Email"),
+        max_length=254,
+        widget=forms.EmailInput(attrs={
+            'autocomplete': 'email',
+            'class': 'input-reset', 
+            'placeholder': 'seu.nome@aluno.puc-rio.br ou outro email institucional'
+        })
+    )

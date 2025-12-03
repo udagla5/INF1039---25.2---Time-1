@@ -1,8 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from .forms import CustomPasswordResetForm 
 
 urlpatterns = [
     # ========== PÁGINAS PRINCIPAIS ==========
@@ -19,6 +20,32 @@ urlpatterns = [
     path('criar-conta/', views.criar_conta, name='criar_conta'),
     path('cadastro/professor/<int:user_id>/', views.cadastro_professor_parte2, name='cadastro_professor_parte2'),
 
+    # ========== FLUXO DE REDEFINIÇÃO DE SENHA (Novo) ==========
+    # 1. Solicita o email do usuário
+    path('reset_senha/', auth_views.PasswordResetView.as_view(
+        template_name='esqueci_senha.html', 
+        form_class=CustomPasswordResetForm,  
+        email_template_name='reset_senha/password_reset_email.html',
+        subject_template_name='reset_senha/password_reset_subject.txt',
+        success_url='/reset_senha/enviado/' 
+    ), name='password_reset'),
+    
+    # 2. Informa que o email foi enviado
+    path('reset_senha/enviado/', auth_views.PasswordResetDoneView.as_view(
+        template_name='reset_senha/password_reset_done.html' # AGORA EXISTE
+    ), name='password_reset_done'),
+
+    # 3. Link de redefinição no email
+    path('reset_senha/confirmar/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        template_name='reset_senha/password_reset_confirm.html', # AGORA EXISTE
+        success_url='/reset_senha/completo/'
+    ), name='password_reset_confirm'),
+
+    # 4. Confirmação final
+    path('reset_senha/completo/', auth_views.PasswordResetCompleteView.as_view(
+        template_name='reset_senha/password_reset_complete.html' # AGORA EXISTE
+    ), name='password_reset_complete'),
+    
     # ========== PERFIL ==========
     path('perfil-aluno/', views.perfil_aluno, name='perfil_aluno'),
     path('perfil-aluno-parte2/', views.perfil_aluno_parte2, name='perfil_aluno_parte2'),

@@ -28,6 +28,8 @@ class Usuario(AbstractUser):
 
     interesses = models.ManyToManyField('Interesse', blank=True, related_name='usuarios')
 
+    foto_perfil = models.ImageField(upload_to='perfil/', blank=True, null=True, verbose_name='Foto de Perfil')
+
     REQUIRED_FIELDS = ['email']
 
     def __str__(self):

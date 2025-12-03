@@ -7,11 +7,38 @@
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+
+<style>
+    /* CSS EXTRA: Garante que as fotos na lista fiquem redondas e bonitas */
+    .chat-item img {
+        width: 50px;       /* Tamanho fixo */
+        height: 50px;
+        border-radius: 50%; /* Faz a imagem ficar redonda */
+        object-fit: cover;  /* Corta a imagem para caber no círculo sem esticar */
+        margin-right: 15px; /* Espaço entre a foto e o texto */
+        border: 1px solid #eee; /* Borda suave opcional */
+    }
+    
+    /* Garante que o link ocupe o espaço todo e alinhe os itens */
+    .usuario-item a {
+        display: flex; 
+        align-items: center; 
+        text-decoration: none; 
+        color: inherit; 
+        width: 100%;
+        padding: 10px; /* Um pouco de respiro interno */
+    }
+    
+    .usuario-item:hover {
+        background-color: #f5f5f5; /* Efeito visual ao passar o mouse */
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="chat-container">
   <div class="sidebar" style="width: 100%; max-width: 600px; margin: 0 auto;">
+    
     <div class="search-box">
       <a href="{% url 'chat' %}" class="back-btn">
         <i class="fa-solid fa-arrow-left"></i>
@@ -25,8 +52,14 @@
       {% if usuarios %}
         {% for usuario in usuarios %}
         <div class="chat-item usuario-item">
-          <a href="{% url 'chat' %}?conversa_com={{ usuario.id }}" style="display: flex; align-items: center; text-decoration: none; color: inherit; width: 100%;">
-            <img src="{% static 'img/user_placeholder.png' %}" alt="{{ usuario.username }}">
+          <a href="{% url 'chat' %}?conversa_com={{ usuario.id }}">
+            
+            {% if usuario.foto_perfil %}
+                <img src="{{ usuario.foto_perfil.url }}" alt="{{ usuario.username }}">
+            {% else %}
+                <img src="{% static 'img/user_placeholder.png' %}" alt="{{ usuario.username }}">
+            {% endif %}
+            
             <div class="chat-info">
               <div class="chat-top">
                 <span>{{ usuario.first_name|default:usuario.username }}</span>
@@ -43,13 +76,14 @@
         </div>
       {% endif %}
     </div>
+
   </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-// Busca de usuários
+// Busca de usuários (Filtro em tempo real)
 const searchInput = document.getElementById('searchInput');
 const usuarioItems = document.querySelectorAll('.usuario-item');
 
@@ -58,13 +92,15 @@ if (searchInput) {
     const searchTerm = this.value.toLowerCase();
     
     usuarioItems.forEach(item => {
+      // Pega o nome e o email dentro do item
       const nomeUsuario = item.querySelector('.chat-top span').textContent.toLowerCase();
       const emailUsuario = item.querySelector('.chat-info small:last-child').textContent.toLowerCase();
       
+      // Verifica se o termo digitado está no nome ou no email
       if (nomeUsuario.includes(searchTerm) || emailUsuario.includes(searchTerm)) {
-        item.style.display = 'block';
+        item.style.display = 'block'; // Mostra
       } else {
-        item.style.display = 'none';
+        item.style.display = 'none';  // Esconde
       }
     });
   });

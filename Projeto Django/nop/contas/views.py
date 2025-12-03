@@ -128,15 +128,21 @@ def perfil_aluno_parte2(request):
 @login_required
 def upload_avatar(request):
     if request.method == 'POST':
-        if 'avatar' in request.FILES:
-            novo_avatar = request.FILES['avatar']
+        # O nome 'avatar' vem do input name="avatar" no seu HTML
+        nova_foto = request.FILES.get('avatar')
+        
+        if nova_foto:
             try:
-                profile = request.user.profile # Verifique se seu modelo usa profile ou user direto
-                profile.avatar = novo_avatar
-                profile.save()
+                user = request.user
+                # Se já existir uma foto antiga, o Django substitui ou você pode deletar manualmente se quiser
+                user.foto_perfil = nova_foto
+                user.save()
                 messages.success(request, 'Foto de perfil atualizada com sucesso!')
             except Exception as e:
-                messages.error(request, f'Erro ao salvar a imagem: {e}')
+                messages.error(request, 'Erro ao salvar a imagem.')
+        else:
+            messages.warning(request, 'Nenhuma imagem selecionada.')
+            
     return redirect('perfil_aluno')
 
 # ===============================

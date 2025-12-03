@@ -6,6 +6,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+<style>
+    /* CSS EXTRA: Garante que as fotos fiquem redondas e bonitas */
+    .chat-item img, .chat-header img {
+        width: 45px; /* Tamanho fixo */
+        height: 45px;
+        border-radius: 50%; /* Faz ficar redondo */
+        object-fit: cover; /* Corta a imagem sem esticar */
+        margin-right: 15px;
+        border: 1px solid #eee;
+    }
+    
+    /* Ajuste específico para o header se necessário */
+    .chat-header img {
+        width: 50px;
+        height: 50px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -26,7 +43,13 @@
         {% for conversa in conversas %}
         <div class="chat-item {% if conversa.id|stringformat:'s' == request.GET.conversa_com %}selected{% endif %}">
           <a href="?conversa_com={{ conversa.id }}" style="display: flex; align-items: center; text-decoration: none; color: inherit; width: 100%;">
-            <img src="{% static 'img/user_placeholder.png' %}" alt="{{ conversa.username }}">
+            
+            {% if conversa.foto_perfil %}
+                <img src="{{ conversa.foto_perfil.url }}" alt="{{ conversa.username }}">
+            {% else %}
+                <img src="{% static 'img/user_placeholder.png' %}" alt="{{ conversa.username }}">
+            {% endif %}
+
             <div class="chat-info">
               <div class="chat-top">
                 <span>{{ conversa.first_name|default:conversa.username }}</span>
@@ -50,19 +73,23 @@
   <div class="chat-area">
     {% if destinatario %}
     <div class="chat-header">
-      <img src="{% static 'img/user_placeholder.png' %}" alt="{{ destinatario.username }}">
+      
+      {% if destinatario.foto_perfil %}
+          <img src="{{ destinatario.foto_perfil.url }}" alt="{{ destinatario.username }}">
+      {% else %}
+          <img src="{% static 'img/user_placeholder.png' %}" alt="{{ destinatario.username }}">
+      {% endif %}
+
       <div class="info">
         <span>{{ destinatario.first_name|default:destinatario.username }}</span>
         <small>{{ destinatario.get_tipo_display|default:"Usuário" }}</small>
       </div>
       
-      <!-- Botão dos três pontos -->
       <div class="chat-header-actions">
         <button class="dots-btn" id="dotsBtn">
           <i class="fas fa-ellipsis-v"></i>
         </button>
         
-        <!-- Popup de denúncia -->
         <div class="denuncia-popup" id="denunciaPopup">
           <button class="denuncia-btn" id="denunciaBtn">
             <i class="fas fa-exclamation-triangle"></i>
@@ -72,7 +99,6 @@
       </div>
     </div>
 
-    <!-- Overlay para fechar popup -->
     <div class="overlay" id="overlay"></div>
 
     <div class="chat-messages" id="chat">

@@ -77,6 +77,28 @@
                 <div class="profile-section-divider"></div>
 
                 <div class="profile-form-section">
+                    <h3 class="profile-section-title">Meus Interesses</h3>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Selecione suas áreas de interesse para receber oportunidades personalizadas</p>
+                    
+                    <div class="profile-interesses-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        {% for checkbox in form.interesses %}
+                            <div class="profile-interesse-item" style="display: flex; align-items: center; gap: 8px;">
+                                {{ checkbox.tag }}
+                                <label for="{{ checkbox.id_for_label }}" style="cursor: pointer; margin: 0; font-size: 14px;">
+                                    {{ checkbox.choice_label }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if form.interesses.errors %}
+                        <span class="error-message" style="color: #dc3545; font-size: 12px; margin-top: 5px;">{{ form.interesses.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="profile-section-divider"></div>
+
+                <div class="profile-form-section">
                     <h3 class="profile-section-title">Segurança</h3>
                     <div class="profile-form-group profile-password-group">
                         <label>Senha atual</label>

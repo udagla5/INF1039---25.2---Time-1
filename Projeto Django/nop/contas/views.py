@@ -142,7 +142,10 @@ def perfil_aluno(request):
     if request.method == 'POST':
         form = EditarPerfilForm(request.POST, instance=request.user)
         if form.is_valid():
-            form.save()
+            usuario = form.save(commit=False)
+            usuario.save()
+            # Salvar os interesses (Many-to-Many)
+            form.save_m2m()
             messages.success(request, 'Perfil atualizado com sucesso!')
             return redirect('perfil_aluno')
     else:

@@ -99,6 +99,19 @@
         </section>
         {% endif %}
 
+        {% if oportunidade.related_interests.exists %}
+        <section class="op-section">
+            <h2>Áreas de Interesse</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;">
+                {% for interesse in oportunidade.related_interests.all %}
+                    <span style="background: #031020; color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500;">
+                        {{ interesse.nome }}
+                    </span>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
         <div class="op-actions">
             <button class="btn-candidatar">Candidatar-se</button>
             

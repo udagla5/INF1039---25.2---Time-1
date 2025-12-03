@@ -76,7 +76,7 @@
 
             {# ------------------ 4. OUTROS CAMPOS DE INPUT ------------------ #}
             {% for field in form %}
-                {% if field.name != 'tipo' and field.name != 'titulo' and field.name != 'descricao' and field.name != 'foto' and field.name != 'data_encerramento' %}
+                {% if field.name != 'tipo' and field.name != 'titulo' and field.name != 'descricao' and field.name != 'foto' and field.name != 'data_encerramento' and field.name != 'related_interests' %}
                     <div class="form-group">
                         <label class="opportunity-label" for="{{ field.id_for_label }}">{{ field.label }} {% if field.field.required %}<span class="required">*</span>{% endif %}</label>
                         {{ field }}
@@ -84,6 +84,27 @@
                     </div>
                 {% endif %}
             {% endfor %}
+            
+            {# ------------------ 4.5. INTERESSES RELACIONADOS ------------------ #}
+            <div class="form-group">
+                <label class="opportunity-label">Interesses Relacionados (Opcional)</label>
+                <p style="color: #666; font-size: 13px; margin-bottom: 10px;">Marque os interesses que melhor descrevem esta oportunidade</p>
+                
+                <div class="opportunity-interesses-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; padding: 15px; background: #f8f9fa; border-radius: 6px; max-height: 300px; overflow-y: auto;">
+                    {% for checkbox in form.related_interests %}
+                        <div class="opportunity-interesse-item" style="display: flex; align-items: center; gap: 6px;">
+                            {{ checkbox.tag }}
+                            <label for="{{ checkbox.id_for_label }}" style="cursor: pointer; margin: 0; font-size: 13px;">
+                                {{ checkbox.choice_label }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                {% for error in form.related_interests.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            </div>
             
             {# ------------------ 5. DATA DE ENCERRAMENTO (Fim do Form) ------------------ #}
             <div class="form-group">

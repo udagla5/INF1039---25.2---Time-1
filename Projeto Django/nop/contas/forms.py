@@ -234,9 +234,19 @@ class OportunidadeForm(forms.ModelForm):
 class EditarPerfilForm(forms.ModelForm):
     """Formulário para editar perfil do aluno (perfil_aluno.html)"""
     
+    # Campo para editar interesses
+    interesses = forms.ModelMultipleChoiceField(
+        queryset=Interesse.objects.all().order_by('nome'),
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'form-check-input',
+        }),
+        required=False,
+        label='Meus Interesses'
+    )
+    
     class Meta:
         model = Usuario  # ← Usar Usuario (CustomUser) para acessar todos os campos
-        fields = ['email', 'first_name', 'last_name', 'curso', 'periodo', 'telefone'] # Exemplo de campos relevantes
+        fields = ['email', 'first_name', 'last_name', 'curso', 'periodo', 'telefone', 'interesses'] # Adicionado interesses
         widgets = {
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',

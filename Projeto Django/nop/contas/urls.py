@@ -12,7 +12,6 @@ urlpatterns = [
     path('feed/', views.lista_oportunidades, name='feed'),
 
     # ========== AUTENTICAÇÃO ==========
-    # Rota de login, o NOME da rota é 'login'
     path('login/', views.custom_login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('cadastro1/', views.cadastro1, name='cadastro1'),

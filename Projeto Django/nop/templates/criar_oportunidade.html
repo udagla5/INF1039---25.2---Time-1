@@ -35,10 +35,17 @@
                 
                 <div class="opportunity-activity-group">
                      {# Os valores de data-value devem coincidir com os choices do seu forms.py #}
-                     <button type="button" class="opportunity-activity-btn" data-value="MONITORIA">Monitoria Acadêmica</button>
+                     <button type="button" class="opportunity-activity-btn" data-value="MON">Monitoria Acadêmica</button>
                      <button type="button" class="opportunity-activity-btn" data-value="IC">Iniciação Científica</button>
-                     <button type="button" class="opportunity-activity-btn" data-value="ESTAGIO">Estágio</button>
-                     <button type="button" class="opportunity-activity-btn" data-value="PESQUISA">Laboratório de Pesquisa</button>
+                     <button type="button" class="opportunity-activity-btn" data-value="EST">Estágio</button>
+                     <button type="button" class="opportunity-activity-btn" data-value="LP">Laboratório de Pesquisa</button>
+                     <button type="button" class="opportunity-activity-btn" data-value="TMP">Trabalho Meio Período</button>
+                     <button type="button" class="opportunity-activity-btn" data-value="VOL">Voluntariado</button>
+                     <button type="button" class="opportunity-activity-btn" data-value="PAL">Palestra</button>
+                     <button type="button" class="opportunity-activity-btn" data-value="EQC">Equipe de Competição</button>
+                     <button type="button" class="opportunity-activity-btn" data-value="BOL">Bolsa</button>
+                     <button type="button" class="opportunity-activity-btn" data-value="OUT">Outro</button>
+                
                 </div>
                 {# Mensagem de erro para o campo tipo #}
                 {% for error in form.tipo.errors %}<span class="error-message">{{ error }}</span>{% endfor %}

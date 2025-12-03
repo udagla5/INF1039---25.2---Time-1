@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notificações | NOP{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/notificacoes.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="notifications-wrapper">
+
+    <h2 class="page-title">Notificações</h2>
+
+    <div class="notifications-list" id="notificationsList">
+
+        <div class="notification-item unread" data-id="1">
+            <div class="notification-icon">🔔</div>
+            <div class="notification-content">
+                <p class="notification-text">Seu perfil foi atualizado com sucesso.</p>
+                <span class="notification-time">2 horas atrás</span>
+            </div>
+        </div>
+
+        <div class="notification-item unread" data-id="2">
+            <div class="notification-icon">📌</div>
+            <div class="notification-content">
+                <p class="notification-text">Uma nova oportunidade foi recomendada para você.</p>
+                <span class="notification-time">Ontem</span>
+            </div>
+        </div>
+
+        <div class="notification-item" data-id="3">
+            <div class="notification-icon">💬</div>
+            <div class="notification-content">
+                <p class="notification-text">Você recebeu uma nova mensagem.</p>
+                <span class="notification-time">3 dias atrás</span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const list = document.getElementById("notificationsList");
+
+    if (!list) return;
+
+    list.addEventListener("click", (event) => {
+        const item = event.target.closest(".notification-item");
+        if (!item) return;
+
+        if (item.classList.contains("unread")) {
+            item.classList.remove("unread");
+        }
+    });
+});
+</script>
+{% endblock %}

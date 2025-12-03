@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 
 # Ajuste suas importações de forms conforme o nome real do seu arquivo forms.py
 from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm, ProfessorCadastroFormParte2
-from .models import Oportunidade, Usuario, Mensagem, Favorito
+from .models import Oportunidade, Usuario, Mensagem, Favorito, Notificacao
 
 # ===============================
 # PÁGINAS PRINCIPAIS E AUTENTICAÇÃO
@@ -354,3 +354,9 @@ class ListarUsuariosView(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         return Usuario.objects.exclude(id=self.request.user.id).order_by('username')
+    
+# notificacoes
+
+def notificacoes(request):
+    notificacoes = Notificacao.objects.filter(usuario=request.user)
+    return render(request, 'notificacoes.html', {"notificacoes": notificacoes})

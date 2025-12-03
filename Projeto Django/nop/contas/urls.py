@@ -62,6 +62,9 @@ urlpatterns = [
     path('chat/', views.ChatView.as_view(), name='chat'),
     path('chat/enviar/', views.EnviarMensagemView.as_view(), name='enviar_mensagem'),
     path('chat/usuarios/', views.ListarUsuariosView.as_view(), name='usuarios_chat'),
+
+    # ========== NOTIFICAÇÕES ==========
+    path('notificacoes/', views.notificacoes, name='notificacoes'),
 ]
 
 if settings.DEBUG:

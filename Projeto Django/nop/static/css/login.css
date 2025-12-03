@@ -5,17 +5,8 @@
 
 /* -------------------- LAYOUT GERAL E CENTRALIZAÇÃO -------------------- */
 
-/* O body agora apenas define o fundo e a cor do texto, permitindo que o 
- * base.css (flex-direction: column) e o login.html (main-content) 
- * controlem a centralização abaixo do header. 
- */
-body { 
-    display: flex; /* Mantém o flex para a coluna */
-    margin: 0; 
-    padding: 0; /* O padding deve ser 0 aqui para o layout ocupar toda a tela */
-    background-color: var(--primary-dark); 
-    color: var(--text-light); 
-}
+/* REMOVA o body do login.css - isso será controlado pelo base.css */
+/* MANTER APENAS estilos específicos para a página de login */
 
 .page { 
     width: 100%; 
@@ -24,6 +15,7 @@ body {
     flex-direction: column; 
     align-items: center; 
     gap: 20px;
+    margin: 0 auto; /* Centraliza horizontalmente */
 }
 
 .logo { 
@@ -142,36 +134,45 @@ label {
 }
 
 /* Link Esqueceu a senha */
-/* Se a URL for um placeholder, use o seletor mais específico: */
-.card a[href="{% url 'password_reset' %}"]:not(.close-toast),
-/* Ou se o seu placeholder é apenas "#": */
-.card a[href="#"]:not(.close-toast) { 
+.card a.forgot-password {
     font-size: 0.85rem; 
     color: var(--primary-blue); 
     text-decoration: none;
     font-weight: 500;
 }
 
-.card a[href="{% url 'password_reset' %}"]:hover,
-.card a[href="#"]:hover {
+.card a.forgot-password:hover {
     text-decoration: underline;
 }
 
 /* Linha Divisória */
-/* Seletor mais robusto, caso o style mude, mas mantém o original para segurança: */
-.card > div[style*="height: 1px"], 
-.card > div[style="height: 1px; background: #eee; margin: 20px 0;"] {
-    background: #e0e0e0 !important;
+.divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 20px 0;
+    width: 100%;
 }
 
 /* Link Criar conta */
-.card p a {
+.card .register-link {
+    text-align: center; 
+    color: #666; 
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.card .register-link a {
     color: var(--primary-blue) !important; 
     font-weight: bold;
+    text-decoration: none;
+}
+
+.card .register-link a:hover {
+    text-decoration: underline;
 }
 
 /* Botão Voltar */
-.card button[type="button"] {
+.back-btn {
     width: 100%; 
     padding: 12px; 
     background: transparent; 
@@ -182,62 +183,15 @@ label {
     margin-top: 15px;
     font-weight: 500;
     transition: background-color 0.2s;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
 }
-.card button[type="button"]:hover {
+
+.back-btn:hover {
     background-color: #f0f0f0;
 }
 
-/* -------------------- CSS DO TOAST MESSAGE (Mantido) -------------------- */
-
-.messages-container {
-    position: fixed; 
-    bottom: 30px; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    z-index: 9999; 
-    
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: max-content;
-    max-width: 90%;
-    pointer-events: none; 
-}
-
-.toast-message {
-    background-color: #333;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 50px; 
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    pointer-events: auto; 
-    opacity: 0;
-    animation: slideUp 0.4s ease-out forwards;
-}
-
-.toast-message.error { background-color: #DC2626; } 
-.toast-message.success { background-color: #031020; } 
-.toast-message.warning { background-color: #F59E0B; color: #000; } 
-
-.close-toast {
-    background: none;
-    border: none;
-    color: inherit;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 16px;
-    margin-left: 10px;
-}
-
-@keyframes slideUp {
-    from { transform: translateY(100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
+/* -------------------- CSS DO TOAST MESSAGE (Removido - já está no base) -------------------- */
 
 /* -------------------- RESPONSIVIDADE -------------------- */
 

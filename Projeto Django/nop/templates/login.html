@@ -5,33 +5,32 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
-<link rel="stylesheet" href="{% static 'css/messages.css' %}">
 
 <style>
-/* * Este CSS injetado garante que o conteúdo do 'block content' (main-content) 
- * centralize o card sem ocultar o header. 
- */
+/* ESTILOS ESPECÍFICOS PARA CENTRALIZAR O LOGIN */
+/* O body já tem display: flex e flex-direction: column do base.css */
+
 .main-content {
-    /* O main-content é definido no base.html como flex: 1; display: flex; flex-direction: column; */
-    /* Vamos usá-lo para centralizar o CARD: */
-    align-items: center; /* Centraliza horizontalmente o div.page */
-    justify-content: center; /* Centraliza verticalmente o conteúdo (se houver espaço) */
-    flex-grow: 1; /* Garante que ocupe todo o espaço vertical disponível */
-    padding-top: 50px; /* Adiciona um respiro entre o header e o card */
-    padding-bottom: 50px;
-    background-color: var(--primary-dark); /* Garante que o fundo sob o header seja escuro */
+    /* O base.css já define flex: 1 e display: flex */
+    /* Vamos centralizar o conteúdo vertical e horizontalmente */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: calc(100vh - 70px); /* Altura total menos o header */
+    padding: 20px;
+    background-color: var(--primary-dark);
 }
 
-/* O body tem height: 100% e flex-direction: column em base.css */
-/* O body agora vai ocupar 100% da altura da viewport */
-body {
-    min-height: 100vh;
+/* Garante que o container ocupe toda a altura disponível */
+.page {
+    width: 100%;
+    max-width: 480px;
+    margin: 0;
 }
 </style>
 {% endblock %}
 
 {% block content %}
-  {# O messages-floating é tratado globalmente no base.html, não é necessário aqui. #}
   
   <div class="page">
     <img class="logo" src="{% static 'img/logo-grande.png' %}" alt="NOP Logo" onerror="this.style.display='none'">
@@ -49,9 +48,9 @@ body {
         <label for="{{ form.username.id_for_label }}">Usuário</label>
         {{ form.username }}
         
-        <div style="display: flex; justify-align: space-between; align-items: center; margin-top: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
           <label for="{{ form.password.id_for_label }}">Senha</label>
-          <a href="{% url 'password_reset' %}">Esqueceu a senha?</a>
+          <a href="{% url 'password_reset' %}" class="forgot-password">Esqueceu a senha?</a>
         </div>
         
         <div class="pwd-wrap">
@@ -64,13 +63,13 @@ body {
         <button class="enter-btn" type="submit">Entrar</button>
       </form>
 
-      <div style="height: 1px; background: #eee; margin: 20px 0;"></div>
+      <div class="divider"></div>
 
-      <p style="text-align: center; color: #666; font-size: 0.9rem;">
+      <p class="register-link">
           Não tem uma conta? <a href="{% url 'cadastro1' %}">Criar conta</a>
       </p>
       
-      <button type="button" onclick="window.location.href='{% url 'home' %}'">
+      <button type="button" class="back-btn" onclick="window.location.href='{% url 'home' %}'">
           Voltar para a página inicial
       </button>
     </main>

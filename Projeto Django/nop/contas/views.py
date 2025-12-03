@@ -106,6 +106,7 @@ def cadastro2(request):
         form = InteressesForm(initial={'interesses': interesses_ids})
     
     return render(request, 'cadastro2.html', {'form': form})
+
 def criar_conta(request):
     return redirect('cadastro1')
 
@@ -331,10 +332,23 @@ def lista_oportunidades(request):
     # 6. Filtro por Interesses (Checkbox/Lista)
     interesses_ids = request.GET.getlist('interesses')
     
-    # 🔑 FILTRAGEM POR INTERESSE USANDO A RELAÇÃO M-T-M
-    if interesses_ids:
-        # Filtra oportunidades que possuam QUALQUER UM dos interesses selecionados
-        oportunidades = oportunidades.filter(related_interests__id__in=interesses_ids).distinct()
+    # 🔑 CORREÇÃO CRÍTICA: Verificar se 'tudo' está na lista
+    # Se 'tudo' está presente, IGNORA o filtro por interesses
+    if interesses_ids and 'tudo' not in interesses_ids:
+        try:
+            # Converte todos os IDs para inteiros (garantia)
+            ids_validos = []
+            for id_str in interesses_ids:
+                try:
+                    ids_validos.append(int(id_str))
+                except ValueError:
+                    continue  # Ignora valores não numéricos
+            
+            if ids_validos:
+                # Filtra oportunidades que possuam QUALQUER UM dos interesses selecionados
+                oportunidades = oportunidades.filter(related_interests__id__in=ids_validos).distinct()
+        except Exception:
+            pass  # Em caso de erro, mantém todas as oportunidades
 
     # 7. Contexto
     context = {

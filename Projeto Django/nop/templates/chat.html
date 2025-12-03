@@ -55,7 +55,25 @@
         <span>{{ destinatario.first_name|default:destinatario.username }}</span>
         <small>{{ destinatario.get_tipo_display|default:"Usuário" }}</small>
       </div>
+      
+      <!-- Botão dos três pontos -->
+      <div class="chat-header-actions">
+        <button class="dots-btn" id="dotsBtn">
+          <i class="fas fa-ellipsis-v"></i>
+        </button>
+        
+        <!-- Popup de denúncia -->
+        <div class="denuncia-popup" id="denunciaPopup">
+          <button class="denuncia-btn" id="denunciaBtn">
+            <i class="fas fa-exclamation-triangle"></i>
+            Denunciar Usuário
+          </button>
+        </div>
+      </div>
     </div>
+
+    <!-- Overlay para fechar popup -->
+    <div class="overlay" id="overlay"></div>
 
     <div class="chat-messages" id="chat">
       {% if mensagens %}
@@ -111,6 +129,40 @@
 <script>
 const chat = document.getElementById("chat");
 const form = document.getElementById("mensagemForm");
+const dotsBtn = document.getElementById("dotsBtn");
+const denunciaPopup = document.getElementById("denunciaPopup");
+const denunciaBtn = document.getElementById("denunciaBtn");
+const overlay = document.getElementById("overlay");
+
+// Função para mostrar/ocultar popup de denúncia
+if (dotsBtn && denunciaPopup) {
+    dotsBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        denunciaPopup.classList.toggle("show");
+        overlay.classList.toggle("show");
+    });
+
+    // Botão de denúncia apenas fecha o popup (não faz nada ainda)
+    if (denunciaBtn) {
+        denunciaBtn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            // Aqui no futuro será a lógica de denúncia
+            denunciaPopup.classList.remove("show");
+            overlay.classList.remove("show");
+        });
+    }
+
+    // Fechar popup ao clicar fora
+    overlay.addEventListener("click", function() {
+        denunciaPopup.classList.remove("show");
+        overlay.classList.remove("show");
+    });
+
+    // Prevenir fechamento ao clicar dentro do popup
+    denunciaPopup.addEventListener("click", function(e) {
+        e.stopPropagation();
+    });
+}
 
 // Envio de mensagens via AJAX
 if (form) {

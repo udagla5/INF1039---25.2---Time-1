@@ -1,3 +1,4 @@
+/* cadastro2.css - VERSÃO SIMPLIFICADA */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -17,159 +18,106 @@ body {
 }
 
 .logo-container {
-    margin-bottom: 24px;
+    margin-bottom: 30px;
 }
 
 .main-logo {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    background-color: #e9ecef;
+    width: 100px;
+    height: auto;
 }
 
 .signup-card {
     background-color: #ffffff;
     border: 1px solid #dee2e6;
     border-radius: 12px;
-    padding: 32px;
+    padding: 40px;
     width: 100%;
-    max-width: 550px;
+    max-width: 600px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
 }
 
 .form-title {
     font-size: 24px;
     font-weight: 600;
     text-align: center;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.inline-logo {
-    height: 24px;
-    width: auto;
+    margin-bottom: 30px;
+    color: #333;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    margin-bottom: 25px;
 }
 
 .form-group label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #495057;
-}
-
-.form-group select {
-    width: 100%;
-    padding: 12px 16px;
+    display: block;
     font-size: 16px;
-    font-family: 'Inter', sans-serif;
-    color: #495057;
-    border: 1px solid #ced4da;
-    border-radius: 8px;
-    background-color: #ffffff;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 5L8 10L3 5" stroke="%236c757d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
 }
 
-.form-group select:invalid {
-    color: #6c757d;
-}
-
-/* CONTAINER DOS INTERESSES */
-.interests-container {
-    border: 1px solid #ced4da;
+/* ESTILOS DOS CHECKBOXES */
+.interesses-container {
+    border: 1px solid #dee2e6;
     border-radius: 8px;
-    padding: 16px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    max-height: 200px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    max-height: 300px;
     overflow-y: auto;
 }
 
-/* ESTILIZAÇÃO DO ITEM INDIVIDUAL (O contêiner da tag) */
-.interest-tag-wrapper { 
-    font-family: 'Inter', sans-serif;
-    background-color: #ffffff;
-    border: 1px solid #adb5bd;
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #495057;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
+.interesses-checkbox {
     display: flex;
     align-items: center;
-    line-height: 1;
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: white;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s;
 }
 
-.interest-tag-wrapper:hover {
+.interesses-checkbox:hover {
     background-color: #f1f3f5;
-    border-color: #868e96;
+    border-color: #ced4da;
 }
 
-/* Oculta o input real, mantendo-o funcional e invisível */
-.interest-tag-wrapper input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    pointer-events: none;
-}
-
-/* Estiliza a label para se parecer com a tag (já que o input está oculto) */
-.interest-tag-wrapper label {
+.interesses-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 12px;
     cursor: pointer;
-    /* Reset de estilos da label do form-group */
-    margin: 0; 
-    padding: 0;
-    color: inherit;
-    font-weight: inherit;
-    font-size: inherit;
+    accent-color: #3b82f6;
 }
 
-/* ESTADO SELECIONADO (Aplicado ao wrapper pelo JS quando o checkbox está checked) */
-.interest-tag-wrapper.selected { 
-    background-color: #e7f5ff;
-    border-color: #4dabf7;
-    color: #1971c2;
+.interesses-checkbox label {
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    flex-grow: 1;
 }
 
-
+/* BOTÃO */
 .submit-btn {
     width: 100%;
-    padding: 14px;
+    padding: 16px;
     font-size: 16px;
     font-weight: 600;
-    font-family: 'Inter', sans-serif;
     color: #ffffff;
     background-color: #3b82f6;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-top: 8px;
+    transition: all 0.2s;
+    margin-top: 20px;
 }
 
 .submit-btn:hover {
     background-color: #2563eb;
+}
+
+.error {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 5px;
 }

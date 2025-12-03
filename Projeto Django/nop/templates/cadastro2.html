@@ -8,6 +8,32 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    /* Garantir que checkboxes sejam visíveis */
+    .interesses-container {
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+    
+    .interesses-checkbox {
+        margin-bottom: 10px;
+    }
+    
+    .interesses-checkbox input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+    
+    .interesses-checkbox label {
+        cursor: pointer;
+        font-size: 14px;
+        color: #333;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -36,13 +62,12 @@
         {% endif %}
 
         <div class="form-group">
-            {{ form.interesses.label_tag }} 
+            {{ form.interesses.label_tag }}
             
-            <div class="interests-container">
-                {% for opcao in form.interesses %}
-                    <div class="interest-tag-wrapper">
-                        {{ opcao.tag }}
-                        <label for="{{ opcao.id_for_label }}">{{ opcao.choice_label }}</label>
+            <div class="interesses-container">
+                {% for checkbox in form.interesses %}
+                    <div class="interesses-checkbox">
+                        {{ checkbox }}
                     </div>
                 {% endfor %}
             </div>
@@ -56,43 +81,4 @@
 
     </form>
 </main>
-{% endblock %}
-    
-{% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const wrappers = document.querySelectorAll('.interest-tag-wrapper');
-        
-        wrappers.forEach(wrapper => {
-            const checkbox = wrapper.querySelector('input[type="checkbox"]');
-            
-            // 1. Inicializa o estado visual baseado no estado do checkbox
-            if (checkbox.checked) {
-                wrapper.classList.add('selected');
-            }
-
-            // 2. Adiciona listener no wrapper para alternar o estado visual
-            wrapper.addEventListener('click', function(e) {
-                // Se o clique não foi no próprio checkbox, alterna o estado
-                if (e.target.tagName !== 'INPUT') {
-                    checkbox.checked = !checkbox.checked;
-                }
-                
-                // Alterna a classe 'selected' no wrapper
-                wrapper.classList.toggle('selected', checkbox.checked);
-            });
-            
-            // 3. Listener extra para sincronizar o estado
-            checkbox.addEventListener('change', function() {
-                wrapper.classList.toggle('selected', this.checked);
-            });
-        });
-    });
-
-    const mensagemSucesso = document.querySelector(".alert-success");
-    if (mensagemSucesso) {
-        // Exemplo de alerta, pode ser removido ou alterado para um modal
-        // alert("Cadastro concluído com sucesso!"); 
-    }
-</script>
 {% endblock %}

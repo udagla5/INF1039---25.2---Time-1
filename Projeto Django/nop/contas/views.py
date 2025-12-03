@@ -72,28 +72,34 @@ def cadastro2(request):
     if not request.user.is_authenticated:
         messages.warning(request, "Você precisa estar logado para selecionar seus interesses.")
         return redirect('login')
-        
-    # Agora é seguro acessar request.user.interesses
-    # Inicializa o formulário com os interesses atuais do usuário (para pré-seleção)
-    user_interesses_ids = list(request.user.interesses.values_list('id', flat=True))
+    
+    # Obtém o usuário REAL do banco de dados (não o request.user simples)
+    usuario = Usuario.objects.get(id=request.user.id)
     
     if request.method == 'POST':
         form = InteressesForm(request.POST)
         if form.is_valid():
             interesses_selecionados = form.cleaned_data.get('interesses')
             if interesses_selecionados:
-                request.user.interesses.set(interesses_selecionados) 
-            else:
-                request.user.interesses.clear()
+                # LIMPA os interesses existentes e adiciona os novos
+                usuario.interesses.clear()
+                for interesse in interesses_selecionados:
+                    usuario.interesses.add(interesse)
                 
-            messages.success(request, 'Interesses salvos com sucesso!')
-            return redirect('feed')
+                usuario.save()  # SALVA as alterações
+                messages.success(request, 'Interesses salvos com sucesso!')
+                return redirect('feed')
+            else:
+                usuario.interesses.clear()
+                usuario.save()
+                messages.info(request, 'Nenhum interesse selecionado.')
+                return redirect('feed')
     else:
-        # Inicializa o formulário com os interesses atuais do usuário
-        form = InteressesForm(initial={'interesses': user_interesses_ids})
-        
+        # Pega os IDs dos interesses atuais do usuário
+        interesses_ids = list(usuario.interesses.values_list('id', flat=True))
+        form = InteressesForm(initial={'interesses': interesses_ids})
+    
     return render(request, 'cadastro2.html', {'form': form})
-
 def criar_conta(request):
     return redirect('cadastro1')
 

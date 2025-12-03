@@ -67,12 +67,21 @@ class InteressesForm(forms.Form):
     """Formulário de seleção de interesses (cadastro2.html)"""
     
     interesses = forms.ModelMultipleChoiceField(
-        queryset=Interesse.objects.all().order_by('nome'), # Busca todos os interesses
-        widget=forms.CheckboxSelectMultiple(attrs={'class': 'interesses-checkbox'}),
+        queryset=Interesse.objects.all().order_by('nome'),
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'form-check-input',  # Adiciona classe
+            'style': 'margin-right: 8px;'  # Estilo inline
+        }),
         required=False,
         label='Selecione seus interesses'
     )
-
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Força os checkboxes a serem renderizados como <input> visíveis
+        self.fields['interesses'].widget.choices = [
+            (obj.id, obj.nome) for obj in Interesse.objects.all()
+        ]
 # ===============================
 # cadastro3.html - PARTE 2 (Professor/Gestor)
 # ===============================

@@ -60,22 +60,28 @@
                     
                     <div class="profile-form-group">
                         <label for="username">Seu username</label>
-                        <input type="text" id="username" name="username" value="{{ user.username }}">
+                        <input type="text" id="username" name="username" value="{{ user.username }}" disabled>
+                        <small style="color: #666; font-size: 12px;">O username não pode ser alterado</small>
                     </div>
 
-                    <div class="profile-form-group">
-                        <label for="email-institucional">Email institucional</label>
-                        <input type="email" id="email-institucional" name="email-institucional" value="{{ user.email }}">
-                    </div>
-
-                    <div class="profile-form-group">
-                        <label for="telefone">Telefone</label>
-                        <input type="tel" id="telefone" name="telefone" placeholder="(21) 99999-9999" onkeyup="formatPhone(this)">
-                    </div>
+                    {% for field in form %}
+                        {% if field.name not in 'interesses' %}
+                        <div class="profile-form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                {% for error in field.errors %}
+                                    <span class="error-message" style="color: #dc3545; font-size: 12px;">{{ error }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
 
                 <div class="profile-section-divider"></div>
 
+                {% if not is_professor %}
                 <div class="profile-form-section">
                     <h3 class="profile-section-title">Meus Interesses</h3>
                     <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Selecione suas áreas de interesse para receber oportunidades personalizadas</p>
@@ -97,6 +103,7 @@
                 </div>
 
                 <div class="profile-section-divider"></div>
+                {% endif %}
 
                 <div class="profile-form-section">
                     <h3 class="profile-section-title">Segurança</h3>

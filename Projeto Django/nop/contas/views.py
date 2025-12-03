@@ -9,11 +9,12 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 
 # Importações dos seus modelos e forms
-from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm, ProfessorCadastroFormParte2, BuscaOportunidadeForm
-from .models import Oportunidade, Usuario, Mensagem, Favorito, Interesse
-# Ajuste suas importações de forms conforme o nome real do seu arquivo forms.py
-from .forms import OportunidadeForm, CustomLoginForm, InteressesForm, EditarPerfilForm, UsuarioForm, MensagemForm, ProfessorCadastroFormParte2
-from .models import Oportunidade, Usuario, Mensagem, Favorito, Notificacao
+from .forms import (
+    OportunidadeForm, CustomLoginForm, InteressesForm, 
+    EditarPerfilForm, EditarPerfilProfessorForm, UsuarioForm, 
+    MensagemForm, ProfessorCadastroFormParte2, BuscaOportunidadeForm
+)
+from .models import Oportunidade, Usuario, Mensagem, Favorito, Interesse, Notificacao
 
 # ===============================
 # PÁGINAS PRINCIPAIS E AUTENTICAÇÃO
@@ -75,6 +76,11 @@ def cadastro2(request):
     
     # Obtém o usuário REAL do banco de dados (não o request.user simples)
     usuario = Usuario.objects.get(id=request.user.id)
+    
+    # 🔑 APENAS ALUNOS SELECIONAM INTERESSES
+    if usuario.tipo == 'PROFESSOR':
+        messages.info(request, 'Professores não precisam selecionar interesses.')
+        return redirect('feed')
     
     if request.method == 'POST':
         form = InteressesForm(request.POST)
@@ -138,19 +144,31 @@ def custom_logout(request):
 
 @login_required
 def perfil_aluno(request):
-    # AQUI: Usa o formulário EditarPerfilForm que agora usa o modelo Usuario
+    # Determina qual formulário usar baseado no tipo de usuário
+    if request.user.tipo == 'PROFESSOR':
+        FormClass = EditarPerfilProfessorForm
+    else:
+        FormClass = EditarPerfilForm
+    
     if request.method == 'POST':
-        form = EditarPerfilForm(request.POST, instance=request.user)
+        form = FormClass(request.POST, instance=request.user)
         if form.is_valid():
             usuario = form.save(commit=False)
             usuario.save()
-            # Salvar os interesses (Many-to-Many)
-            form.save_m2m()
+            # Salvar os interesses (Many-to-Many) - APENAS PARA ALUNOS
+            if request.user.tipo != 'PROFESSOR':
+                form.save_m2m()
             messages.success(request, 'Perfil atualizado com sucesso!')
             return redirect('perfil_aluno')
     else:
-        form = EditarPerfilForm(instance=request.user)
-    return render(request, 'perfil_aluno.html', {'form': form})
+        form = FormClass(instance=request.user)
+    
+    # Adiciona informação sobre tipo de usuário ao contexto
+    context = {
+        'form': form,
+        'is_professor': request.user.tipo == 'PROFESSOR'
+    }
+    return render(request, 'perfil_aluno.html', context)
 
 @login_required
 def perfil_aluno_parte2(request):
@@ -205,6 +223,9 @@ def criar_oportunidade(request):
             # SALVANDO RELAÇÃO MANY-TO-MANY (Interesses)
             form.save_m2m() # Salva as relações M2M (como related_interests)
             
+            # CRIAR NOTIFICAÇÕES para usuários interessados
+            notificar_nova_oportunidade(oportunidade)
+            
             messages.success(request, 'Oportunidade criada com sucesso!')
             return redirect('feed') 
     else:
@@ -245,8 +266,13 @@ def remover_salva(request, id):
 @login_required
 def favoritar_oportunidade(request, id):
     oportunidade = get_object_or_404(Oportunidade, pk=id)
-    Favorito.objects.get_or_create(usuario=request.user, oportunidade=oportunidade) 
-    messages.success(request, 'Oportunidade salva com sucesso! 🎉')
+    favorito, created = Favorito.objects.get_or_create(usuario=request.user, oportunidade=oportunidade)
+    
+    if created:
+        messages.success(request, 'Oportunidade salva com sucesso! 🎉')
+    else:
+        messages.info(request, 'Você já salvou esta oportunidade.')
+    
     return redirect('oportunidades_salvas')
 
 # ===============================
@@ -381,6 +407,10 @@ class EnviarMensagemView(LoginRequiredMixin, TemplateView):
                 mensagem.remetente = request.user
                 mensagem.destinatario = destinatario
                 mensagem.save()
+                
+                # CRIAR NOTIFICAÇÃO para o destinatário
+                notificar_nova_mensagem(request.user, destinatario)
+                
                 return JsonResponse({
                     'success': True,
                     'mensagem': {
@@ -402,9 +432,103 @@ class ListarUsuariosView(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         return Usuario.objects.exclude(id=self.request.user.id).order_by('username')
-    
-# notificacoes
 
+# ===============================
+# SISTEMA DE NOTIFICAÇÕES
+# ===============================
+
+@login_required
 def notificacoes(request):
-    notificacoes = Notificacao.objects.filter(usuario=request.user)
-    return render(request, 'notificacoes.html', {"notificacoes": notificacoes})
+    """Exibe todas as notificações do usuário"""
+    notificacoes = Notificacao.objects.filter(usuario=request.user).order_by('-data')
+    
+    # Conta notificações não lidas
+    nao_lidas = notificacoes.filter(lida=False).count()
+    
+    context = {
+        'notificacoes': notificacoes,
+        'nao_lidas': nao_lidas,
+    }
+    return render(request, 'notificacoes.html', context)
+
+@login_required
+def marcar_notificacao_lida(request, id):
+    """Marca uma notificação como lida"""
+    notificacao = get_object_or_404(Notificacao, id=id, usuario=request.user)
+    notificacao.lida = True
+    notificacao.save()
+    return JsonResponse({'success': True})
+
+@login_required
+def marcar_todas_lidas(request):
+    """Marca todas as notificações como lidas"""
+    Notificacao.objects.filter(usuario=request.user, lida=False).update(lida=True)
+    messages.success(request, 'Todas as notificações foram marcadas como lidas.')
+    return redirect('notificacoes')
+
+@login_required
+def deletar_notificacao(request, id):
+    """Deleta uma notificação"""
+    notificacao = get_object_or_404(Notificacao, id=id, usuario=request.user)
+    notificacao.delete()
+    messages.success(request, 'Notificação removida.')
+    return redirect('notificacoes')
+
+@login_required
+def limpar_notificacoes(request):
+    """Remove todas as notificações lidas"""
+    Notificacao.objects.filter(usuario=request.user, lida=True).delete()
+    messages.success(request, 'Notificações lidas foram removidas.')
+    return redirect('notificacoes')
+
+# ===============================
+# FUNÇÕES AUXILIARES PARA CRIAR NOTIFICAÇÕES
+# ===============================
+
+def criar_notificacao(usuario, mensagem, tipo='info'):
+    """
+    Cria uma notificação para um usuário
+    Tipos: 'info', 'success', 'warning', 'error'
+    """
+    Notificacao.objects.create(
+        usuario=usuario,
+        mensagem=mensagem
+    )
+
+def notificar_nova_oportunidade(oportunidade):
+    """Notifica alunos interessados sobre nova oportunidade"""
+    # Encontra alunos com interesses relacionados
+    interesses_oportunidade = oportunidade.related_interests.all()
+    
+    if interesses_oportunidade.exists():
+        # Busca usuários que têm esses interesses
+        usuarios_interessados = Usuario.objects.filter(
+            interesses__in=interesses_oportunidade,
+            tipo__in=['ALUNO', 'ALUNO_EXTERNO']
+        ).exclude(id=oportunidade.criador.id).distinct()
+        
+        for usuario in usuarios_interessados:
+            mensagem = f"Nova oportunidade de {oportunidade.get_tipo_display()}: {oportunidade.titulo}"
+            criar_notificacao(usuario, mensagem)
+
+def notificar_favorito_atualizado(oportunidade, tipo_atualizacao):
+    """Notifica usuários que favoritaram uma oportunidade sobre atualizações"""
+    usuarios_favoritos = Usuario.objects.filter(
+        favorito__oportunidade=oportunidade
+    ).distinct()
+    
+    mensagens = {
+        'editada': f'A oportunidade "{oportunidade.titulo}" que você salvou foi atualizada.',
+        'encerrada': f'A oportunidade "{oportunidade.titulo}" foi encerrada.',
+        'vagas': f'Novas vagas disponíveis em "{oportunidade.titulo}"!',
+    }
+    
+    mensagem = mensagens.get(tipo_atualizacao, f'Atualização em "{oportunidade.titulo}"')
+    
+    for usuario in usuarios_favoritos:
+        criar_notificacao(usuario, mensagem)
+
+def notificar_nova_mensagem(remetente, destinatario):
+    """Notifica sobre nova mensagem recebida"""
+    mensagem = f"Você recebeu uma nova mensagem de {remetente.username}"
+    criar_notificacao(destinatario, mensagem)

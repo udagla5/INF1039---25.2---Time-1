@@ -228,13 +228,13 @@ class OportunidadeForm(forms.ModelForm):
                 field.widget.attrs.update({'class': 'opportunity-input'})
 
 # ===============================
-# perfil_aluno.html - RF17
+# perfil_aluno.html - RF17 - APENAS ALUNOS
 # ===============================
 
 class EditarPerfilForm(forms.ModelForm):
-    """Formulário para editar perfil do aluno (perfil_aluno.html)"""
+    """Formulário para editar perfil do aluno (perfil_aluno.html) - APENAS ALUNOS"""
     
-    # Campo para editar interesses
+    # Campo para editar interesses (APENAS ALUNOS)
     interesses = forms.ModelMultipleChoiceField(
         queryset=Interesse.objects.all().order_by('nome'),
         widget=forms.CheckboxSelectMultiple(attrs={
@@ -245,8 +245,8 @@ class EditarPerfilForm(forms.ModelForm):
     )
     
     class Meta:
-        model = Usuario  # ← Usar Usuario (CustomUser) para acessar todos os campos
-        fields = ['email', 'first_name', 'last_name', 'curso', 'periodo', 'telefone', 'interesses'] # Adicionado interesses
+        model = Usuario
+        fields = ['email', 'first_name', 'last_name', 'curso', 'periodo', 'telefone', 'interesses']
         widgets = {
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',
@@ -267,6 +267,43 @@ class EditarPerfilForm(forms.ModelForm):
             'periodo': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Período'
+            }),
+            'telefone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Telefone'
+            }),
+        }
+
+# ===============================
+# perfil - PROFESSORES (SEM INTERESSES)
+# ===============================
+
+class EditarPerfilProfessorForm(forms.ModelForm):
+    """Formulário para editar perfil do professor - SEM INTERESSES"""
+    
+    class Meta:
+        model = Usuario
+        fields = ['email', 'first_name', 'last_name', 'cursos_atuacao', 'cargos', 'telefone']
+        widgets = {
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'E-mail'
+            }),
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Nome'
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Sobrenome'
+            }),
+            'cursos_atuacao': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Cursos de Atuação'
+            }),
+            'cargos': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Cargos'
             }),
             'telefone': forms.TextInput(attrs={
                 'class': 'form-control',

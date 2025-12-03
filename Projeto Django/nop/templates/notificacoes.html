@@ -5,44 +5,114 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/notificacoes.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 {% endblock %}
 
 {% block content %}
 <div class="notifications-wrapper">
 
-    <h2 class="page-title">Notificações</h2>
+    <div class="notifications-header">
+        <h2 class="page-title">Notificações</h2>
+        <div class="notifications-actions">
+            {% if nao_lidas > 0 %}
+                <a href="{% url 'marcar_todas_lidas' %}" class="btn-action" title="Marcar todas como lidas">
+                    <i class="fas fa-check-double"></i> Marcar todas como lidas
+                </a>
+            {% endif %}
+            <a href="{% url 'limpar_notificacoes' %}" class="btn-action btn-danger" title="Limpar notificações lidas" onclick="return confirm('Deseja remover todas as notificações lidas?')">
+                <i class="fas fa-trash"></i> Limpar lidas
+            </a>
+        </div>
+    </div>
+
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if nao_lidas > 0 %}
+        <div class="notifications-summary">
+            <i class="fas fa-bell"></i> Você tem <strong>{{ nao_lidas }}</strong> notificação(ões) não lida(s)
+        </div>
+    {% endif %}
 
     <div class="notifications-list" id="notificationsList">
-
-        <div class="notification-item unread" data-id="1">
-            <div class="notification-icon">🔔</div>
-            <div class="notification-content">
-                <p class="notification-text">Seu perfil foi atualizado com sucesso.</p>
-                <span class="notification-time">2 horas atrás</span>
+        {% if notificacoes %}
+            {% for notificacao in notificacoes %}
+                <div class="notification-item {% if not notificacao.lida %}unread{% endif %}" data-id="{{ notificacao.id }}">
+                    <div class="notification-icon">
+                        {% if 'mensagem' in notificacao.mensagem|lower %}
+                            💬
+                        {% elif 'oportunidade' in notificacao.mensagem|lower %}
+                            📌
+                        {% elif 'atualização' in notificacao.mensagem|lower %}
+                            🔔
+                        {% elif 'encerrada' in notificacao.mensagem|lower %}
+                            ⏰
+                        {% elif 'vagas' in notificacao.mensagem|lower %}
+                            🎯
+                        {% else %}
+                            🔔
+                        {% endif %}
+                    </div>
+                    <div class="notification-content">
+                        <p class="notification-text">{{ notificacao.mensagem }}</p>
+                        <span class="notification-time">{{ notificacao.data|timesince }} atrás</span>
+                    </div>
+                    <div class="notification-actions">
+                        {% if not notificacao.lida %}
+                            <button class="btn-mark-read" onclick="marcarComoLida({{ notificacao.id }})" title="Marcar como lida">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        {% endif %}
+                        <a href="{% url 'deletar_notificacao' notificacao.id %}" class="btn-delete" title="Remover" onclick="return confirm('Deseja remover esta notificação?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-notifications">
+                <i class="fas fa-bell-slash" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
+                <p>Você não tem notificações no momento.</p>
             </div>
-        </div>
-
-        <div class="notification-item unread" data-id="2">
-            <div class="notification-icon">📌</div>
-            <div class="notification-content">
-                <p class="notification-text">Uma nova oportunidade foi recomendada para você.</p>
-                <span class="notification-time">Ontem</span>
-            </div>
-        </div>
-
-        <div class="notification-item" data-id="3">
-            <div class="notification-icon">💬</div>
-            <div class="notification-content">
-                <p class="notification-text">Você recebeu uma nova mensagem.</p>
-                <span class="notification-time">3 dias atrás</span>
-            </div>
-        </div>
-
+        {% endif %}
     </div>
 
 </div>
 
 <script>
+function marcarComoLida(notificacaoId) {
+    fetch(`/notificacoes/marcar-lida/${notificacaoId}/`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const item = document.querySelector(`.notification-item[data-id="${notificacaoId}"]`);
+            if (item) {
+                item.classList.remove('unread');
+                const btnMarkRead = item.querySelector('.btn-mark-read');
+                if (btnMarkRead) {
+                    btnMarkRead.remove();
+                }
+            }
+            // Recarrega a página para atualizar o contador
+            setTimeout(() => location.reload(), 500);
+        }
+    })
+    .catch(error => console.error('Erro:', error));
+}
+
+// Marcar como lida ao clicar na notificação
 document.addEventListener("DOMContentLoaded", () => {
     const list = document.getElementById("notificationsList");
 
@@ -52,8 +122,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const item = event.target.closest(".notification-item");
         if (!item) return;
 
+        // Não marcar como lida se clicar nos botões de ação
+        if (event.target.closest('.notification-actions')) return;
+
+        const notificacaoId = item.getAttribute('data-id');
+        
         if (item.classList.contains("unread")) {
-            item.classList.remove("unread");
+            marcarComoLida(notificacaoId);
         }
     });
 });

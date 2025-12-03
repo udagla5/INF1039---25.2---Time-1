@@ -65,6 +65,10 @@ urlpatterns = [
 
     # ========== NOTIFICAÇÕES ==========
     path('notificacoes/', views.notificacoes, name='notificacoes'),
+    path('notificacoes/marcar-lida/<int:id>/', views.marcar_notificacao_lida, name='marcar_notificacao_lida'),
+    path('notificacoes/marcar-todas-lidas/', views.marcar_todas_lidas, name='marcar_todas_lidas'),
+    path('notificacoes/deletar/<int:id>/', views.deletar_notificacao, name='deletar_notificacao'),
+    path('notificacoes/limpar/', views.limpar_notificacoes, name='limpar_notificacoes'),
 ]
 
 if settings.DEBUG:

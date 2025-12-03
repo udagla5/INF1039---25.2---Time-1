@@ -26,6 +26,7 @@ class Usuario(AbstractUser):
     cursos_atuacao = models.CharField(max_length=255, verbose_name='Curso(s) de Atuação', blank=True, null=True)
     cargos = models.CharField(max_length=255, verbose_name='Cargo(s)', blank=True, null=True)
 
+    # RELACIONAMENTO M-T-M PARA INTERESSES DO USUÁRIO
     interesses = models.ManyToManyField('Interesse', blank=True, related_name='usuarios')
 
     REQUIRED_FIELDS = ['email']
@@ -39,6 +40,10 @@ class Interesse(models.Model):
 
     def __str__(self):
         return self.nome
+        
+    class Meta:
+        verbose_name = "Interesse"
+        verbose_name_plural = "Interesses"
 
 # ===============================
 # 2️⃣ OPORTUNIDADES
@@ -48,7 +53,7 @@ class Oportunidade(models.Model):
     titulo = models.CharField(max_length=100)
     descricao = models.TextField(max_length=5000)
     
-    # === NOVO CAMPO DE FOTO ===
+    # === CAMPO DE FOTO ===
     foto = models.ImageField(upload_to='oportunidades/', blank=True, null=True, verbose_name='Imagem de Capa')
 
     TIPO_CHOICES = [
@@ -87,6 +92,9 @@ class Oportunidade(models.Model):
         choices=[('PENDENTE', 'Pendente'), ('APROVADA', 'Aprovada'), ('ENCERRADA', 'Encerrada')],
         default='APROVADA' 
     )
+    
+    # NOVO CAMPO: RELACIONAMENTO M-T-M PARA INTERESSES DA OPORTUNIDADE
+    related_interests = models.ManyToManyField('Interesse', blank=True, related_name='oportunidades') 
 
     class Meta:
         verbose_name = "Oportunidade"

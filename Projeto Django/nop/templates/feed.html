@@ -125,12 +125,8 @@
 
 <main class="feed" id="conteudo" role="main">
     {% if filtros_selecionados.busca %}
-    <div class="busca-info" style="margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 4px;">
+    <div class="busca-info" style="margin: 10px 0; padding: 10px; border-radius: 4px;">
         Resultados para: <strong>{{ filtros_selecionados.busca }}</strong>
-        {% if request.GET %}
-        <a href="{% url 'feed' %}{% if request.GET.tipo %}?{% for key, value in request.GET.items %}{% if key != 'busca' %}{{ key }}={{ value }}{% if not forloop.last %}&{% endif %}{% endif %}{% endfor %}{% endif %}" 
-           style="margin-left: 10px; color: #666; text-decoration: none;">✕ Limpar busca</a>
-        {% endif %}
     </div>
     {% endif %}
     

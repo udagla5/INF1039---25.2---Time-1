@@ -30,7 +30,7 @@
 <div class="overlay" id="overlay"></div>
 
 <div class="filter-modal" id="filterModal">
-    <form method="GET" action="{% url 'feed' %}">
+    <form method="GET" action="{% url 'feed' %}" id="filterForm">
         <input type="hidden" name="busca" value="{{ filtros_selecionados.busca|default:'' }}">
         
         <div class="filter-modal-header">
@@ -56,7 +56,6 @@
                     <label><input type="checkbox" name="tipo" value="BOL" {% if 'BOL' in filtros_selecionados.tipos %}checked{% endif %}> Bolsa</label>
                     <label><input type="checkbox" name="tipo" value="LP" {% if 'LP' in filtros_selecionados.tipos %}checked{% endif %}> Laboratório de Pesquisa</label>
                     <label><input type="checkbox" name="tipo" value="OUT" {% if 'OUT' in filtros_selecionados.tipos %}checked{% endif %}> Outro</label>
-                
                 </div>
             </div>
 
@@ -104,29 +103,49 @@
                 </div>
             </div>
 
-            <div class="filter-column">
+            <div class="filter-column interesses-column">
                 <h3>INTERESSES</h3>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" name="interesses" value="meus" {% if 'meus' in filtros_selecionados.interesses %}checked{% endif %}> Meus interesses</label>
-                    
-                    <label><input type="checkbox" name="interesses" value="tudo" {% if not filtros_selecionados.interesses or 'tudo' in filtros_selecionados.interesses %}checked{% endif %}> Tudo</label>
+                
+                <div class="interesses-search-container">
+                    <input type="text" 
+                           id="interesses-search" 
+                           class="interesses-search-input" 
+                           placeholder="Pesquisar interesses...">
+                    <svg class="interesses-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                
+                <div class="interesses-scroll-container">
+                    <div class="interesses-checkbox-group" id="interesses-list">
+                        <label>
+                            <input type="checkbox" name="interesses" value="meus" {% if 'meus' in filtros_selecionados.interesses %}checked{% endif %}>
+                            Meus interesses
+                        </label>
+                        
+                        <label>
+                            <input type="checkbox" name="interesses" value="tudo" {% if not filtros_selecionados.interesses or 'tudo' in filtros_selecionados.interesses %}checked{% endif %}>
+                            Tudo
+                        </label>
 
-                    {% for interesse in todos_interesses %}
-                    <label>
-                        <input type="checkbox" 
-                            name="interesses" 
-                            value="{{ interesse.id }}" 
-                            {% if interesse.id|stringformat:"s" in filtros_selecionados.interesses %}
-                                checked
-                            {% endif %}>
-                        {{ interesse.nome }}
-                    </label>
-                    {% endfor %}
+                        {% for interesse in todos_interesses %}
+                        <label class="interesse-item" data-interesse-nome="{{ interesse.nome|lower }}">
+                            <input type="checkbox" 
+                                   name="interesses" 
+                                   value="{{ interesse.id }}" 
+                                   {% if interesse.id|stringformat:"s" in filtros_selecionados.interesses %}
+                                       checked
+                                   {% endif %}>
+                            {{ interesse.nome }}
+                        </label>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div style="margin-top: 40px; text-align: right;">
+        <div style="margin-top: 40px; padding: 0 30px 30px; text-align: right;">
             <a href="{% url 'feed' %}" style="margin-right: 20px; color: #666; text-decoration: none; font-size: 14px;">Limpar Filtros</a>
             <button type="submit" style="background: #031020; color: white; padding: 10px 30px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer;">
                 APLICAR FILTROS
@@ -251,7 +270,6 @@
         // pois ela causava conflito ao forçar a submissão do formulário.
         // A busca será acionada apenas pelo clique no ícone/botão de busca ou ENTER, 
         // e o autocomplete AJAX do base.html continua funcionando para sugestões.
-        
     });
 
     function initDualSlider(minInputId, maxInputId, rangeBarId, displayMinId, displayMaxId, prefix, suffix) {
@@ -282,9 +300,47 @@
         updateSlider();
     }
 
+    // Função de filtro para interesses
+    function initInteressesSearch() {
+        const searchInput = document.getElementById('interesses-search');
+        const interesseItems = document.querySelectorAll('.interesse-item');
+        
+        if (!searchInput) return;
+        
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            
+            interesseItems.forEach(item => {
+                const interesseNome = item.getAttribute('data-interesse-nome');
+                
+                if (searchTerm === '' || interesseNome.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+        
+        // Limpar busca quando o modal é fechado
+        closeFilter.addEventListener('click', function() {
+            searchInput.value = '';
+            interesseItems.forEach(item => {
+                item.style.display = 'flex';
+            });
+        });
+        
+        overlay.addEventListener('click', function() {
+            searchInput.value = '';
+            interesseItems.forEach(item => {
+                item.style.display = 'flex';
+            });
+        });
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         initDualSlider("min-rem", "max-rem", "rem-range-bar", "display-min-rem", "display-max-rem", "R$ ", "");
         initDualSlider("min-horas", "max-horas", "horas-range-bar", "display-min-horas", "display-max-horas", "", "h");
+        initInteressesSearch();
     });
 </script>
 {% endblock %}

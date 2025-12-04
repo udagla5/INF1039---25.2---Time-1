@@ -20,8 +20,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    /* Alteração: Aumentado o max-width para dar mais espaço às 5 colunas */
-    max-width: 1200px; 
+    max-width: 1500px; 
     max-height: 90vh; /* Leve aumento na altura máxima também */
     background: white;
     border-radius: 12px;
@@ -138,6 +137,7 @@
     background: #ddd;
     border-radius: 2px;
     transform: translateY(-50%);
+    margin-top: -20px;
 }
 
 .slider-range {
@@ -147,6 +147,7 @@
     background: #3b82f6;
     border-radius: 2px;
     transform: translateY(-50%);
+    margin-top: -20px;
 }
 
 .range-input {
@@ -193,7 +194,7 @@
 .slider-values {
     display: flex;
     justify-content: space-between;
-    margin-top: 15px;
+    margin-top: 20px;
     font-size: 13px;
     color: #666;
 }
@@ -202,8 +203,9 @@
 /* AJUSTE PARA INTERESSES: Ocupar a largura total e isolar o scroll */
 /* --------------------------------------------------- */
 .interesses-column {
-    grid-column: 1 / 6; /* Ocupa as 5 colunas em telas grandes */
+    grid-column: span 1; /* Ocupa as 5 colunas em telas grandes */
     height: 100%; 
+    display: flex;
 }
 
 /* Barra de pesquisa dentro da caixinha */

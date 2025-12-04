@@ -69,6 +69,8 @@ urlpatterns = [
     path('notificacoes/marcar-todas-lidas/', views.marcar_todas_lidas, name='marcar_todas_lidas'),
     path('notificacoes/deletar/<int:id>/', views.deletar_notificacao, name='deletar_notificacao'),
     path('notificacoes/limpar/', views.limpar_notificacoes, name='limpar_notificacoes'),
+
+    path('busca/ajax/', views.busca_oportunidades_ajax, name='busca_oportunidades_ajax'),
 ]
 
 if settings.DEBUG:

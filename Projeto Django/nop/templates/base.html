@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -7,6 +8,56 @@
     <title>{% block title %}NOP{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Adicionar CSS para autocomplete -->
+    <style>
+        .autocomplete-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .autocomplete-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .autocomplete-suggestion {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+        
+        .autocomplete-suggestion:hover {
+            background-color: #f5f9ff;
+        }
+        
+        .autocomplete-suggestion.active {
+            background-color: #e8f0fe;
+        }
+        
+        .autocomplete-suggestion .title {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .autocomplete-suggestion .details {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+    </style>
+    
     {% block extra_css %}{% endblock %}
     
     <style>
@@ -47,8 +98,6 @@
         .btn-close-toast { background: none; border: none; color: inherit; cursor: pointer; font-size: 16px; opacity: 0.8; padding: 0 5px; }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes fadeOut { to { opacity: 0; transform: translateY(-20px); } }
-        
-        /* O CSS da busca foi removido daqui e movido para o base.css */
     </style>
 </head>
 <body>
@@ -73,19 +122,24 @@
             </div>
             
             <div class="header-search">
-                <form method="GET" action="{% url 'feed' %}" class="search-form">
+                <form method="GET" action="{% url 'feed' %}" class="search-form" id="header-search-form">
                     <button type="submit" class="search-submit">
                         <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                     </button>
-                    <input type="text" 
-                           name="busca" 
-                           class="search-input" 
-                           placeholder="Buscar oportunidades..." 
-                           value="{{ request.GET.busca|default:'' }}"
-                           onkeypress="if(event.keyCode == 13) this.form.submit();">
+                    <div class="autocomplete-container">
+                        <input type="text" 
+                               name="busca" 
+                               class="search-input" 
+                               placeholder="Buscar oportunidades..." 
+                               value="{{ request.GET.busca|default:'' }}"
+                               id="header-search-input"
+                               autocomplete="off"
+                               data-search-url="{% url 'busca_oportunidades_ajax' %}">
+                        <div class="autocomplete-suggestions" id="header-autocomplete"></div>
+                    </div>
                 </form>
             </div>
             
@@ -172,8 +226,8 @@
             
             if (searchInput) {
                 searchInput.addEventListener('focus', function() {
-                    searchForm.style.borderColor = 'var(--primary-blue)'; // Usando a variável
-                    searchForm.style.boxShadow = '0 0 0 2px rgba(99, 149, 255, 0.3)'; // Sombra com a cor primária
+                    searchForm.style.borderColor = 'var(--primary-blue)';
+                    searchForm.style.boxShadow = '0 0 0 2px rgba(99, 149, 255, 0.3)';
                 });
                 
                 searchInput.addEventListener('blur', function() {
@@ -187,7 +241,131 @@
                     searchInput.select();
                 }
             }
+            
+            // Inicializar autocomplete para a busca do header
+            initializeSearchAutocomplete();
         });
+        
+        // Função para inicializar o autocomplete
+        function initializeSearchAutocomplete() {
+            const searchInput = document.getElementById('header-search-input');
+            const autocompleteDiv = document.getElementById('header-autocomplete');
+            const searchUrl = searchInput.dataset.searchUrl;
+            
+            if (!searchInput || !autocompleteDiv || !searchUrl) return;
+            
+            let debounceTimer;
+            let selectedIndex = -1;
+            
+            // Função para buscar sugestões
+            function fetchSuggestions(query) {
+                if (query.length < 2) {
+                    autocompleteDiv.style.display = 'none';
+                    return;
+                }
+                
+                fetch(`${searchUrl}?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.results && data.results.length > 0) {
+                            displaySuggestions(data.results);
+                        } else {
+                            autocompleteDiv.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar sugestões:', error);
+                        autocompleteDiv.style.display = 'none';
+                    });
+            }
+            
+            // Função para exibir sugestões
+            function displaySuggestions(results) {
+                autocompleteDiv.innerHTML = '';
+                selectedIndex = -1;
+                
+                results.forEach((result, index) => {
+                    const suggestion = document.createElement('div');
+                    suggestion.className = 'autocomplete-suggestion';
+                    suggestion.dataset.index = index;
+                    
+                    suggestion.innerHTML = `
+                        <div class="title">${result.titulo}</div>
+                        <div class="details">
+                            ${result.tipo} • ${result.local || ''} • 
+                            ${result.remuneracao > 0 ? 'R$ ' + result.remuneracao : 'Voluntário'}
+                        </div>
+                    `;
+                    
+                    suggestion.addEventListener('click', function() {
+                        // Preencher o campo e redirecionar para a página da oportunidade
+                        searchInput.value = result.titulo;
+                        autocompleteDiv.style.display = 'none';
+                        window.location.href = result.url;
+                    });
+                    
+                    suggestion.addEventListener('mouseenter', function() {
+                        setSelectedIndex(index);
+                    });
+                    
+                    autocompleteDiv.appendChild(suggestion);
+                });
+                
+                autocompleteDiv.style.display = 'block';
+            }
+            
+            // Função para definir item selecionado
+            function setSelectedIndex(index) {
+                // Remover classe active de todos
+                const allSuggestions = autocompleteDiv.querySelectorAll('.autocomplete-suggestion');
+                allSuggestions.forEach(s => s.classList.remove('active'));
+                
+                // Adicionar classe ao selecionado
+                if (index >= 0 && index < allSuggestions.length) {
+                    allSuggestions[index].classList.add('active');
+                    selectedIndex = index;
+                }
+            }
+            
+            // Evento de input com debounce
+            searchInput.addEventListener('input', function(e) {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    fetchSuggestions(e.target.value);
+                }, 300);
+            });
+            
+            // Evento de teclado
+            searchInput.addEventListener('keydown', function(e) {
+                const suggestions = autocompleteDiv.querySelectorAll('.autocomplete-suggestion');
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = Math.min(selectedIndex + 1, suggestions.length - 1);
+                    setSelectedIndex(selectedIndex);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = Math.max(selectedIndex - 1, -1);
+                    setSelectedIndex(selectedIndex);
+                } else if (e.key === 'Enter' && selectedIndex >= 0) {
+                    e.preventDefault();
+                    if (suggestions[selectedIndex]) {
+                        suggestions[selectedIndex].click();
+                    }
+                } else if (e.key === 'Escape') {
+                    autocompleteDiv.style.display = 'none';
+                    selectedIndex = -1;
+                }
+            });
+            
+            // Fechar autocomplete ao clicar fora
+            document.addEventListener('click', function(e) {
+                if (!autocompleteDiv.contains(e.target) && e.target !== searchInput) {
+                    autocompleteDiv.style.display = 'none';
+                    selectedIndex = -1;
+                }
+            });
+        }
     </script>
 </body>
 </html>

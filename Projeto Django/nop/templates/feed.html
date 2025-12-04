@@ -31,7 +31,6 @@
 
 <div class="filter-modal" id="filterModal">
     <form method="GET" action="{% url 'feed' %}">
-        <!-- Campo hidden para manter a busca -->
         <input type="hidden" name="busca" value="{{ filtros_selecionados.busca|default:'' }}">
         
         <div class="filter-modal-header">
@@ -108,8 +107,21 @@
             <div class="filter-column">
                 <h3>INTERESSES</h3>
                 <div class="checkbox-group">
-                    <label><input type="checkbox" name="interesses" value="meus" {% if 'meus' == filtros_selecionados.interesses %}checked{% endif %}> Meus interesses</label>
-                    <label><input type="checkbox" name="interesses" value="tudo" {% if not filtros_selecionados.interesses or 'tudo' == filtros_selecionados.interesses %}checked{% endif %}> Tudo</label>
+                    <label><input type="checkbox" name="interesses" value="meus" {% if 'meus' in filtros_selecionados.interesses %}checked{% endif %}> Meus interesses</label>
+                    
+                    <label><input type="checkbox" name="interesses" value="tudo" {% if not filtros_selecionados.interesses or 'tudo' in filtros_selecionados.interesses %}checked{% endif %}> Tudo</label>
+
+                    {% for interesse in todos_interesses %}
+                    <label>
+                        <input type="checkbox" 
+                            name="interesses" 
+                            value="{{ interesse.id }}" 
+                            {% if interesse.id|stringformat:"s" in filtros_selecionados.interesses %}
+                                checked
+                            {% endif %}>
+                        {{ interesse.nome }}
+                    </label>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -234,24 +246,12 @@
                 if (form) form.submit();
             });
         });
-
-        // Adiciona o campo de busca ao formulário de filtros se não existir
-        const filterForm = document.querySelector('.filter-modal form');
-        if (filterForm) {
-            // Verifica se já existe um campo busca
-            const buscaInput = filterForm.querySelector('input[name="busca"]');
-            if (!buscaInput) {
-                // Pega o valor da busca da URL atual ou do input existente
-                const urlParams = new URLSearchParams(window.location.search);
-                const buscaValue = urlParams.get('busca') || '';
-                
-                const hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = 'busca';
-                hiddenInput.value = buscaValue;
-                filterForm.appendChild(hiddenInput);
-            }
-        }
+        
+        // 🔑 CORREÇÃO: Removemos a lógica de Live Search JS daqui, 
+        // pois ela causava conflito ao forçar a submissão do formulário.
+        // A busca será acionada apenas pelo clique no ícone/botão de busca ou ENTER, 
+        // e o autocomplete AJAX do base.html continua funcionando para sugestões.
+        
     });
 
     function initDualSlider(minInputId, maxInputId, rangeBarId, displayMinId, displayMaxId, prefix, suffix) {

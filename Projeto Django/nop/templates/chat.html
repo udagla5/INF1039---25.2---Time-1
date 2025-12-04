@@ -1,3 +1,5 @@
+[file name]: chat.html
+[file content begin]
 {% extends "base.html" %}
 {% load static %}
 
@@ -33,12 +35,15 @@
       <a href="{% url 'feed' %}" class="back-btn">
         <i class="fa-solid fa-arrow-left"></i>
       </a>
-      <input type="text" placeholder="Procure uma conversa">
+      <div style="flex: 1; position: relative;">
+        <input type="text" id="chat-search-input" placeholder="Procure uma conversa" autocomplete="off">
+        <div class="autocomplete-suggestions" id="chat-autocomplete" style="top: 100%; left: 0; right: 0; z-index: 1000;"></div>
+      </div>
       <a href="{% url 'usuarios_chat' %}" style="margin-left: 10px; color: #007bff; text-decoration: none;">
         <i class="fa-solid fa-plus"></i>
       </a>
     </div>
-    <div class="chat-list">
+    <div class="chat-list" id="chat-list">
       {% if conversas %}
         {% for conversa in conversas %}
         <div class="chat-item {% if conversa.id|stringformat:'s' == request.GET.conversa_com %}selected{% endif %}">
@@ -153,6 +158,73 @@
 {% endblock %}
 {% block extra_js %}
 <script>
+// Inicializar autocomplete para busca no chat
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('chat-search-input');
+    const autocompleteDiv = document.getElementById('chat-autocomplete');
+    const chatList = document.getElementById('chat-list');
+    
+    if (searchInput && autocompleteDiv) {
+        let debounceTimer;
+        
+        // Função para filtrar conversas localmente
+        function filterConversas(query) {
+            const conversas = chatList.querySelectorAll('.chat-item');
+            let hasMatches = false;
+            
+            if (query.length < 2) {
+                // Mostrar todas as conversas
+                conversas.forEach(conv => {
+                    conv.style.display = 'flex';
+                });
+                autocompleteDiv.style.display = 'none';
+                return;
+            }
+            
+            const lowerQuery = query.toLowerCase();
+            conversas.forEach(conv => {
+                const nome = conv.querySelector('.chat-top span').textContent.toLowerCase();
+                const tipo = conv.querySelector('.chat-info small').textContent.toLowerCase();
+                
+                if (nome.includes(lowerQuery) || tipo.includes(lowerQuery)) {
+                    conv.style.display = 'flex';
+                    hasMatches = true;
+                } else {
+                    conv.style.display = 'none';
+                }
+            });
+            
+            // Mostrar mensagem se não houver resultados
+            if (!hasMatches) {
+                autocompleteDiv.innerHTML = `
+                    <div class="autocomplete-suggestion">
+                        <div class="title">Nenhuma conversa encontrada</div>
+                        <div class="details">Tente buscar por nome ou tipo de usuário</div>
+                    </div>
+                `;
+                autocompleteDiv.style.display = 'block';
+            } else {
+                autocompleteDiv.style.display = 'none';
+            }
+        }
+        
+        // Evento de input com debounce
+        searchInput.addEventListener('input', function(e) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                filterConversas(e.target.value);
+            }, 300);
+        });
+        
+        // Fechar autocomplete ao clicar fora
+        document.addEventListener('click', function(e) {
+            if (!autocompleteDiv.contains(e.target) && e.target !== searchInput) {
+                autocompleteDiv.style.display = 'none';
+            }
+        });
+    }
+});
+
 const chat = document.getElementById("chat");
 const form = document.getElementById("mensagemForm");
 const dotsBtn = document.getElementById("dotsBtn");
@@ -271,3 +343,4 @@ atualizarMensagens();
 </script>
 
 {% endblock %}
+[file content end]

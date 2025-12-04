@@ -281,21 +281,53 @@ def favoritar_oportunidade(request, id):
 # ===============================
 
 @login_required
+@login_required
 def lista_oportunidades(request):
     # 1. Busca inicial ordenada por data de publicação
     oportunidades = Oportunidade.objects.all().order_by('-data_publicacao')
 
     # 2. Filtro de Texto (BUSCA) - AGORA MAIS COMPLETO
     busca = request.GET.get('busca')
+    
+    # 🔑 NOVO: Normalizar o termo de busca para comparar com códigos de tipo
+    tipos_mapeados = {
+        'MONITORIA': 'MON',
+        'ESTAGIO': 'EST',
+        'INICIACAO CIENTIFICA': 'IC',
+        'TRABALHO MEIO PERIODO': 'TMP',
+        'VOLUNTARIADO': 'VOL',
+        'PALESTRA': 'PAL',
+        'EQUIPE DE COMPETICAO': 'EQC',
+        'BOLSA': 'BOL',
+        'LABORATORIO DE PESQUISA': 'LP',
+        'OUTRO': 'OUT',
+        # Adicione mais mapeamentos conforme necessário (em português e sem acento)
+    }
+    
+    tipo_busca_codificado = ''
     if busca:
-        oportunidades = oportunidades.filter(
+        busca_upper = busca.upper().replace('ÃO', 'AO').replace('Ç', 'C').replace('Í', 'I').strip()
+        
+        for nome_completo, codigo in tipos_mapeados.items():
+            if busca_upper in nome_completo or codigo in busca_upper:
+                tipo_busca_codificado = codigo
+                break
+
+    if busca:
+        query = (
             Q(titulo__icontains=busca) | 
             Q(descricao__icontains=busca) |
             Q(local__icontains=busca) |
             Q(cursos_elegiveis__icontains=busca) |
-            Q(tipo__icontains=busca) |
-            Q(related_interests__nome__icontains=busca)  # Busca por interesses
-        ).distinct()
+            Q(related_interests__nome__icontains=busca) # Busca por interesses
+        )
+        
+        # 🔑 CORREÇÃO: Adicionar filtro por código de tipo se encontrado
+        if tipo_busca_codificado:
+             query = query | Q(tipo__icontains=tipo_busca_codificado)
+        
+        # Filtro final
+        oportunidades = oportunidades.filter(query).distinct()
 
     # 3. Filtro por Tipo (Checkbox)
     tipos = request.GET.getlist('tipo')
@@ -354,25 +386,31 @@ def lista_oportunidades(request):
             # 'compativel' pode ser uma lógica mais complexa que você precisa definir
 
     # 7. Filtro por Interesses (Checkbox/Lista)
-    interesses_ids = request.GET.getlist('interesses')
+    interesses_selecionados = request.GET.getlist('interesses') # Pega 'meus', 'tudo' ou IDs
     
-    # 🔑 CORREÇÃO CRÍTICA: Verificar se 'tudo' está na lista
+    ids_para_filtrar = []
+
     # Se 'tudo' está presente, IGNORA o filtro por interesses
-    if interesses_ids and 'tudo' not in interesses_ids:
-        try:
-            # Converte todos os IDs para inteiros (garantia)
-            ids_validos = []
-            for id_str in interesses_ids:
-                try:
-                    ids_validos.append(int(id_str))
-                except ValueError:
-                    continue  # Ignora valores não numéricos
-            
-            if ids_validos:
-                # Filtra oportunidades que possuam QUALQUER UM dos interesses selecionados
-                oportunidades = oportunidades.filter(related_interests__id__in=ids_validos).distinct()
-        except Exception:
-            pass  # Em caso de erro, mantém todas as oportunidades
+    if interesses_selecionados and 'tudo' not in interesses_selecionados:
+        
+        # 7a. Lógica para o checkbox "Meus interesses"
+        if 'meus' in interesses_selecionados and request.user.tipo in ['ALUNO', 'ALUNO_EXTERNO']:
+            # Pega os IDs dos interesses do usuário
+            ids_de_usuario = list(request.user.interesses.values_list('id', flat=True))
+            ids_para_filtrar.extend(ids_de_usuario)
+
+        # 7b. Adiciona quaisquer outros IDs de interesse selecionados (que não são 'meus' ou 'tudo')
+        for id_str in interesses_selecionados:
+            try:
+                # Se for um ID de interesse (inteiro)
+                ids_para_filtrar.append(int(id_str))
+            except ValueError:
+                # Ignora valores não numéricos, como 'meus' ou 'tudo'
+                continue  
+
+        # Filtra oportunidades que possuam QUALQUER UM dos interesses selecionados
+        if ids_para_filtrar:
+            oportunidades = oportunidades.filter(related_interests__id__in=ids_para_filtrar).distinct()
 
     # 8. Contexto
     context = {
@@ -381,7 +419,7 @@ def lista_oportunidades(request):
         'favoritos_ids': Favorito.objects.filter(usuario=request.user).values_list('oportunidade_id', flat=True) if request.user.is_authenticated else [],
         'filtros_selecionados': {
             'tipos': tipos,
-            'interesses': interesses_ids, # IDs selecionados para manter o estado do filtro
+            'interesses': interesses_selecionados, # Strings: ['meus', '2', '3']
             'min_remuneracao': min_rem if min_rem else '0',
             'max_remuneracao': max_rem if max_rem else '5000',
             'min_horas': min_horas if min_horas else '0',
@@ -572,3 +610,34 @@ def notificar_nova_mensagem(remetente, destinatario):
     """Notifica sobre nova mensagem recebida"""
     mensagem = f"Você recebeu uma nova mensagem de {remetente.username}"
     criar_notificacao(destinatario, mensagem)
+
+
+@login_required
+def busca_oportunidades_ajax(request):
+    """View para busca AJAX de oportunidades (autocomplete)"""
+    query = request.GET.get('q', '').strip()
+    
+    if len(query) < 2:
+        return JsonResponse({'success': False, 'error': 'Termo muito curto'})
+    
+    # Filtra oportunidades com base na query
+    oportunidades = Oportunidade.objects.filter(
+        Q(titulo__icontains=query) | 
+        Q(descricao__icontains=query) |
+        Q(local__icontains=query) |
+        Q(cursos_elegiveis__icontains=query) |
+        Q(tipo__icontains=query)
+    )[:10]  # Limita a 10 resultados
+    
+    results = []
+    for op in oportunidades:
+        results.append({
+            'id': op.id,
+            'titulo': op.titulo,
+            'tipo': op.get_tipo_display(),
+            'local': op.local,
+            'remuneracao': op.remuneracao,
+            'url': reverse_lazy('detalhe_oportunidade', kwargs={'id': op.id})
+        })
+    
+    return JsonResponse({'success': True, 'results': results})

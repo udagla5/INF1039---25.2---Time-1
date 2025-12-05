@@ -8,32 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-    /* Garantir que checkboxes sejam visíveis */
-    .interesses-container {
-        border: 1px solid #ced4da;
-        border-radius: 8px;
-        padding: 20px;
-        background-color: #f8f9fa;
-    }
-    
-    .interesses-checkbox {
-        margin-bottom: 10px;
-    }
-    
-    .interesses-checkbox input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        margin-right: 10px;
-        cursor: pointer;
-    }
-    
-    .interesses-checkbox label {
-        cursor: pointer;
-        font-size: 14px;
-        color: #333;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -81,4 +55,41 @@
 
     </form>
 </main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const interesseContainers = document.querySelectorAll('.interesses-checkbox');
+
+        // Itera sobre todos os containers de checkbox/chip
+        interesseContainers.forEach(container => {
+            const checkbox = container.querySelector('input[type="checkbox"]');
+            const label = container.querySelector('label');
+
+            if (checkbox && label) {
+                
+                // 1. Função para atualizar o visual do chip
+                function updateChipAppearance() {
+                    if (checkbox.checked) {
+                        // Adiciona a classe 'selected-chip' ao label para reforçar o estilo
+                        label.classList.add('selected-chip');
+                    } else {
+                        // Remove a classe se não estiver checado
+                        label.classList.remove('selected-chip');
+                    }
+                }
+
+                // 2. Manipula o clique no container (ou label)
+                // O evento 'change' do input é mais confiável, pois é disparado quando o estado muda
+                // seja por clique direto no input ou no label associado.
+                checkbox.addEventListener('change', updateChipAppearance);
+
+                // 3. Inicializa o visual no carregamento da página
+                // (Importante se o Django pré-seleciona interesses no formulário)
+                updateChipAppearance(); 
+            }
+        });
+    });
+</script>
 {% endblock %}

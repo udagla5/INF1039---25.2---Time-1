@@ -206,7 +206,12 @@ class BuscaOportunidadeForm(forms.Form):
 # ===============================
 
 class OportunidadeForm(forms.ModelForm):
-    # ... (related_interests)
+    related_interests = forms.ModelMultipleChoiceField(
+        queryset=Interesse.objects.all().order_by('nome'),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label='Interesses Relacionados'
+    )
     
     # Add cursos_elegiveis as ModelMultipleChoiceField
     cursos_elegiveis = forms.ModelMultipleChoiceField(

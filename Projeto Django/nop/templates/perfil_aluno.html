@@ -7,19 +7,6 @@
 <link rel="stylesheet" href="{% static 'css/perfil_aluno_style.css' %}">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-    /* Garante que a foto de perfil fique redonda e não esticada */
-    .profile-avatar-img, .profile-modal-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-    /* Remove estilos conflitantes se houver */
-    .profile-edit-container .profile-avatar {
-        width: auto !important; height: auto !important;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -60,6 +47,7 @@
                     
                     <div class="profile-form-group">
                         <label for="username">Seu username</label>
+                        <!-- O campo username é apenas para exibição e é desabilitado -->
                         <input type="text" id="username" name="username" value="{{ user.username }}" disabled>
                         <small style="color: #666; font-size: 12px;">O username não pode ser alterado</small>
                     </div>
@@ -86,11 +74,13 @@
                     <h3 class="profile-section-title">Meus Interesses</h3>
                     <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Selecione suas áreas de interesse para receber oportunidades personalizadas</p>
                     
-                    <div class="profile-interesses-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <!-- NOVO CONTAINER DE INTERESSES (CHIPS) -->
+                    <div class="profile-interesses-container"> 
                         {% for checkbox in form.interesses %}
-                            <div class="profile-interesse-item" style="display: flex; align-items: center; gap: 8px;">
-                                {{ checkbox.tag }}
-                                <label for="{{ checkbox.id_for_label }}" style="cursor: pointer; margin: 0; font-size: 14px;">
+                            <!-- Ajustado para usar a nova classe e estrutura de chip -->
+                            <div class="profile-interesse-item">
+                                {{ checkbox.tag }} 
+                                <label for="{{ checkbox.id_for_label }}" style="cursor: pointer; margin: 0;">
                                     {{ checkbox.choice_label }}
                                 </label>
                             </div>
@@ -107,6 +97,7 @@
 
                 <div class="profile-form-section">
                     <h3 class="profile-section-title">Segurança</h3>
+                    <!-- OBS: Campos de senha não estão vinculados ao ModelForm, precisam de manipulação customizada no Django para salvar -->
                     <div class="profile-form-group profile-password-group">
                         <label>Senha atual</label>
                         <input type="password" id="senhaAntigaInput" name="senha-antiga" placeholder="Digite a sua senha atual">
@@ -128,6 +119,7 @@
     </main>
 </div>
 
+<!-- Modal de Edição de Avatar (mantido inalterado) -->
 <div id="avatarEditModal" class="profile-modal">
     <div class="profile-modal-content">
         <span class="profile-modal-close-btn">&times;</span>
@@ -157,81 +149,126 @@
 
 {% block extra_js %}
 <script>
-    // Formatação de telefone
-    function formatPhone(input) {
-        let value = input.value.replace(/\D/g, "");
-        let formattedValue = '';
-        if (value.length > 0) formattedValue = '(' + value.substring(0, 2);
-        if (value.length > 2) formattedValue += ') ' + value.substring(2, 7);
-        if (value.length > 7) formattedValue += '-' + value.substring(7, 11);
-        input.value = formattedValue.substring(0, 15);
-    }
-
-    // Toggle de senha
-    function setupPasswordToggle(toggleId, inputId) {
-        const toggleButton = document.getElementById(toggleId);
-        const passwordInput = document.getElementById(inputId);
-        if(toggleButton && passwordInput){
-            toggleButton.addEventListener('click', function() {
-                const type = passwordInput.type === 'password' ? 'text' : 'password';
-                passwordInput.type = type;
-                const icon = this.querySelector('i');
-                icon.classList.toggle('fa-eye');
-                icon.classList.toggle('fa-eye-slash');
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // Formatação de telefone
+        const telefoneInput = document.getElementById('id_telefone');
+        if (telefoneInput) {
+            telefoneInput.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, "");
+                let formattedValue = '';
+                if (value.length > 0) formattedValue = '(' + value.substring(0, 2);
+                if (value.length > 2) formattedValue += ') ' + value.substring(2, 7);
+                if (value.length > 7) formattedValue += '-' + value.substring(7, 11);
+                this.value = formattedValue.substring(0, 15);
             });
         }
-    }
-    setupPasswordToggle('toggleSenhaAntiga', 'senhaAntigaInput');
-    setupPasswordToggle('toggleSenhaNova', 'senhaNovaInput');
 
-    // MODAL DE UPLOAD
-    const modal = document.getElementById('avatarEditModal');
-    const btnCamera = document.querySelector('.profile-edit-avatar-btn');
-    const spanClose = document.querySelector('.profile-modal-close-btn');
-    const avatarFileInput = document.getElementById('avatarFileInput');
-    const changeImageBtn = document.getElementById('changeImageBtn');
-    const saveImageBtn = document.getElementById('saveImageBtn');
-    const avatarPreviewContainer = document.querySelector('.profile-modal-avatar-preview');
 
-    if(btnCamera) {
-        btnCamera.addEventListener('click', () => { 
-            modal.style.display = 'block'; 
-            saveImageBtn.style.display = 'none';
-        });
-    }
-    if(spanClose) {
-        spanClose.addEventListener('click', () => { modal.style.display = 'none'; });
-    }
-    window.addEventListener('click', (event) => {
-        if (event.target == modal) modal.style.display = 'none';
-    });
+        // Toggle de senha (Mantido)
+        function setupPasswordToggle(toggleId, inputId) {
+            const toggleButton = document.getElementById(toggleId);
+            const passwordInput = document.getElementById(inputId);
+            if(toggleButton && passwordInput){
+                toggleButton.addEventListener('click', function() {
+                    const type = passwordInput.type === 'password' ? 'text' : 'password';
+                    passwordInput.type = type;
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('fa-eye');
+                    icon.classList.toggle('fa-eye-slash');
+                });
+            }
+        }
+        setupPasswordToggle('toggleSenhaAntiga', 'senhaAntigaInput');
+        setupPasswordToggle('toggleSenhaNova', 'senhaNovaInput');
 
-    if(changeImageBtn) {
-        changeImageBtn.addEventListener('click', () => avatarFileInput.click());
-    }
+        // --- LÓGICA DE SELEÇÃO DOS CHIPS DE INTERESSE ---
+        const interesseItems = document.querySelectorAll('.profile-interesse-item');
+        
+        interesseItems.forEach(item => {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            const label = item.querySelector('label');
 
-    if(avatarFileInput) {
-        avatarFileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    let defaultAvatar = document.getElementById('modalAvatarPreviewDefault');
-                    if (defaultAvatar) defaultAvatar.remove();
-
-                    let imgElement = document.getElementById('modalAvatarPreviewImg');
-                    if (!imgElement) {
-                        imgElement = document.createElement('img');
-                        imgElement.id = 'modalAvatarPreviewImg';
-                        imgElement.classList.add('profile-modal-img');
-                        avatarPreviewContainer.appendChild(imgElement);
+            if (checkbox && label) {
+                
+                // 1. Função para garantir que o estilo CSS seja aplicado no carregamento (se já estiver checked)
+                function updateChipAppearance() {
+                    if (checkbox.checked) {
+                        label.classList.add('selected-chip');
+                    } else {
+                        label.classList.remove('selected-chip');
                     }
-                    imgElement.src = e.target.result;
-                    saveImageBtn.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
+                }
+                
+                // 2. Manipula o clique no item (necessário porque o input está oculto)
+                item.addEventListener('click', (e) => {
+                    // Impede que o clique na label padrão dispare duas vezes
+                    if (e.target !== checkbox && e.target !== label) {
+                        checkbox.checked = !checkbox.checked;
+                        // Dispara o evento 'change' para que o CSS :checked seja reavaliado
+                        checkbox.dispatchEvent(new Event('change')); 
+                    }
+                });
+                
+                // 3. Garante que o CSS mude o estilo ao interagir (em navegadores que não suportam :checked + label perfeitamente)
+                checkbox.addEventListener('change', updateChipAppearance);
+                
+                // 4. Inicializa o estado visual
+                updateChipAppearance(); 
             }
         });
-    }
+
+
+        // --- LÓGICA DO MODAL DE UPLOAD (Mantido) ---
+        const modal = document.getElementById('avatarEditModal');
+        const btnCamera = document.querySelector('.profile-edit-avatar-btn');
+        const spanClose = document.querySelector('.profile-modal-close-btn');
+        const avatarFileInput = document.getElementById('avatarFileInput');
+        const changeImageBtn = document.getElementById('changeImageBtn');
+        const saveImageBtn = document.getElementById('saveImageBtn');
+        const avatarPreviewContainer = document.querySelector('.profile-modal-avatar-preview');
+
+        if(btnCamera) {
+            btnCamera.addEventListener('click', () => { 
+                modal.style.display = 'block'; 
+                // Inicialmente esconde o botão de salvar
+                saveImageBtn.style.display = 'none'; 
+            });
+        }
+        if(spanClose) {
+            spanClose.addEventListener('click', () => { modal.style.display = 'none'; });
+        }
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) modal.style.display = 'none';
+        });
+
+        if(changeImageBtn) {
+            changeImageBtn.addEventListener('click', () => avatarFileInput.click());
+        }
+
+        if(avatarFileInput) {
+            avatarFileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        let defaultAvatar = document.getElementById('modalAvatarPreviewDefault');
+                        if (defaultAvatar) defaultAvatar.remove();
+
+                        let imgElement = document.getElementById('modalAvatarPreviewImg');
+                        if (!imgElement) {
+                            imgElement = document.createElement('img');
+                            imgElement.id = 'modalAvatarPreviewImg';
+                            imgElement.classList.add('profile-modal-img');
+                            avatarPreviewContainer.appendChild(imgElement);
+                        }
+                        imgElement.src = e.target.result;
+                        saveImageBtn.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    });
 </script>
 {% endblock %}

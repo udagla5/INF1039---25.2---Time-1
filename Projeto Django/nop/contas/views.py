@@ -288,7 +288,6 @@ def favoritar_oportunidade(request, id):
 # ===============================
 
 @login_required
-@login_required
 def lista_oportunidades(request):
     # 1. Busca inicial ordenada por data de publicação
     oportunidades = Oportunidade.objects.all().order_by('-data_publicacao')
@@ -313,6 +312,7 @@ def lista_oportunidades(request):
     
     tipo_busca_codificado = ''
     if busca:
+        # Lógica para normalizar o termo de busca
         busca_upper = busca.upper().replace('ÃO', 'AO').replace('Ç', 'C').replace('Í', 'I').strip()
         
         for nome_completo, codigo in tipos_mapeados.items():
@@ -320,20 +320,24 @@ def lista_oportunidades(request):
                 tipo_busca_codificado = codigo
                 break
 
-    if busca:
+        # AQUI ESTÁ O BLOCO DE CORREÇÃO
         query = (
             Q(titulo__icontains=busca) | 
             Q(descricao__icontains=busca) |
             Q(local__icontains=busca) |
-            Q(cursos_elegiveis__icontains=busca) |
-            Q(related_interests__nome__icontains=busca) # Busca por interesses
+            
+            # ✅ CORREÇÃO APLICADA: Assume-se que o modelo Curso tem um campo 'nome'
+            Q(cursos_elegiveis__nome__icontains=busca) | 
+            
+            # Este já estava correto, pois atravessa a relação Many-to-Many 'related_interests' para o campo 'nome' do modelo 'Interesse'
+            Q(related_interests__nome__icontains=busca) 
         )
         
         # 🔑 CORREÇÃO: Adicionar filtro por código de tipo se encontrado
         if tipo_busca_codificado:
              query = query | Q(tipo__icontains=tipo_busca_codificado)
         
-        # Filtro final
+        # Filtro final (Linha 336 da sua trace original)
         oportunidades = oportunidades.filter(query).distinct()
 
     # 3. Filtro por Tipo (Checkbox)
@@ -632,7 +636,10 @@ def busca_oportunidades_ajax(request):
         Q(titulo__icontains=query) | 
         Q(descricao__icontains=query) |
         Q(local__icontains=query) |
-        Q(cursos_elegiveis__icontains=query) |
+        
+        # ✅ CORREÇÃO APLICADA AQUI TAMBÉM
+        Q(cursos_elegiveis__nome__icontains=query) | 
+        
         Q(tipo__icontains=query)
     )[:10]  # Limita a 10 resultados
     

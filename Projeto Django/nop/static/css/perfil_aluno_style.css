@@ -1,4 +1,3 @@
-/* perfil_aluno_style.css - CLASSES ESPECÍFICAS PARA EVITAR CONFLITOS */
 
 .profile-edit-container {
     max-width: 100%;
@@ -168,22 +167,37 @@
     margin-bottom: 8px;
 }
 
-.profile-form-group input {
+.profile-form-group input,
+.profile-form-group select, /* ESTILO PARA COMBOBOX */
+.profile-form-group textarea {
     width: 100%;
     padding: 12px 15px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #ced4da; /* Cor de borda mais clara */
     border-radius: var(--border-radius);
     font-size: 14px;
     outline: none;
     color: var(--text-dark);
     background: var(--background-light);
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
     font-family: 'Inter', sans-serif;
+    
+    /* Remove a seta nativa do SELECT */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    /* Adiciona ícone de seta customizado para SELECT */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2399a8bd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
 }
 
-.profile-form-group input:focus {
+.profile-form-group input:focus,
+.profile-form-group select:focus,
+.profile-form-group textarea:focus {
     border-color: var(--primary-blue);
-    box-shadow: 0 0 0 2px rgba(99, 149, 255, 0.1);
+    box-shadow: 0 0 0 2px rgba(99, 149, 255, 0.3);
 }
 
 /* GRUPOS DE SENHA */
@@ -208,36 +222,57 @@
     z-index: 2;
 }
 
-/* INTERESSES */
-.profile-interests-grid {
+/* --- ESTILOS PARA INTERESSES (CHIPS SELECIONÁVEIS) --- */
+
+/* Estilo do container de Interesses (Flex-wrap para o layout de tags) */
+.profile-interesses-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 10px;
+    padding: 15px; /* Manter padding e fundo do container */
+    background: #f8f9fa; 
+    border: 1px solid #e0e0e0;
+    border-radius: var(--border-radius);
 }
 
-.profile-interest-tag {
-    background-color: var(--background-light);
-    color: var(--text-dark);
-    border: 1px solid var(--border-color);
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 13px;
+/* Estilo de cada item individual de interesse */
+.profile-interesse-item {
     cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    font-family: 'Inter', sans-serif;
+    margin: 0;
+    display: inline-block !important; /* Faz o item ocupar o espaço necessário */
 }
 
-.profile-interest-tag:hover {
+/* Esconde o checkbox real do Django */
+.profile-interesse-item input[type="checkbox"] {
+    display: none;
+}
+
+/* Estilo base do LABEL (que é o CHIP) */
+.profile-interesse-item label {
+    display: block; /* Ocupa o espaço do item */
+    padding: 8px 15px;
+    border-radius: 20px; /* Borda redonda de chip */
+    background-color: #e9ecef; /* Cor de fundo padrão */
+    color: var(--text-dark);
+    border: 1px solid #ced4da;
+    font-size: 14px !important;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.2s;
+    user-select: none; /* Evita seleção de texto no clique */
+}
+
+.profile-interesse-item:hover label {
     border-color: var(--primary-blue);
-    transform: translateY(-1px);
+    background-color: #f1f3f5;
 }
 
-.profile-interest-tag.profile-interest-selected {
+/* Estado SELECIONADO (Quando o checkbox está marcado) */
+.profile-interesse-item input[type="checkbox"]:checked + label {
     background-color: var(--primary-blue);
     color: var(--text-light);
     border-color: var(--primary-blue);
+    transform: scale(1.02);
 }
 
 /* BOTÃO PRINCIPAL */
@@ -354,10 +389,13 @@
     border-radius: var(--border-radius);
     font-size: 16px;
     font-weight: 600;
-    cursor: not-allowed;
-    opacity: 0.6;
+    cursor: pointer;
     margin-top: 20px;
-    transition: opacity 0.3s ease;
+    transition: background 0.3s ease;
+}
+
+.profile-modal-action-btn:hover {
+    background-color: #4a80f0;
 }
 
 /* Animações */
@@ -369,4 +407,16 @@
 @keyframes slideUp {
     from { transform: translateY(50px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+}
+
+/* Garante que a foto de perfil fique redonda e não esticada */
+.profile-avatar-img, .profile-modal-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+/* Remove estilos conflitantes se houver */
+.profile-edit-container .profile-avatar {
+    width: auto !important; height: auto !important;
 }

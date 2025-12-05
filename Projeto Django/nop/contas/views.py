@@ -14,7 +14,7 @@ from .forms import (
     EditarPerfilForm, EditarPerfilProfessorForm, UsuarioForm, 
     MensagemForm, ProfessorCadastroFormParte2, BuscaOportunidadeForm
 )
-from .models import Oportunidade, Usuario, Mensagem, Favorito, Interesse, Notificacao
+from .models import Oportunidade, Usuario, Mensagem, Favorito, Interesse, Notificacao, Curso
 
 # ===============================
 # PÁGINAS PRINCIPAIS E AUTENTICAÇÃO
@@ -66,7 +66,14 @@ def cadastro_professor_parte2(request, user_id):
     else:
         form = ProfessorCadastroFormParte2(instance=usuario)
 
-    return render(request, 'cadastro3.html', {'form': form, 'usuario': usuario})
+    cursos = Curso.objects.all().order_by('nome')
+    
+    return render(request, 'cadastro3.html', {
+        'form': form, 
+        'usuario': usuario,
+        'cursos': cursos  # ← ADICIONE ESTE PARÂMETRO
+    })
+
 
 def cadastro2(request):
     # 🔑 CORREÇÃO CRÍTICA: Impedir AnonymousUser de prosseguir

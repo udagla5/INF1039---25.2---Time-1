@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm
 from django.contrib.auth.models import User
-from .models import Usuario, Oportunidade, Interesse, Mensagem # Importe Interesse
+from .models import Curso, Usuario, Oportunidade, Interesse, Mensagem # Importe Interesse
 
 # ===============================
 # cadastro1.html - PARTE 1 (Universal)
@@ -9,14 +9,15 @@ from .models import Usuario, Oportunidade, Interesse, Mensagem # Importe Interes
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        # CAMPOS UNIVERSAIS: username, email, tipo, matricula
-        fields = ['username', 'email', 'tipo', 'matricula']
+        fields = ['username', 'email', 'tipo', 'matricula', 'curso']  # Added 'curso'
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome de usuário'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'seu.email@example.com'}),
             'tipo': forms.Select(attrs={'class': 'form-control'}),
-            'matricula': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Matrícula'}), # INCLUÍDO
+            'matricula': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Matrícula'}),
+            'curso': forms.Select(attrs={'class': 'form-control'}),  # Changed to Select
         }
+    
 
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Senha'}),
@@ -91,22 +92,34 @@ class ProfessorCadastroFormParte2(forms.ModelForm):
     """
     class Meta:
         model = Usuario
-        # CAMPOS ESPECÍFICOS DO PROFESSOR (conforme design)
         fields = ['cursos_atuacao', 'cargos']
-        
         widgets = {
-            'cursos_atuacao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Selecione o(s) seu(s) curso(s) de atuação'}),
-            'cargos': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Selecione o(s) seu(s) cargo(s)'}),
+            'cursos_atuacao': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'cargos': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Selecione o(s) seu(s) cargo(s)'
+            }),
         }
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['cursos_atuacao'].label = 'Curso(s) de atuação'
         self.fields['cargos'].label = 'Cargo(s)'
-        # Força a obrigatoriedade dos campos de atuação e cargo na Parte 2
         self.fields['cursos_atuacao'].required = True
         self.fields['cargos'].required = True
-
+        
+        # 🔴 IMPORTANTE: Popula as opções do select manualmente
+        # Cria as opções com base nos cursos do banco
+        cursos_opcoes = [('', 'Selecione um curso')] + [
+            (curso.nome, curso.nome) for curso in Curso.objects.all().order_by('nome')
+        ]
+        self.fields['cursos_atuacao'].widget.choices = cursos_opcoes
+        
+        # 🔴 Se estiver editando, define o valor atual
+        if self.instance and self.instance.cursos_atuacao:
+            self.initial['cursos_atuacao'] = self.instance.cursos_atuacao
 
 # ===============================
 # login.html e login1.html
@@ -193,7 +206,7 @@ class BuscaOportunidadeForm(forms.Form):
 # ===============================
 
 class OportunidadeForm(forms.ModelForm):
-    # Campo para selecionar os interesses da oportunidade (ModelMultipleChoiceField)
+    # Campo para selecionar os interesses da oportunidade
     related_interests = forms.ModelMultipleChoiceField(
         queryset=Interesse.objects.all().order_by('nome'),
         widget=forms.CheckboxSelectMultiple,
@@ -201,24 +214,18 @@ class OportunidadeForm(forms.ModelForm):
         label='Interesses Relacionados'
     )
     
+    # Add cursos_elegiveis as ModelMultipleChoiceField
+    cursos_elegiveis = forms.ModelMultipleChoiceField(
+        queryset=Curso.objects.all().order_by('nome'),
+        widget=forms.SelectMultiple(attrs={'class': 'opportunity-input'}),
+        required=False,
+        label='Cursos Elegíveis'
+    )
+    
     class Meta:
         model = Oportunidade
-        # 🔑 ADICIONADO 'related_interests' NA LISTA DE CAMPOS
-        fields = ['titulo', 'descricao', 'foto', 'tipo', 'local', 'cursos_elegiveis', 'carga_horaria', 'num_vagas', 'processo_seletivo', 'data_encerramento', 'horas_complementares', 'remuneracao', 'related_interests']
-        
-        widgets = {
-            'titulo': forms.TextInput(attrs={'placeholder': 'Título da oportunidade', 'maxlength': 100}),
-            'descricao': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Descrição...', 'maxlength': 5000}),
-            'foto': forms.FileInput(attrs={'class': 'form-control'}), # Widget simples para upload
-            'local': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Indique o local'}),
-            'cursos_elegiveis': forms.TextInput(attrs={'placeholder': 'Cursos elegíveis'}),
-            'carga_horaria': forms.TextInput(attrs={'placeholder': 'Carga horária'}),
-            'num_vagas': forms.NumberInput(attrs={'placeholder': 'Vagas'}),
-            'processo_seletivo': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Processo seletivo'}),
-            'horas_complementares': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Horas complementares'}),
-            'remuneracao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Remuneracao'}),
-            'data_encerramento': forms.DateInput(attrs={'type': 'date'}),
-        }
+        # REMOVE 'cursos_elegiveis' from this list since we're defining it above
+        fields = ['titulo', 'descricao', 'foto', 'tipo', 'local', 'carga_horaria', 'num_vagas', 'processo_seletivo', 'data_encerramento', 'horas_complementares', 'remuneracao', 'related_interests', 'cursos_elegiveis']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -260,9 +267,8 @@ class EditarPerfilForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Sobrenome'
             }),
-            'curso': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Curso'
+            'curso': forms.Select(attrs={  # Changed from TextInput to Select
+                'class': 'form-control'
             }),
             'periodo': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -273,7 +279,12 @@ class EditarPerfilForm(forms.ModelForm):
                 'placeholder': 'Telefone'
             }),
         }
-
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Populate the curso field with actual Curso objects
+        self.fields['curso'].queryset = Curso.objects.all().order_by('nome')
+        self.fields['curso'].label_from_instance = lambda obj: obj.nome
 # ===============================
 # perfil - PROFESSORES (SEM INTERESSES)
 # ===============================

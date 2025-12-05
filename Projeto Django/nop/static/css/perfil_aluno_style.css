@@ -199,12 +199,12 @@
     position: absolute;
     right: 10px;
     top: 50%;
-    transform: translateY(10px);
+    transform: translateY(5px);
     background: none;
     border: none;
     color: var(--text-gray);
     cursor: pointer;
-    padding: 5px;
+    padding: 3px;
     z-index: 2;
 }
 

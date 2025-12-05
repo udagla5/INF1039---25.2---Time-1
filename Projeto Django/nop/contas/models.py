@@ -19,11 +19,24 @@ class Usuario(AbstractUser):
     tipo = models.CharField(max_length=20, choices=TIPOS_USUARIO, default='ALUNO')
     
     matricula = models.CharField(max_length=20, unique=True, null=True, blank=True)
-    curso = models.CharField(max_length=100, blank=True, null=True)
+    curso = models.ForeignKey(
+        'Curso', 
+        on_delete=models.SET_NULL, # Define o que acontece se o curso for excluído (SET_NULL é comum)
+        null=True, 
+        blank=True, 
+        verbose_name='Curso Principal' # Rótulo para o formulário/admin
+    )
     periodo = models.CharField(max_length=20, blank=True, null=True)
     telefone = models.CharField(max_length=20, blank=True, null=True)
 
-    cursos_atuacao = models.CharField(max_length=255, verbose_name='Curso(s) de Atuação', blank=True, null=True)
+    # Deve ser assim:
+    cursos_atuacao = models.CharField(
+        max_length=255, 
+        verbose_name='Curso(s) de Atuação', 
+        blank=True, 
+        null=True
+    )  
+
     cargos = models.CharField(max_length=255, verbose_name='Cargo(s)', blank=True, null=True)
 
     # RELACIONAMENTO M-T-M PARA INTERESSES DO USUÁRIO
@@ -46,6 +59,16 @@ class Interesse(models.Model):
     class Meta:
         verbose_name = "Interesse"
         verbose_name_plural = "Interesses"
+
+class Curso(models.Model):
+    nome = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.nome
+        
+    class Meta:
+        verbose_name = "Curso"
+        verbose_name_plural = "Cursos"
 
 # ===============================
 # 2️⃣ OPORTUNIDADES
@@ -73,7 +96,6 @@ class Oportunidade(models.Model):
     tipo = models.CharField(max_length=3, choices=TIPO_CHOICES, default='OUT')
     
     local = models.TextField(verbose_name='Local de realização da atividade') 
-    cursos_elegiveis = models.CharField(max_length=255, verbose_name='Cursos elegíveis', blank=True, null=True)
     
     carga_horaria = models.CharField(max_length=50, verbose_name='Carga horária (Texto)')
     num_vagas = models.IntegerField(verbose_name='Número de vagas', default=1)
@@ -97,6 +119,7 @@ class Oportunidade(models.Model):
     
     # NOVO CAMPO: RELACIONAMENTO M-T-M PARA INTERESSES DA OPORTUNIDADE
     related_interests = models.ManyToManyField('Interesse', blank=True, related_name='oportunidades') 
+    cursos_elegiveis = models.ManyToManyField('Curso', blank=True, related_name='oportunidades') 
 
     class Meta:
         verbose_name = "Oportunidade"
@@ -126,7 +149,7 @@ class Favorito(models.Model):
         unique_together = ('usuario', 'oportunidade')
 
     def __str__(self):
-        return f"{self.usuario.username} ❤️ {self.oportunidade.titulo}"
+        return f"{self.usuario.username} {self.oportunidade.titulo}"
 
 class PedidoOportunidade(models.Model):
     solicitante = models.ForeignKey(Usuario, on_delete=models.CASCADE)

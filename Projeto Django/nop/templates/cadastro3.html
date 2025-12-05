@@ -5,6 +5,13 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/cadastro1.css' %}">
+<style>
+    /* Estilo para select múltiplo */
+    select[multiple] {
+        height: auto;
+        min-height: 100px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -23,6 +30,7 @@
                 <div class="cadastro-form-group">
                     <label for="{{ form.cursos_atuacao.id_for_label }}">
                         {{ form.cursos_atuacao.label }} <span class="cadastro-required">*</span>
+                        <small style="font-weight: normal;">(Segure Ctrl/Cmd para selecionar múltiplos)</small>
                     </label>
                     {{ form.cursos_atuacao }} 
                     {% if form.cursos_atuacao.errors %}

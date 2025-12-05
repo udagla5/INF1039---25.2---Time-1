@@ -1,36 +1,52 @@
-/* cadastro1.css - ESTILOS ESPECÍFICOS DA TELA DE CADASTRO */
-
-/* -------------------- VARIÁVEIS DE CORES HERDADAS -------------------- */
 /*
-Variáveis importantes do base.css:
---primary-blue: #6395ff;
---primary-dark: #031020;
---primary-dark-light: #1e2a3b;
---text-light: #e0e0e0;
---text-gray: #99a8bd;
---text-dark: #333333;
---background-light: #ffffff;
---error-color: #e65252;
---border-radius: 8px;
---border-radius-lg: 12px;
---shadow-lg: 0 10px 30px rgba(0,0,0,0.2);
+ * CONTEÚDO COMBINADO DE cadastro2.css - Priorizando .cadastro-card e adicionando .interesses-*
+ *
+ * NOTA: Assumindo que o arquivo original do 'cadastro1' já define:
+ * --shadow-lg, --success-color, --error-color, --text-light, --text-gray
+ * Caso contrário, será necessário adicionar estas variáveis também.
 */
 
-/* -------------------- 1. LAYOUT GERAL -------------------- */
+:root {
+    /*
+     * Variáveis replicadas/ajustadas para consistência.
+     * Mantendo as variáveis do primeiro bloco, pois são mais específicas,
+     * mas garantindo que as cores base sejam as mesmas.
+     */
+    --primary-blue: #6395ff; 
+    --primary-dark: #031020;
+    --text-dark: #333333;
+    --background-light: #ffffff;
+    --border-radius: 8px;
+    --border-radius-lg: 12px;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Shadow para o card de tags */
+    --accent-blue: #3b82f6; /* Azul forte do botão e tags selecionadas */
+    --accent-blue-hover: #2563eb;
+    
+    /* Variáveis necessárias do segundo bloco, se não estiverem no base.css */
+    /* Exemplo:
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --text-light: #ffffff;
+    --shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --text-gray: #6c757d;
+    */
+}
+
+/* -------------------- 1. LAYOUT DA PÁGINA DE CADASTRO -------------------- */
 
 .cadastro-page {
     flex: 1; 
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px 20px;
+    padding: 20px 20px;
     background-color: var(--primary-dark);
     min-height: 100vh;
 }
 
 .cadastro-container {
     width: 100%;
-    max-width: 480px; 
+    max-width: 1000px; 
 }
 
 /* -------------------- 2. CARTÃO DE CADASTRO (CADASTRO CARD) -------------------- */
@@ -40,7 +56,7 @@ Variáveis importantes do base.css:
     color: var(--text-dark); 
     padding: 30px;
     border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg); /* Assumindo que existe --shadow-lg */
     border-top: 5px solid var(--primary-blue);
 }
 
@@ -57,7 +73,7 @@ Variáveis importantes do base.css:
     height: 24px;
 }
 
-/* -------------------- 3. MESSAGES (Alertas do Django) -------------------- */
+/* -------------------- 3. MESSAGES (Alertas) -------------------- */
 
 .cadastro-messages {
     margin-bottom: 20px;
@@ -74,13 +90,13 @@ Variáveis importantes do base.css:
 
 .cadastro-alert-success {
     background-color: var(--success-color);
-    color: white;
+    color: white; /* Corrigido para 'white' */
 }
 
 .cadastro-alert-error,
 .cadastro-alert-danger {
     background-color: var(--error-color);
-    color: white;
+    color: white; /* Corrigido para 'white' */
 }
 
 .cadastro-alert-info,
@@ -89,7 +105,7 @@ Variáveis importantes do base.css:
     color: var(--text-dark);
 }
 
-/* -------------------- 4. SELEÇÃO DE TIPO DE CONTA (ESTILOS ATUALIZADOS) -------------------- */
+/* -------------------- 4. SELEÇÃO DE TIPO DE CONTA (OPCIONAL/MANTIDO) -------------------- */
 
 .cadastro-type-select {
     margin-bottom: 25px;
@@ -117,9 +133,9 @@ Variáveis importantes do base.css:
     padding: 10px 18px;
     
     /* ESTADO INATIVO: BRANCO */
-    background-color: var(--background-light); /* Fundo Branco */
-    color: var(--text-dark); /* Texto Escuro */
-    border: 1px solid #ccc; /* Borda cinza clara */
+    background-color: var(--background-light);
+    color: var(--text-dark); 
+    border: 1px solid #ccc; 
     
     border-radius: var(--border-radius);
     font-size: 0.95rem;
@@ -139,7 +155,7 @@ Variáveis importantes do base.css:
 /* --- ESTILO DO BOTÃO ATIVO (AZUL) --- */
 .cadastro-type-btn.is-active {
     background-color: var(--primary-blue);
-    color: var(--text-light); /* Texto Branco */
+    color: var(--text-light); /* Assumindo --text-light = white */
     border-color: var(--primary-blue);
     font-weight: 600;
 }
@@ -149,18 +165,7 @@ Variáveis importantes do base.css:
     stroke: var(--text-light); 
 }
 
-/* O botão .professor-btn agora segue as regras padrão de INATIVO (branco) ou ATIVO (azul).
-    A remoção do estilo escuro anterior (.cadastro-type-btn.professor-btn)
-    faz com que ele herde os estilos de .cadastro-type-btn e .cadastro-type-btn.is-active.
-*/
-.cadastro-type-btn.professor-btn.is-active {
-    background-color: var(--primary-blue);
-    border-color: var(--primary-blue);
-    box-shadow: none;
-}
-
-
-/* -------------------- 5. FORMULÁRIO -------------------- */
+/* -------------------- 5. CAMPOS DO FORMULÁRIO -------------------- */
 
 .cadastro-form-group {
     margin-bottom: 20px;
@@ -219,7 +224,73 @@ Variáveis importantes do base.css:
     color: var(--text-gray);
 }
 
-/* -------------------- 6. BOTÃO DE SUBMISSÃO -------------------- */
+/* -------------------- 6. ESTILOS DE INTERESSES (TAGS/CHIPS) - DO BLOCO 1 -------------------- */
+
+.form-group label.interesses-label { /* Adicionando uma classe seletiva para a label de interesses */
+    margin-bottom: 15px; /* Ajuste para ter mais espaço antes do container */
+}
+
+.interesses-container {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    background-color: transparent; 
+    
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Espaçamento entre os chips */
+    max-height: 700px; /* Limite de altura */
+    overflow-y: auto;
+    padding-right: 10px; /* Para acomodar a barra de rolagem */
+}
+
+/* Estilo de cada chip/checkbox */
+.interesses-checkbox {
+    margin-bottom: 0; 
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    transition: none;
+    display: inline-block;
+}
+
+/* Estilo do label (a Tag/Chip em si) */
+.interesses-checkbox label {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+    background-color: #e9ecef; /* Fundo do chip não selecionado */
+    border: 1px solid #ced4da;
+    border-radius: 20px; /* Arredondado para visual de chip */
+    padding: 8px 15px;
+    margin: 0;
+    transition: all 0.2s;
+}
+
+/* Ocultar o checkbox nativo, mas mantê-lo funcional */
+.interesses-checkbox input[type="checkbox"] {
+    display: none; 
+}
+
+/* Estado SELECIONADO */
+.interesses-checkbox input[type="checkbox"]:checked + label,
+.interesses-checkbox label.selected-chip {
+    background-color: var(--accent-blue);
+    color: white;
+    border-color: var(--accent-blue);
+    transform: scale(1.02); 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Estado de Foco (Acessibilidade) */
+.interesses-checkbox input[type="checkbox"]:focus-visible + label {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+    outline: none;
+}
+
+/* -------------------- 7. BOTÃO DE SUBMISSÃO -------------------- */
 
 .cadastro-btn {
     width: 100%;
@@ -243,7 +314,7 @@ Variáveis importantes do base.css:
     transform: scale(0.99);
 }
 
-/* -------------------- 7. RESPONSIVIDADE -------------------- */
+/* -------------------- 8. RESPONSIVIDADE -------------------- */
 
 @media (max-width: 600px) {
     .cadastro-card {

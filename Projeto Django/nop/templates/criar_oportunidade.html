@@ -11,14 +11,14 @@
 <div class="opportunity-page">
     <header class="opportunity-header">
         {# O botão de voltar deve ter uma ação JS ou uma URL #}
-        <a href="#" class="opportunity-back-button" onclick="history.back(); return false;">
+        <a href="#" class="opportunity-back-button" onclick="history.back(); return false;" title="Voltar">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
                 <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </a>
 
-        <div class="opportunity-header-title">Criar Oportunidade</div>
-        <div class="opportunity-header-subtitle">Conecte alunos com oportunidades acadêmicas criadas por você</div>
+        <h1 class="opportunity-header-title">Criar Oportunidade</h1>
+        <p class="opportunity-header-subtitle">Conecte alunos com oportunidades acadêmicas criadas por você</p>
     </header>
 
     <form method="POST" enctype="multipart/form-data" class="opportunity-form">
@@ -45,7 +45,6 @@
                      <button type="button" class="opportunity-activity-btn" data-value="EQC">Equipe de Competição</button>
                      <button type="button" class="opportunity-activity-btn" data-value="BOL">Bolsa</button>
                      <button type="button" class="opportunity-activity-btn" data-value="OUT">Outro</button>
-                
                 </div>
                 {# Mensagem de erro para o campo tipo #}
                 {% for error in form.tipo.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
@@ -73,10 +72,12 @@
                 {% for error in form.foto.errors %}<span class="error-message">{{ error }}</span>{% endfor %}
                 <small class="opportunity-help-text">Se nenhuma imagem for enviada, um placeholder será exibido.</small>
             </div>
-
-            {# ------------------ 4. OUTROS CAMPOS DE INPUT ------------------ #}
+            
+            {# ------------------ 4. CAMPOS RESTANTES (Individualmente ou com loop) ------------------ #}
+            
             {% for field in form %}
-                {% if field.name != 'tipo' and field.name != 'titulo' and field.name != 'descricao' and field.name != 'foto' and field.name != 'data_encerramento' and field.name != 'related_interests' %}
+                {% comment %} Renderiza os campos que não foram tratados acima e que não serão tratados abaixo {% endcomment %}
+                {% if field.name != 'tipo' and field.name != 'titulo' and field.name != 'descricao' and field.name != 'foto' and field.name != 'data_encerramento' and field.name != 'cursos_elegiveis' and field.name != 'related_interests' %}
                     <div class="form-group">
                         <label class="opportunity-label" for="{{ field.id_for_label }}">{{ field.label }} {% if field.field.required %}<span class="required">*</span>{% endif %}</label>
                         {{ field }}
@@ -84,21 +85,58 @@
                     </div>
                 {% endif %}
             {% endfor %}
-            
-            {# ------------------ 4.5. INTERESSES RELACIONADOS ------------------ #}
-            <div class="form-group">
-                <label class="opportunity-label">Interesses Relacionados (Opcional)</label>
-                <p style="color: #666; font-size: 13px; margin-bottom: 10px;">Marque os interesses que melhor descrevem esta oportunidade</p>
+
+            {# ------------------ 4.2. CURSOS ELEGÍVEIS (CheckboxSelectMultiple) ------------------ #}
+            <div class="form-group form-group-checkbox-list">
+                <label class="opportunity-label" for="{{ form.cursos_elegiveis.id_for_label }}">Cursos Elegíveis (Opcional)</label>
+                <p class="opportunity-help-text">Selecione os cursos que podem se candidatar a esta oportunidade.</p>
                 
-                <div class="opportunity-interesses-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; padding: 15px; background: #f8f9fa; border-radius: 6px; max-height: 300px; overflow-y: auto;">
-                    {% for checkbox in form.related_interests %}
-                        <div class="opportunity-interesse-item" style="display: flex; align-items: center; gap: 6px;">
-                            {{ checkbox.tag }}
-                            <label for="{{ checkbox.id_for_label }}" style="cursor: pointer; margin: 0; font-size: 13px;">
-                                {{ checkbox.choice_label }}
-                            </label>
-                        </div>
-                    {% endfor %}
+                <div class="searchable-checkbox-container">
+                    {# Searchbox para filtrar os cursos #}
+                    <div class="checkbox-search-box">
+                        <input type="text" class="search-input" id="search-cursos" placeholder="Buscar curso..." aria-label="Buscar curso elegível">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+
+                    <div class="opportunity-cursos-container checkbox-grid" id="cursos-list">
+                        {% for checkbox in form.cursos_elegiveis %}
+                            <div class="opportunity-curso-item checkbox-item" data-filter-label="{{ checkbox.choice_label|lower }}">
+                                {{ checkbox.tag }}
+                                <label for="{{ checkbox.id_for_label }}" class="checkbox-label">
+                                    {{ checkbox.choice_label }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                {% for error in form.cursos_elegiveis.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            </div>
+            
+            {# ------------------ 4.5. INTERESSES RELACIONADOS (CheckboxSelectMultiple) ------------------ #}
+            <div class="form-group form-group-checkbox-list">
+                <label class="opportunity-label" for="{{ form.related_interests.id_for_label }}">Interesses Relacionados (Opcional)</label>
+                <p class="opportunity-help-text">Marque os interesses que melhor descrevem esta oportunidade.</p>
+                
+                <div class="searchable-checkbox-container">
+                    {# Searchbox para filtrar os interesses #}
+                    <div class="checkbox-search-box">
+                        <input type="text" class="search-input" id="search-interesses" placeholder="Buscar interesse..." aria-label="Buscar interesse relacionado">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+
+                    <div class="opportunity-interesses-container checkbox-grid" id="interesses-list">
+                        {% for checkbox in form.related_interests %}
+                            <div class="opportunity-interesse-item checkbox-item" data-filter-label="{{ checkbox.choice_label|lower }}">
+                                {{ checkbox.tag }}
+                                <label for="{{ checkbox.id_for_label }}" class="checkbox-label">
+                                    {{ checkbox.choice_label }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
                 
                 {% for error in form.related_interests.errors %}
@@ -135,18 +173,27 @@
                 // Define o valor do input hidden com base no data-value do botão
                 typeHiddenInput.value = btn.getAttribute('data-value');
             });
+
+            // Lógica para manter o botão 'selected' se o valor do campo hidden já estiver preenchido
+            if (typeHiddenInput.value && btn.getAttribute('data-value') === typeHiddenInput.value) {
+                btn.classList.add('selected');
+            }
         });
 
         // Adiciona a lógica de JavaScript para os contadores de caracteres
         const charCounterSetup = (textareaId, counterClass, maxLength) => {
-            const textarea = document.getElementById(textareaId);
-            const counter = textarea ? textarea.closest('.form-group').querySelector(counterClass) : null;
+            const element = document.getElementById(textareaId);
+            const counter = element ? element.closest('.form-group').querySelector(counterClass) : null;
 
-            if (textarea && counter) {
+            if (element && counter) {
                 const updateCounter = () => {
-                    counter.textContent = `${textarea.value.length}/${maxLength}`;
+                    // Limita o texto ao comprimento máximo
+                    if (element.value.length > maxLength) {
+                        element.value = element.value.substring(0, maxLength);
+                    }
+                    counter.textContent = `${element.value.length}/${maxLength}`;
                 };
-                textarea.addEventListener('input', updateCounter);
+                element.addEventListener('input', updateCounter);
                 updateCounter(); // Contagem inicial
             }
         };
@@ -154,6 +201,39 @@
         // Aplica o contador para Título e Descrição
         charCounterSetup('id_titulo', '.char-counter', 100);
         charCounterSetup('id_descricao', '.char-counter', 5000);
+
+        // ------------------ LÓGICA DE FILTRAGEM DE CHECKBOX (SEARCHBOX) ------------------
+
+        const setupSearchFilter = (inputId, listId) => {
+            const searchInput = document.getElementById(inputId);
+            const listContainer = document.getElementById(listId);
+            if (!searchInput || !listContainer) return;
+
+            const items = listContainer.querySelectorAll('.checkbox-item');
+
+            const filterItems = () => {
+                const filter = searchInput.value.toLowerCase().trim();
+                
+                items.forEach(item => {
+                    // Usa o data-filter-label que foi adicionado no HTML
+                    const labelText = item.getAttribute('data-filter-label') || ''; 
+                    
+                    if (labelText.includes(filter)) {
+                        item.style.display = 'flex'; // Mostra o item
+                    } else {
+                        item.style.display = 'none'; // Esconde o item
+                    }
+                });
+            };
+
+            searchInput.addEventListener('input', filterItems);
+        };
+
+        // Aplica o filtro de busca para Cursos
+        setupSearchFilter('search-cursos', 'cursos-list');
+
+        // Aplica o filtro de busca para Interesses
+        setupSearchFilter('search-interesses', 'interesses-list');
     });
 </script>
 {% endblock %}

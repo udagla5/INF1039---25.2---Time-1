@@ -1,6 +1,22 @@
 /* static/css/criar_oportunidade.css */
 /* ESTILOS ESPECÍFICOS PARA A PÁGINA CRIAR OPORTUNIDADE */
-
+:root {
+    --primary-blue: #6395ff;
+    --primary-dark: #031020;
+    --primary-dark-light: #1e2a3b;
+    --text-light: #e0e0e0;
+    --text-gray: #99a8bd;
+    --text-dark: #333333;
+    --background-dark: #031020;
+    --background-light: #ffffff;
+    --border-color: #2d3b4f;
+    --success-color: #28a745;
+    --error-color: #e65252;
+    --border-radius: 8px;
+    --border-radius-lg: 12px;
+    --shadow: 0 2px 10px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.2);
+}
 .opportunity-page {
     background: var(--background-dark);
     min-height: 100vh;
@@ -171,6 +187,7 @@ textarea.opportunity-input {
     font-size: 13px;
     display: block;
     margin-top: 8px;
+    margin-bottom: 15px; /* Mais espaço para separar do searchbox/grid */
 }
 
 .char-counter {
@@ -181,6 +198,124 @@ textarea.opportunity-input {
     margin-right: 16px;
     position: relative;
     z-index: 10;
+}
+
+/* -------------------- ESTILOS PARA CHECKBOX LISTS E SEARCHBOX -------------------- */
+
+.searchable-checkbox-container {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden; /* Garante que o searchbox e o grid fiquem dentro da borda */
+}
+
+.checkbox-search-box {
+    position: relative;
+    padding: 10px 15px;
+    background: var(--primary-dark);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.checkbox-search-box .search-input {
+    width: 100%;
+    padding: 10px 10px 10px 35px; /* Espaço para o ícone */
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--background-dark);
+    color: var(--text-light);
+    box-sizing: border-box;
+}
+
+.checkbox-search-box .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 25px;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--text-gray);
+    pointer-events: none; /* Não interfere no input */
+}
+
+.checkbox-grid {
+    display: grid;
+    /* Colunas responsivas, auto-preenchendo com itens de no mínimo 200px */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+    gap: 10px;
+    padding: 15px;
+    background: var(--background-dark);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.checkbox-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.checkbox-grid::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.checkbox-grid::-webkit-scrollbar-track {
+    background: var(--background-dark);
+}
+
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre o checkbox e o label */
+    padding: 8px;
+    border-radius: var(--border-radius);
+    transition: background 0.15s;
+}
+
+.checkbox-item:hover {
+    background: var(--primary-dark);
+}
+
+.checkbox-label {
+    cursor: pointer;
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-light);
+    flex-grow: 1; /* Permite que o label ocupe o espaço restante */
+}
+
+/* Estilo para a checkbox em si */
+.checkbox-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+    flex-shrink: 0; 
+    background: var(--primary-dark-light);
+    border: 1px solid var(--text-gray);
+    appearance: none; 
+    cursor: pointer;
+    position: relative;
+    border-radius: 4px;
+    transition: all 0.15s;
+}
+
+/* Estilo para a checkbox marcada */
+.checkbox-item input[type="checkbox"]:checked {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+/* Criando o checkmark visual */
+.checkbox-item input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 6px;
+    width: 4px;
+    height: 9px;
+    border: solid var(--text-light);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
 }
 
 
@@ -209,6 +344,13 @@ textarea.opportunity-input {
 
 
 /* -------------------- RESPONSIVIDADE -------------------- */
+@media (max-width: 1024px) {
+    /* Ajusta o grid de checkboxes em telas médias */
+    .checkbox-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+    }
+}
+
 @media (max-width: 768px) {
     .opportunity-container {
         width: 95%;
@@ -224,8 +366,26 @@ textarea.opportunity-input {
         left: 16px;
     }
     
+    .opportunity-header-title {
+        font-size: 26px;
+    }
+    
     .opportunity-activity-group {
-        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .opportunity-activity-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .char-counter {
+        margin-top: -24px;
+        margin-right: 12px;
+    }
+
+    .checkbox-grid {
+        grid-template-columns: 1fr; /* Uma coluna em mobile */
     }
     
     .opportunity-confirm {

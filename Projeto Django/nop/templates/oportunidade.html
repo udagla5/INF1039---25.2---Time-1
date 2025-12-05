@@ -92,13 +92,23 @@
         </section>
         {% endif %}
 
-        {% if oportunidade.cursos_elegiveis %}
+        {# CORREÇÃO: Removendo a seção de cursos incorreta (que usava a tag <p>) #}
+        {# A seção correta é a próxima, que itera sobre os objetos #}
+
+        {% if oportunidade.cursos_elegiveis.exists %}
         <section class="op-section">
             <h2>Cursos Elegíveis</h2>
-            <p class="op-text-highlight">{{ oportunidade.cursos_elegiveis }}</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;">
+                {% for curso in oportunidade.cursos_elegiveis.all %}
+                    <span style="background: #031020; color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500;">
+                        {{ curso.nome }}
+                    </span>
+                {% endfor %}
+            </div>
         </section>
         {% endif %}
 
+        {# CORREÇÃO: RESTAURANDO a seção related_interests que havia sumido #}
         {% if oportunidade.related_interests.exists %}
         <section class="op-section">
             <h2>Áreas de Interesse</h2>
@@ -111,7 +121,7 @@
             </div>
         </section>
         {% endif %}
-
+        
         <div class="op-actions">
             <button class="btn-candidatar">Candidatar-se</button>
             

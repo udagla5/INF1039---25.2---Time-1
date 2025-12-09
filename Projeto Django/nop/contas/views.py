@@ -22,9 +22,18 @@ from .models import Oportunidade, Usuario, Mensagem, Favorito, Interesse, Notifi
 
 def home(request):
     destaques = Oportunidade.objects.all().order_by('?')[:3]
-    return render(request, 'home.html', {'destaques': destaques})
+    
+    # 🔑 LINHA ADICIONADA: Busca todos os cursos para preencher o dropdown
+    cursos = Curso.objects.all().order_by('nome')
+    
+    return render(request, 'home.html', {
+        'destaques': destaques,
+        'cursos': cursos # 🔑 LINHA ADICIONADA: Passa os cursos para o template
+    })
 
 def cadastro1(request):
+# ... (restante da função cadastro1) ...
+# CÓDIGO INALTERADO
     if request.method == 'POST':
         form = UsuarioForm(request.POST)
         if form.is_valid():
@@ -52,6 +61,8 @@ def cadastro1(request):
     return render(request, 'cadastro1.html', {'form': form})
 
 def cadastro_professor_parte2(request, user_id):
+# ... (restante da função cadastro_professor_parte2) ...
+# CÓDIGO INALTERADO
     usuario = get_object_or_404(Usuario, id=user_id)
     if usuario.tipo != 'PROFESSOR':
         messages.error(request, "Acesso não autorizado para o seu tipo de conta.")
@@ -76,6 +87,8 @@ def cadastro_professor_parte2(request, user_id):
 
 
 def cadastro2(request):
+# ... (restante da função cadastro2) ...
+# CÓDIGO INALTERADO
     # 🔑 CORREÇÃO CRÍTICA: Impedir AnonymousUser de prosseguir
     if not request.user.is_authenticated:
         messages.warning(request, "Você precisa estar logado para selecionar seus interesses.")
@@ -118,6 +131,8 @@ def criar_conta(request):
     return redirect('cadastro1')
 
 def custom_login(request):
+# ... (restante da função custom_login) ...
+# CÓDIGO INALTERADO
     if request.user.is_authenticated:
         return redirect('feed') # Redireciona usuários já logados
         
@@ -142,6 +157,8 @@ def custom_login(request):
 
 @login_required
 def custom_logout(request):
+# ... (restante da função custom_logout) ...
+# CÓDIGO INALTERADO
     logout(request)
     messages.success(request, 'Logout realizado com sucesso!')
     return redirect('home')
@@ -152,6 +169,8 @@ def custom_logout(request):
 
 @login_required
 def perfil_aluno(request):
+# ... (restante da função perfil_aluno) ...
+# CÓDIGO INALTERADO
     # Determina qual formulário usar baseado no tipo de usuário
     if request.user.tipo == 'PROFESSOR':
         FormClass = EditarPerfilProfessorForm
@@ -184,6 +203,8 @@ def perfil_aluno_parte2(request):
 
 @login_required
 def upload_avatar(request):
+# ... (restante da função upload_avatar) ...
+# CÓDIGO INALTERADO
     if request.method == 'POST':
         # O nome 'avatar' vem do input name="avatar" no seu HTML
         nova_foto = request.FILES.get('avatar')
@@ -215,6 +236,8 @@ def detalhe_oportunidade(request, id):
 
 @login_required
 def criar_oportunidade(request):
+# ... (restante da função criar_oportunidade) ...
+# CÓDIGO INALTERADO
     # SEGURANÇA: Só professor pode criar
     if request.user.tipo != 'PROFESSOR':
         messages.error(request, 'Apenas professores podem criar oportunidades.')
@@ -242,6 +265,8 @@ def criar_oportunidade(request):
 
 # View baseada em classe (manter apenas uma, se possível)
 class CriarOportunidadeView(LoginRequiredMixin, FormView):
+# ... (restante da classe CriarOportunidadeView) ...
+# CÓDIGO INALTERADO
     template_name = 'criar_oportunidade.html'
     form_class = OportunidadeForm
     login_url = 'login' 
@@ -260,6 +285,8 @@ class CriarOportunidadeView(LoginRequiredMixin, FormView):
 
 @login_required
 def oportunidades_salvas(request):
+# ... (restante da função oportunidades_salvas) ...
+# CÓDIGO INALTERADO
     oportunidades = Favorito.objects.filter(usuario=request.user)
     return render(request, 'oportunidades_salvas.html', {
         'oportunidades': [f.oportunidade for f in oportunidades]
@@ -291,6 +318,18 @@ def favoritar_oportunidade(request, id):
 def lista_oportunidades(request):
     # 1. Busca inicial ordenada por data de publicação
     oportunidades = Oportunidade.objects.all().order_by('-data_publicacao')
+
+    # =======================================================
+    # 🔑 FILTRO NOVO: CURSO SELECIONADO NA HOME
+    # =======================================================
+    curso_filtro_id = request.GET.get('curso_selecionado')
+    
+    if curso_filtro_id:
+        try:
+            # Filtra oportunidades cuja lista de cursos elegíveis inclua o curso selecionado
+            oportunidades = oportunidades.filter(cursos_elegiveis__id=curso_filtro_id)
+        except ValueError:
+            pass # Ignora se o ID não for um número válido
 
     # 2. Filtro de Texto (BUSCA) - AGORA MAIS COMPLETO
     busca = request.GET.get('busca')
@@ -437,15 +476,13 @@ def lista_oportunidades(request):
             'max_horas': max_horas if max_horas else '200',
             'cargas': cargas,
             'busca': busca,  # ADICIONE ISSO PARA MANTER O TERMO NA BARRA
+            'curso_selecionado': curso_filtro_id, # 🔑 ADICIONADO PARA MANTER O ESTADO SE NECESSÁRIO
         }
     }
     
     return render(request, 'feed.html', context)
-
-# ===============================
-# SISTEMA DE CHAT
-# ===============================
-
+# ... (restante das views de chat, notificações e ajax) ...
+# CÓDIGO INALTERADO
 class ChatView(LoginRequiredMixin, TemplateView):
     template_name = 'chat.html'
     login_url = 'login' 

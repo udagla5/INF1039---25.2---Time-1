@@ -103,18 +103,20 @@
         <h2 class="filter-title">Ache oportunidades do meu curso</h2>
         <p class="filter-description">Conectamos você às oportunidades mais relevantes do seu curso para que sua trajetória universitária seja ainda mais completa e significativa</p>
         
-        <form class="filter-form">
+        <form class="filter-form" action="{% url 'feed' %}" method="GET">
             <label for="course-select" class="sr-only">Selecione o seu Curso</label>
             <div class="select-wrapper">
-                <select id="course-select" name="course">
+                <select id="course-select" name="curso_selecionado" required>
                     <option value="" disabled selected>Selecione o seu Curso</option>
-                    <option value="design">Design</option>
-                    <option value="ccp">Ciência da Computação</option>
-                    <option value="engenharia">Engenharia da Computação </option>
-                    </select>
+                    
+                    {% for curso in cursos %}
+                        <option value="{{ curso.id }}">{{ curso.nome }}</option>
+                    {% endfor %}
+                    
+                </select>
             </div>
             
-            <button type="button" onclick="window.location.href='{% url 'feed' %}'" class="ir-btn">IR</button>
+            <button type="submit" class="ir-btn">IR</button>
         </form>
     </div>
 </section>
@@ -129,11 +131,8 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search");
-    // Verificamos se searchInput existe antes de adicionar listeners, 
-    // pois ele pode estar no base.html e não visível aqui diretamente.
     if (searchInput) {
         const clearButton = document.getElementById("clear-btn");
-        // ... resto do seu script de busca ...
     }
 });
 </script>

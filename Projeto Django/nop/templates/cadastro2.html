@@ -19,7 +19,7 @@
             {% csrf_token %}
 
             <h1>
-                Selecione seus Interesses
+                Complete seu Perfil
                 <img src="{% static 'img/logo-pequena.png' %}" alt="Logo" class="cadastro-inline-logo">
             </h1>
 
@@ -33,6 +33,22 @@
                 </div>
             {% endif %}
 
+            {# NOVO CAMPO: CURSO #}
+            <div class="cadastro-form-group">
+                <label for="{{ form.curso.id_for_label }}">{{ form.curso.label }}<span class="cadastro-required">*</span></label>
+                {{ form.curso }}
+                {% if form.curso.errors %}
+                    <span class="cadastro-error">{{ form.curso.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="cadastro-form-group">
+                <label for="{{ form.periodo.id_for_label }}">{{ form.periodo.label }}<span class="cadastro-required">*</span></label>
+                {{ form.periodo }}
+                {% if form.periodo.errors %}
+                    <span class="cadastro-error">{{ form.periodo.errors.0 }}</span>
+                {% endif %}
+            </div>
             <div class="cadastro-form-group">
                 <label class="interesses-label">
                     {{ form.interesses.label }}

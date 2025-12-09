@@ -47,7 +47,6 @@
                     
                     <div class="profile-form-group">
                         <label for="username">Seu username</label>
-                        <!-- O campo username é apenas para exibição e é desabilitado -->
                         <input type="text" id="username" name="username" value="{{ user.username }}" disabled>
                         <small style="color: #666; font-size: 12px;">O username não pode ser alterado</small>
                     </div>
@@ -74,10 +73,8 @@
                     <h3 class="profile-section-title">Meus Interesses</h3>
                     <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Selecione suas áreas de interesse para receber oportunidades personalizadas</p>
                     
-                    <!-- NOVO CONTAINER DE INTERESSES (CHIPS) -->
                     <div class="profile-interesses-container"> 
                         {% for checkbox in form.interesses %}
-                            <!-- Ajustado para usar a nova classe e estrutura de chip -->
                             <div class="profile-interesse-item">
                                 {{ checkbox.tag }} 
                                 <label for="{{ checkbox.id_for_label }}" style="cursor: pointer; margin: 0;">
@@ -97,7 +94,6 @@
 
                 <div class="profile-form-section">
                     <h3 class="profile-section-title">Segurança</h3>
-                    <!-- OBS: Campos de senha não estão vinculados ao ModelForm, precisam de manipulação customizada no Django para salvar -->
                     <div class="profile-form-group profile-password-group">
                         <label>Senha atual</label>
                         <input type="password" id="senhaAntigaInput" name="senha-antiga" placeholder="Digite a sua senha atual">
@@ -119,7 +115,6 @@
     </main>
 </div>
 
-<!-- Modal de Edição de Avatar (mantido inalterado) -->
 <div id="avatarEditModal" class="profile-modal">
     <div class="profile-modal-content">
         <span class="profile-modal-close-btn">&times;</span>

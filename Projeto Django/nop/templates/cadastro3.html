@@ -17,20 +17,21 @@
 {% block content %}
 <div class="cadastro-page">
     <div class="cadastro-container">
-        <div class="cadastro-logo">
-            <img src="{% static 'img/logo-principal.png' %}" alt="NOP" class="cadastro-main-logo">
-        </div>
+        
 
         <div class="cadastro-card">
-            <h1 style="margin-bottom: 20px;">Criar sua conta NOP</h1>
-            
+            {% csrf_token %}
+
+            <h1>
+                Complete seu Perfil
+                <img src="{% static 'img/logo-pequena.png' %}" alt="Logo" class="cadastro-inline-logo">
+            </h1>
             <form method="POST" class="cadastro-form">
                 {% csrf_token %}
                 
                 <div class="cadastro-form-group">
                     <label for="{{ form.cursos_atuacao.id_for_label }}">
                         {{ form.cursos_atuacao.label }} <span class="cadastro-required">*</span>
-                        <small style="font-weight: normal;">(Segure Ctrl/Cmd para selecionar múltiplos)</small>
                     </label>
                     {{ form.cursos_atuacao }} 
                     {% if form.cursos_atuacao.errors %}

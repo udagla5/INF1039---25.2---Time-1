@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm
 from django.contrib.auth.models import User
-from .models import Curso, Usuario, Oportunidade, Interesse, Mensagem # Importe Interesse
+# MODIFICADO: Importar PERIODO_CHOICES do models.py, se estiver lá, ou definir aqui se for apenas para o forms.
+from .models import Curso, Usuario, Oportunidade, Interesse, Mensagem, PERIODO_CHOICES 
+# Usando PERIODO_CHOICES importado de models.py
 
 # ===============================
 # cadastro1.html - PARTE 1 (Universal)
@@ -9,16 +11,16 @@ from .models import Curso, Usuario, Oportunidade, Interesse, Mensagem # Importe 
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = ['username', 'email', 'tipo', 'matricula', 'curso']  # Added 'curso'
+        # MODIFICADO: Removidos 'curso' e 'periodo'
+        fields = ['username', 'email', 'tipo', 'matricula'] 
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome de usuário'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'seu.email@example.com'}),
             'tipo': forms.Select(attrs={'class': 'form-control'}),
             'matricula': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Matrícula'}),
-            'curso': forms.Select(attrs={'class': 'form-control'}),  # Changed to Select
+            # REMOVIDOS 'curso' e 'periodo' daqui.
         }
     
-
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Senha'}),
         label="Senha"
@@ -60,12 +62,29 @@ class UsuarioForm(forms.ModelForm):
             user.save()
         return user
 
+
 # ===============================
-# cadastro2.html - INTERESSES
-# ===============================
+# cadastro2.html - INTERESSES (AGORA COM CURSO E PERIODO)
+# =================================
 
 class InteressesForm(forms.Form):
     """Formulário de seleção de interesses (cadastro2.html)"""
+    
+    # NOVO CAMPO: Curso
+    curso = forms.ModelChoiceField(
+        queryset=Curso.objects.all().order_by('nome'),
+        required=True,
+        label='Seu Curso Principal',
+        widget=forms.Select(attrs={'class': 'form-control form-select'})
+    )
+    
+    # CAMPO JÁ EXISTENTE: Período
+    periodo = forms.ChoiceField(
+        choices=PERIODO_CHOICES,
+        required=True,
+        label='Seu Período Atual',
+        widget=forms.Select(attrs={'class': 'form-control form-select'})
+    )
     
     interesses = forms.ModelMultipleChoiceField(
         queryset=Interesse.objects.all().order_by('nome'),
@@ -83,9 +102,10 @@ class InteressesForm(forms.Form):
         self.fields['interesses'].widget.choices = [
             (obj.id, obj.nome) for obj in Interesse.objects.all()
         ]
+
 # ===============================
 # cadastro3.html - PARTE 2 (Professor/Gestor)
-# ===============================
+# ... (todo o restante do forms.py permanece inalterado) ...
 class ProfessorCadastroFormParte2(forms.ModelForm):
     """
     Formulário para a 2ª etapa do cadastro do Professor/Gestor (Cursos e Cargos).
@@ -270,9 +290,9 @@ class EditarPerfilForm(forms.ModelForm):
             'curso': forms.Select(attrs={  # Changed from TextInput to Select
                 'class': 'form-control'
             }),
-            'periodo': forms.TextInput(attrs={
+            # MODIFICADO: De TextInput para Select para usar as choices do Model
+            'periodo': forms.Select(attrs={
                 'class': 'form-control',
-                'placeholder': 'Período'
             }),
             'telefone': forms.TextInput(attrs={
                 'class': 'form-control',

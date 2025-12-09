@@ -1,35 +1,17 @@
-/*
- * CONTEÚDO COMBINADO DE cadastro2.css - Priorizando .cadastro-card e adicionando .interesses-*
- *
- * NOTA: Assumindo que o arquivo original do 'cadastro1' já define:
- * --shadow-lg, --success-color, --error-color, --text-light, --text-gray
- * Caso contrário, será necessário adicionar estas variáveis também.
-*/
+
 
 :root {
-    /*
-     * Variáveis replicadas/ajustadas para consistência.
-     * Mantendo as variáveis do primeiro bloco, pois são mais específicas,
-     * mas garantindo que as cores base sejam as mesmas.
-     */
+   
     --primary-blue: #6395ff; 
     --primary-dark: #031020;
     --text-dark: #333333;
     --background-light: #ffffff;
     --border-radius: 8px;
     --border-radius-lg: 12px;
-    --shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Shadow para o card de tags */
-    --accent-blue: #3b82f6; /* Azul forte do botão e tags selecionadas */
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.05); 
+    --accent-blue: #3b82f6; 
     --accent-blue-hover: #2563eb;
-    
-    /* Variáveis necessárias do segundo bloco, se não estiverem no base.css */
-    /* Exemplo:
-    --success-color: #28a745;
-    --error-color: #dc3545;
-    --text-light: #ffffff;
-    --shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    --text-gray: #6c757d;
-    */
+
 }
 
 /* -------------------- 1. LAYOUT DA PÁGINA DE CADASTRO -------------------- */
@@ -56,7 +38,7 @@
     color: var(--text-dark); 
     padding: 30px;
     border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-lg); /* Assumindo que existe --shadow-lg */
+    box-shadow: var(--shadow-lg); 
     border-top: 5px solid var(--primary-blue);
 }
 
@@ -90,13 +72,13 @@
 
 .cadastro-alert-success {
     background-color: var(--success-color);
-    color: white; /* Corrigido para 'white' */
+    color: white; 
 }
 
 .cadastro-alert-error,
 .cadastro-alert-danger {
     background-color: var(--error-color);
-    color: white; /* Corrigido para 'white' */
+    color: white; 
 }
 
 .cadastro-alert-info,
@@ -155,7 +137,7 @@
 /* --- ESTILO DO BOTÃO ATIVO (AZUL) --- */
 .cadastro-type-btn.is-active {
     background-color: var(--primary-blue);
-    color: var(--text-light); /* Assumindo --text-light = white */
+    color: var(--text-light); 
     border-color: var(--primary-blue);
     font-weight: 600;
 }
@@ -184,12 +166,33 @@
     font-weight: 700;
 }
 
+/* Seletor mais específico para garantir que SELECT seja estilizado no cadastro2.html */
+.cadastro-card input:not([type="checkbox"]),
+.cadastro-card select,
+.cadastro-card textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    color: var(--text-dark);
+    background-color: #f9f9f9;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    /* Necessário para estilizar o SELECT corretamente */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none; 
+}
+
+
 .cadastro-form input[type="text"],
 .cadastro-form input[type="email"],
 .cadastro-form input[type="password"],
 .cadastro-form input[type="date"],
 .cadastro-form select,
 .cadastro-form textarea {
+    /* O seletor original */
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
@@ -203,7 +206,11 @@
 
 .cadastro-form input:focus,
 .cadastro-form select:focus,
-.cadastro-form textarea:focus {
+.cadastro-form textarea:focus,
+/* Adicionado seletor para foco no .cadastro-card */
+.cadastro-card input:focus,
+.cadastro-card select:focus,
+.cadastro-card textarea:focus {
     border-color: var(--primary-blue);
     box-shadow: 0 0 0 3px rgba(99, 149, 255, 0.2);
 }

@@ -6,6 +6,15 @@ from django.utils import timezone
 # 1️⃣ USUÁRIOS E PERFIS
 # ===============================
 
+# NOVO: Definição das opções para o campo 'periodo'
+PERIODO_CHOICES = [
+    ('1', '1º Período'), ('2', '2º Período'), ('3', '3º Período'), ('4', '4º Período'),
+    ('5', '5º Período'), ('6', '6º Período'), ('7', '7º Período'), ('8', '8º Período'),
+    ('9', '9º Período'), ('10', '10º Período'), ('11', '11º Período'), ('12', '12º Período'),
+    ('13', '13º Período'), ('14', '14º Período'), ('15', '15º Período'), ('16', '16º Período'),
+]
+
+
 class Usuario(AbstractUser):
     username = models.CharField(max_length=20, unique=True)
     email = models.CharField(max_length=50, unique=True)
@@ -26,7 +35,13 @@ class Usuario(AbstractUser):
         blank=True, 
         verbose_name='Curso Principal' # Rótulo para o formulário/admin
     )
-    periodo = models.CharField(max_length=20, blank=True, null=True)
+    # MODIFICADO: Campo 'periodo' agora usa as opções definidas (dropdown)
+    periodo = models.CharField(
+        max_length=20, 
+        choices=PERIODO_CHOICES, # Adicionado
+        default='1',             # Adicionado
+        verbose_name='Período Atual' # Alterado para ser mais claro
+    )
     telefone = models.CharField(max_length=20, blank=True, null=True)
 
     # Deve ser assim:

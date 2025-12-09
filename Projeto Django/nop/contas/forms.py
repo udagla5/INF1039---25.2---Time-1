@@ -11,14 +11,14 @@ from .models import Curso, Usuario, Oportunidade, Interesse, Mensagem, PERIODO_C
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        # MODIFICADO: Removidos 'curso' e 'periodo'
-        fields = ['username', 'email', 'tipo', 'matricula'] 
+        fields = ['username', 'email', 'first_name', 'last_name', 'tipo', 'matricula'] 
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome de usuário'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Sobrenome'}),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Crie um nome de usuário'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'seu.email@example.com'}),
             'tipo': forms.Select(attrs={'class': 'form-control'}),
             'matricula': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Matrícula'}),
-            # REMOVIDOS 'curso' e 'periodo' daqui.
         }
     
     password1 = forms.CharField(

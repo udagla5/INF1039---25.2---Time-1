@@ -80,7 +80,6 @@ body {
 /* -------------------- 3. CARROSSEL DE OPORTUNIDADES -------------------- */
 
 .carousel-wrapper {
-    margin-bottom: 50px;
     display: flex; 
     justify-content: center;
     width: 100%;
@@ -131,9 +130,8 @@ body {
     transform: translateX(-50%);
     width: 100%; 
     max-width: 80%; 
-    padding: 20px 0; 
+    padding: 0px 0; 
     text-align: center; 
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0));
     color: var(--color-text-light);
 }
 
@@ -233,9 +231,9 @@ body {
 .course-filter-section {
     background-color: var(--color-dark-blue);
     color: var(--color-text-light);
-    padding: 90px 20px;
+    padding: 100px 100px;
     text-align: center;
-    margin-top: 50px; 
+    margin-top: 10px; 
     width: 100vw;
     position: relative;
     left: 50%;
@@ -332,6 +330,7 @@ body {
     height: 60px;
     width: 100vw;
     position: relative;
+    display: flex;
     left: 50%;
     right: 50%;
     margin-left: -50vw;

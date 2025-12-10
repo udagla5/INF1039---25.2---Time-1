@@ -167,8 +167,9 @@
     margin-bottom: 8px;
 }
 
+/* ESTILOS GERAIS PARA INPUT, SELECT, TEXTAREA */
 .profile-form-group input,
-.profile-form-group select, /* ESTILO PARA COMBOBOX */
+.profile-form-group select, 
 .profile-form-group textarea {
     width: 100%;
     padding: 12px 15px;
@@ -180,7 +181,17 @@
     background: var(--background-light);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     font-family: 'Inter', sans-serif;
-    
+}
+
+.profile-form-group input:focus,
+.profile-form-group select:focus,
+.profile-form-group textarea:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 2px rgba(99, 149, 255, 0.3);
+}
+
+/* NOVO BLOCO: ESTILOS ESPECÍFICOS PARA O SELECT (COMBOBOX) */
+.profile-form-group select {
     /* Remove a seta nativa do SELECT */
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -191,13 +202,7 @@
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 16px;
-}
-
-.profile-form-group input:focus,
-.profile-form-group select:focus,
-.profile-form-group textarea:focus {
-    border-color: var(--primary-blue);
-    box-shadow: 0 0 0 2px rgba(99, 149, 255, 0.3);
+    padding-right: 40px; /* Adiciona um padding para a seta não cobrir o texto */
 }
 
 /* GRUPOS DE SENHA */
@@ -419,4 +424,17 @@
 /* Remove estilos conflitantes se houver */
 .profile-edit-container .profile-avatar {
     width: auto !important; height: auto !important;
+}
+
+.profile-form-group select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    
+    background-image: url("data:image/svg+xml,...");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 40px; 
 }
